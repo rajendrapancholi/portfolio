@@ -3,5 +3,5 @@ export default function FrontLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <main>{children}</main>;
+  return <div>{children}</div>;
 }
