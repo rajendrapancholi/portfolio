@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
 
 const Button = ({
   title,
@@ -8,6 +8,7 @@ const Button = ({
   otherClasses,
 }: {
   title: string;
+
   icon: React.ReactNode;
   position: string;
   handleClick?: () => void;

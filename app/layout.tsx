@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import '@/styles/globals.css';
 import { FcAbout, FcContacts, FcHome, FcTemplate } from 'react-icons/fc';
+import { HiMiniRectangleGroup } from 'react-icons/hi2';
 import Providers from '@/components/Providers';
 import { FloatingNavbar } from '@/components/ui/FloatingNavbar';
 import Footer from '@/components/Footer';
@@ -18,17 +19,22 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Providers>
-          <header className="container">
+          <header>
             <FloatingNavbar
               navItems={[
                 { name: 'Home', link: '/', icon: <FcHome /> },
+                {
+                  name: 'Blogs',
+                  link: '/blogs',
+                  icon: <HiMiniRectangleGroup />,
+                },
                 { name: 'About', link: '#about', icon: <FcAbout /> },
                 { name: 'Projects', link: '#projects', icon: <FcTemplate /> },
                 { name: 'Contact', link: '#contact', icon: <FcContacts /> },
               ]}
             />
           </header>
-          <main className="">{children}</main>
+          <main className="mx-auto">{children}</main>
           <Footer />
         </Providers>
       </body>

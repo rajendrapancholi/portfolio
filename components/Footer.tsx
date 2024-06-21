@@ -5,7 +5,7 @@ import Button from './ui/Button';
 
 const Footer = () => {
   return (
-    <footer className="w-full relative pt-20 pb-10" id="contact">
+    <footer className="w-full relative pt-20 pb-10 bg-slate-950" id="contact">
       <div className="flex flex-col items-center">
         <h1 className="text-2xl md:text-3xl text-center font-bold lg:max-w-[60vw]">
           The performance optimizations in Next.js aren&apos;t just features
@@ -25,6 +25,7 @@ const Footer = () => {
           />
         </a>
       </div>
+      
       <div className="flex mt-16 md:flex-row flex-col justify-between items-center gap-2 mx-2">
         <p className="md:text-base text-sm md:font-normal font-light">
           Copyright © 2024 Rajendra Pancholi

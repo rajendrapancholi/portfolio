@@ -10,12 +10,12 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   return (
-    <div className="dark:bg-black px-2">
+    <div className="dark:bg-black px-2 ">
       <Hero />
-      {/* <Grid />
+      <Grid />
       <RecentProjects />
       <Experience />
-      <Approach /> */}
+      <Approach />
     </div>
   );
 }

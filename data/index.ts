@@ -144,10 +144,21 @@ export const socialMedia = [
   },
   {
     id: 2,
-    img: '/twit.svg',
+    img: '/link.svg',
   },
   {
     id: 3,
-    img: '/link.svg',
+    img: '/twit.svg',
   },
+];
+
+export const iconList = [
+  { img: '/next.svg' },
+  { img: '/tail.svg' },
+  { img: '/ts.svg' },
+  { img: '/stream.svg' },
+  { img: '/c.svg' },
+  { img: '/three.svg' },
+  { img: '/re.svg' },
+  { img: '/fm.svg' },
 ];

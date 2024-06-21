@@ -1,18 +1,16 @@
-import { ThemeProvider } from './ThemeProvider';
+import { SessionProvider } from 'next-auth/react';
+import ClientProviders from './ClientProvider';
+import { auth } from '@/lib/auth';
 
 export default async function Providers({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="dark"
-      enableSystem
-      disableTransitionOnChange
-    >
-      {children}
-    </ThemeProvider>
+    <SessionProvider session={session}>
+      <ClientProviders>{children}</ClientProviders>
+    </SessionProvider>
   );
 }
