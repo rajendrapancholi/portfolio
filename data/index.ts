@@ -141,14 +141,12 @@ export const socialMedia = [
   {
     id: 1,
     img: '/git.svg',
+    link: 'https://github.com/rajendrapancholi',
   },
   {
     id: 2,
     img: '/link.svg',
-  },
-  {
-    id: 3,
-    img: '/twit.svg',
+    link: 'https://www.linkedin.com/in/rajendra-pancholi-11a3a5286/',
   },
 ];
 

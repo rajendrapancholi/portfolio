@@ -80,7 +80,6 @@ export const config = {
     },
     async signIn({ account, profile, user }: any) {
       if (account.provider == 'credentials') {
-        console.log(account);
         return true;
       }
       try {
