@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { FaLocationArrow } from 'react-icons/fa6';
 import Image from 'next/image';
-import { Project } from '@/lib/models/ProjectMode';
+import { Project } from '@/lib/models/ProjectModel';
 import Button from './ui/Button';
 import { Meteors } from './ui/Meteors';
 
