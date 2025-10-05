@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import Projects from './Projects';
 
 export const metadata: Metadata = {
-  title: 'Admin Projects' || process.env.NEXT_PUBLIC_APP_NAME,
+  title: process.env.NEXT_PUBLIC_APP_NAME || 'Admin Projects',
 };
 const AdminProductsPage = () => {
   return (

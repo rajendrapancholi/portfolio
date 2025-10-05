@@ -43,7 +43,7 @@ export default function ProjectItem({ project }: { project: Project }) {
                     transform: `translateX(-${5 * i + 2}px)`,
                   }}
                 >
-                  <Image src={icon} alt="icon5" className="p-2" />
+                  <Image src={icon} height={70} width={70} alt="icon5" className="bg-white/30 rounded-full p-0.5" />
                 </div>
               ))}
             </div>

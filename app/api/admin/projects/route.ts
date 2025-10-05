@@ -42,6 +42,7 @@ export const POST = auth(async (req: any) => {
       }
     );
   } catch (err: any) {
+    console.log(err.messa);
     return Response.json(
       { message: err.message },
       {

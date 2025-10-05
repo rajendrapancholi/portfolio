@@ -32,7 +32,7 @@ const Projects = () => {
           id: toastId,
         });
       } else {
-        toast.error(data.message, { id: toastId });
+        toast.error(data.message, { id: toastId }); 
       }
     }
   );
@@ -121,11 +121,11 @@ const Projects = () => {
                           }}
                         >
                           <Image
-                            width={15}
-                            height={15}
+                            width={25}
+                            height={25}
                             src={icon}
                             alt={`icon${i + 1}`}
-                            className="p-[1px]"
+                            className="p-0.5 bg-white/30 rounded-full"
                           />
                         </div>
                       ))}

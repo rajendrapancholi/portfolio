@@ -90,69 +90,28 @@ const data = {
 
   projects: [
     {
-      title: '3D Solar System Planets to Explore',
-      des: 'Explore the wonders of our solar system with this captivating 3D simulation of the planets using Three.js.',
-      img: '/p1.svg',
-      iconLists: ['/re.svg', '/tail.svg', '/ts.svg', '/three.svg', '/fm.svg'],
-      link: '/ui.earth.com',
+      title: 'BookBary: Smart Library Management System',
+      des: 'BookBary is a smart library management system that simplifies book tracking, borrowing, and returns. It streamlines library operations with an intuitive interface for students, librarians, and administrators.',
+      img: '/p1.jpg',
+      iconLists: ['/re.svg', '/ndjs.svg', '/ts.svg', '/expjs.svg', '/mysql.svg'],
+      link: '/under-deployemen',
     },
     {
-      title: 'Yoom - Video Conferencing App',
-      des: 'Simplify your video conferencing experience with Yoom. Seamlessly connect with colleagues and friends.',
-      img: '/p2.svg',
-      iconLists: ['/next.svg', '/tail.svg', '/ts.svg', '/stream.svg', '/c.svg'],
-      link: '/ui.yoom.com',
-    },
-    {
-      title: 'AI Image SaaS - Canva Application',
-      des: 'A REAL Software-as-a-Service app with AI features and a payments and credits system using the latest tech stack.',
-      img: '/p3.svg',
-      iconLists: ['/re.svg', '/tail.svg', '/ts.svg', '/three.svg', '/c.svg'],
-      link: '/ui.aiimg.com',
-    },
-    {
-      title: 'Animated Apple Iphone 3D Website',
-      des: 'Recreated the Apple iPhone 15 Pro website, combining GSAP animations and Three.js 3D effects..',
-      img: '/p4.svg',
-      iconLists: [
-        '/next.svg',
-        '/tail.svg',
-        '/ts.svg',
-        '/three.svg',
-        '/gsap.svg',
-      ],
-      link: '/ui.apple.com',
+      title: 'AI-powered customer support chatbot',
+      des: 'An AI-powered customer support chatbot that delivers instant, personalized assistance. It automates responses, resolves queries efficiently, and enhances customer satisfaction with 24/7 intelligent conversational support.',
+      img: '/p2.jpg',
+      iconLists: ['/next.svg', '/re.svg', '/tail.svg', '/ts.svg', '/py.svg', '/mysql.svg'],
+      link: '/under-deployement',
     },
   ],
 
   workExperience: [
     {
       id: 1,
-      title: 'Frontend Engineer Intern',
-      desc: 'Assisted in the development of a web-based platform using React.js, enhancing interactivity.',
+      title: 'MIS excecutive',
+      desc: 'Experienced MIS Executive skilled in Tally Prime data entry, cell tower electrical product management, and permission coordination. Proficient in data analysis, inventory control, and optimizing information systems for operational efficiency.',
       className: 'md:col-span-2',
       thumbnail: '/exp1.svg',
-    },
-    {
-      id: 2,
-      title: 'E-Commerce next-app',
-      desc: 'Designed and developed mobile app for both iOS & Android platforms using React Native.',
-      className: 'md:col-span-2', // change to md:col-span-2
-      thumbnail: '/exp2.svg',
-    },
-    {
-      id: 3,
-      title: ' Project',
-      desc: 'Led the dev of a mobile app for a client, from initial concept to deployment on app stores.',
-      className: 'md:col-span-2', // change to md:col-span-2
-      thumbnail: '/exp3.svg',
-    },
-    {
-      id: 4,
-      title: 'Modern UI App',
-      desc: 'Developed and maintained user-facing features using modern frontend technologies.',
-      className: 'md:col-span-2',
-      thumbnail: '/exp4.svg',
     },
   ],
 

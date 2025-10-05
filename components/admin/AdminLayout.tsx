@@ -77,12 +77,12 @@ const AdminLayout = async ({
         <div className="static h-full bg-base-200 max-sm:m-4 rounded-md shadow_cyan md:col-span-2 lg:col-span-2">
           {/* menu links */}
           <ul className="m-2 sticky sm:top-20 sm:h-[85vh] sm:overflow-hidden sm:overflow-y-auto">
-            {menuItems.map((cat: any) => (
-              <li key={cat}>
+            {menuItems.map((cat: any, index: number) => (
+              <li key={index}>
                 {cat.title}
                 <ul className="menu">
-                  {cat.list.map((items: any) => (
-                    <li key={items} className="m-1">
+                  {cat.list.map((items: any, i: number) => (
+                    <li key={i} className="m-1">
                       <AdminLink item={items} active={activeItem} />
                     </li>
                   ))}

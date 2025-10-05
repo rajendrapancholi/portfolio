@@ -216,7 +216,7 @@ export default function ProjectEditForm({ projectId }: { projectId: string }) {
                     height={25}
                     src={icon.img}
                     alt="icon"
-                    className="w-8 h-8"
+                    className="w-8 h-8 bg-white/30 rounded-full p-0.5"
                   />
                   <input
                     type="checkbox"

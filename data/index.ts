@@ -73,13 +73,21 @@ export const gridItems = [
 
 export const projects = [
   {
-    // id: 1,
-    // title: '3D Solar System Planets to Explore',
-    // des: 'Explore the wonders of our solar system with this captivating 3D simulation of the planets using Three.js.',
-    // img: '/p1.svg',
-    // iconLists: ['/re.svg', '/tail.svg', '/ts.svg', '/three.svg', '/fm.svg'],
-    // link: '/ui.earth.com',
-  },
+    id: 1,
+      title: 'BookBary: Smart Library Management System',
+      des: 'BookBary is a smart library management system that simplifies book tracking, borrowing, and returns. It streamlines library operations with an intuitive interface for students, librarians, and administrators.',
+      img: '/p1.jpg',
+      iconLists: ['/re.svg', '/ndjs.svg', '/ts.svg', '/expjs.svg', '/mysql.svg'],
+      link: '/under-deployemen',
+    },
+    {
+      id: 1,
+      title: 'AI-powered customer support chatbot',
+      des: 'An AI-powered customer support chatbot that delivers instant, personalized assistance. It automates responses, resolves queries efficiently, and enhances customer satisfaction with 24/7 intelligent conversational support.',
+      img: '/p2.jpg',
+      iconLists: ['/next.svg', '/re.svg', '/tail.svg', '/ts.svg', '/py.svg', '/mysql.svg'],
+      link: '/under-deployement',
+    },
 ];
 
 export const workExperience = [
@@ -114,10 +122,10 @@ export const iconList = [
   { img: '/three.svg' },
   { img: '/re.svg' },
   { img: '/fm.svg' },
-  {img: '/mndb.svg'},
-  {img: '/mysql.svg'},
-  {img: '/expjs.svg'},
-  {img: '/ndjs.svg'},
-  {img: '/py.svg'},
+  { img: '/mndb.svg'},
+  { img: '/mysql.svg'},
+  { img: '/expjs.svg'},
+  { img: '/ndjs.svg'},
+  { img: '/py.svg'},
 
 ];
