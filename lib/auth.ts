@@ -25,10 +25,15 @@ export const config = {
         if (user) {
           const isMatch = await bcrypt.compare(
             credentials.password as string,
-            user.password
+            user.password as string
           );
           if (isMatch) {
-            return user;
+            return {
+              id: user._id.toString(), // Convert ObjectId to string
+              email: user.email,
+              name: user.name,
+              isAdmin: user.isAdmin,
+            };;
           }
         }
         return null;

@@ -11,7 +11,6 @@ import { Project } from '@/lib/models/ProjectModel';
 import Image from 'next/image';
 import Button from '@/components/ui/Button';
 import { FaPen } from 'react-icons/fa6';
-import { Span } from 'next/dist/trace';
 
 const Projects = () => {
   const { data: projects, error } = useSWR(`/api/admin/projects`);
@@ -19,7 +18,7 @@ const Projects = () => {
 
   const { trigger: deleteProject } = useSWRMutation(
     `/api/admin/projects`,
-    async (url, { arg }: { arg: { projectId: string } }) => {
+    async (url, { arg }: { arg: { projectId: string | any } }) => {
       const toastId = toast.loading('Deleting project...');
       const response = await fetch(`${url}/${arg.projectId}`, {
         method: 'DELETE',
