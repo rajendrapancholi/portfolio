@@ -100,7 +100,8 @@ export const FloatingNavbar = ({
             <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent  h-px" />
           </button>
         )}
-        {session?.user.isAdmin && (
+        {session?.user && session.user.isAdmin && (
+        // {session?.user.isAdmin && (
           <button type="button" onClick={handleClick}>
             <Link href="/admin/dashboard" className="text-sm">
               Admin Dashboard
