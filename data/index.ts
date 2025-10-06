@@ -81,7 +81,7 @@ export const projects = [
       link: '/under-deployemen',
     },
     {
-      id: 1,
+      id: 2,
       title: 'AI-powered customer support chatbot',
       des: 'An AI-powered customer support chatbot that delivers instant, personalized assistance. It automates responses, resolves queries efficiently, and enhances customer satisfaction with 24/7 intelligent conversational support.',
       img: '/p2.jpg',
