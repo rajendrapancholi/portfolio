@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { IoCopyOutline } from 'react-icons/io5';
 
-import Lottie from 'react-lottie';
 import animationData from '@/data/confetti.json';
 
 import { cn } from '@/lib/utils/cn';
@@ -10,10 +9,11 @@ import { BackgroundGradientAnimation } from './GradientBg';
 import Button from './Button';
 import {
   GlowingStarsBackgroundCard,
-  GlowingStarsDescription,
-  GlowingStarsTitle,
 } from './GlowingStars';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
+// Dynamically import Lottie to make it SSR-safe
+const Lottie = dynamic(() => import('react-lottie'), { ssr: false });
 
 export const BentoGrid = ({
   className,
