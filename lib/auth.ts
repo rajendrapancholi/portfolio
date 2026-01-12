@@ -1,20 +1,20 @@
-import CredentialsProvider from 'next-auth/providers/credentials';
-import GitHubProvider from 'next-auth/providers/github';
-import GoogleProvider from 'next-auth/providers/google';
-import LinkedInProvider from 'next-auth/providers/linkedin';
-import bcrypt from 'bcryptjs';
-import UserModel from './models/UserModel';
-import NextAuth, { Account, Profile, User } from 'next-auth';
-import { connectToDB } from './database';
+import CredentialsProvider from "next-auth/providers/credentials";
+import GitHubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
+import LinkedInProvider from "next-auth/providers/linkedin";
+import bcrypt from "bcryptjs";
+import UserModel from "./models/UserModel";
+import NextAuth, { Account, Profile, User } from "next-auth";
+import { connectToDB } from "./database";
 
 export const config = {
   providers: [
     CredentialsProvider({
       credentials: {
         email: {
-          type: 'email',
+          type: "email",
         },
-        password: { type: 'password' },
+        password: { type: "password" },
       },
       async authorize(credentials) {
         await connectToDB();
@@ -33,7 +33,7 @@ export const config = {
               email: user.email,
               name: user.name,
               isAdmin: user.isAdmin,
-            };;
+            };
           }
         }
         return null;
@@ -54,9 +54,9 @@ export const config = {
     }),
   ],
   pages: {
-    signIn: '/signin',
-    newUser: '/register',
-    error: '/signin',
+    signIn: "/signin",
+    newUser: "/register",
+    error: "/signin",
   },
   callbacks: {
     async jwt({ user, trigger, session, token }: any) {
@@ -68,7 +68,7 @@ export const config = {
           isAdmin: user.isAdmin,
         };
       }
-      if (trigger === 'update' && session) {
+      if (trigger === "update" && session) {
         token.user = {
           ...token.user,
           email: session.user.email,
@@ -84,7 +84,7 @@ export const config = {
       return session;
     },
     async signIn({ account, profile, user }: any) {
-      if (account.provider == 'credentials') {
+      if (account.provider == "credentials") {
         return true;
       }
       try {
@@ -103,7 +103,7 @@ export const config = {
 
         return true;
       } catch (error: any) {
-        console.log('Error checking if user exists: ', error.message);
+        console.log("Error checking if user exists: ", error.message);
         return false;
       }
     },

@@ -1,112 +1,80 @@
-import { auth } from '@/lib/auth';
-import { connectToDB } from '@/lib/database';
-import UserModel from '@/lib/models/UserModel';
+import { auth } from "@/lib/auth";
+import { connectToDB } from "@/lib/database";
+import UserModel from "@/lib/models/UserModel";
 
-export const GET = auth(async (...args: any) => {
-  const [req, { params }] = args;
+type Params = {
+  params: Promise<{ id: string }>;
+};
+
+/* ===================== GET ===================== */
+export const GET = auth(async (req, context: Params) => {
   if (!req.auth || !req.auth.user?.isAdmin) {
-    return Response.json(
-      { message: 'unauthorized' },
-      {
-        status: 401,
-      }
-    );
+    return Response.json({ message: "unauthorized" }, { status: 401 });
   }
+
+  const { id } = await context.params;
+
   await connectToDB();
-  const user = await UserModel.findById(params.id);
+  const user = await UserModel.findById(id);
+
   if (!user) {
-    return Response.json(
-      { message: 'user not found!' },
-      {
-        status: 404,
-      }
-    );
+    return Response.json({ message: "user not found" }, { status: 404 });
   }
+
   return Response.json(user);
-}) as any;
+});
 
-export const PUT = auth(async (...p: any) => {
-  const [req, { params }] = p;
+/* ===================== PUT ===================== */
+export const PUT = auth(async (req, context: Params) => {
   if (!req.auth || !req.auth.user?.isAdmin) {
-    return Response.json(
-      { message: 'unauthorized!' },
-      {
-        status: 401,
-      }
-    );
+    return Response.json({ message: "unauthorized" }, { status: 401 });
   }
 
+  const { id } = await context.params;
   const { name, email, isAdmin } = await req.json();
 
-  try {
-    await connectToDB();
-    const user = await UserModel.findById(params.id);
-    if (user) {
-      user.name = name;
-      user.email = email;
-      user.isAdmin = Boolean(isAdmin);
+  await connectToDB();
+  const user = await UserModel.findById(id);
 
-      const updatedUser = await user.save();
-      return Response.json({
-        message: 'User updated successfully.',
-        user: updatedUser,
-      });
-    } else {
-      return Response.json(
-        { message: 'User not found!' },
-        {
-          status: 404,
-        }
-      );
-    }
-  } catch (err: any) {
-    return Response.json(
-      { message: err.message },
-      {
-        status: 500,
-      }
-    );
+  if (!user) {
+    return Response.json({ message: "user not found" }, { status: 404 });
   }
-}) as any;
 
-export const DELETE = auth(async (...args: any) => {
-  const [req, { params }] = args;
+  user.name = name;
+  user.email = email;
+  user.isAdmin = Boolean(isAdmin);
+
+  await user.save();
+
+  return Response.json({
+    message: "User updated successfully",
+    user,
+  });
+});
+
+/* ===================== DELETE ===================== */
+export const DELETE = auth(async (req, context: Params) => {
   if (!req.auth || !req.auth.user?.isAdmin) {
+    return Response.json({ message: "unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await context.params;
+
+  await connectToDB();
+  const user = await UserModel.findById(id);
+
+  if (!user) {
+    return Response.json({ message: "user not found" }, { status: 404 });
+  }
+
+  if (user.isAdmin) {
     return Response.json(
-      { message: 'unauthorized!' },
-      {
-        status: 401,
-      }
+      { message: "cannot delete admin user" },
+      { status: 400 }
     );
   }
 
-  try {
-    await connectToDB();
-    const user = await UserModel.findById(params.id);
-    if (user) {
-      if (user.isAdmin)
-        return Response.json(
-          { message: 'User is admin' },
-          {
-            status: 400,
-          }
-        );
-      await user.deleteOne();
-      return Response.json({ message: 'User deleted successfully.' });
-    } else {
-      return Response.json(
-        { message: 'User not found!' },
-        {
-          status: 404,
-        }
-      );
-    }
-  } catch (err: any) {
-    return Response.json(
-      { message: err.message },
-      {
-        status: 500,
-      }
-    );
-  }
-}) as any;
+  await user.deleteOne();
+
+  return Response.json({ message: "User deleted successfully" });
+});

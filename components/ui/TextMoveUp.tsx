@@ -1,153 +1,126 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-export function TextMoveUp({ text }: { text: string[] }) {
-  const [currentText, setCurrentText] = useState(0);
-
-  useEffect(() => {
-    let interval: any;
-    const startAnimation = () => {
-      interval = setInterval(() => {
-        setCurrentText((prev) => (prev + 1) % text.length);
-      }, 1500);
-    };
-    startAnimation();
-    return () => clearInterval(interval);
-  }, [text.length]);
-
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const newDataRef = useRef<any[]>([]);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [value, setValue] = useState('');
+export function TextMoveUp({ text }: { text: string[]; }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [animating, setAnimating] = useState(false);
 
-  const draw = useCallback(() => {
-    if (!inputRef.current) return;
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const particlesRef = useRef<any[]>([]);
+  const frameRef = useRef<number | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const drawTextToCanvas = (value: string) => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    if (!canvas || !canvas.parentElement) return;
+
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
 
-    canvas.width = 800;
-    canvas.height = 800;
-    ctx.clearRect(0, 0, 800, 800);
-    const computedStyles = getComputedStyle(inputRef.current);
+    canvas.width = canvas.parentElement.offsetWidth;
+    canvas.height = canvas.parentElement.offsetHeight;
 
-    const fontSize = parseFloat(computedStyles.getPropertyValue('font-size'));
-    ctx.font = `${fontSize * 2}px ${computedStyles.fontFamily}`;
-    ctx.fillStyle = '#FFF';
-    ctx.fillText(value, 16, 40);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = `bold ${canvas.height * 0.6}px sans-serif`;
+    ctx.fillStyle = '#fff';
+    ctx.textBaseline = 'middle';
 
-    const imageData = ctx.getImageData(0, 0, 800, 800);
-    const pixelData = imageData.data;
-    const newData: any[] = [];
+    const textWidth = ctx.measureText(value).width;
+    ctx.fillText(value, (canvas.width - textWidth) / 2, canvas.height / 2);
 
-    for (let t = 0; t < 800; t++) {
-      let i = 4 * t * 800;
-      for (let n = 0; n < 800; n++) {
-        let e = i + 4 * n;
-        if (
-          pixelData[e] !== 0 &&
-          pixelData[e + 1] !== 0 &&
-          pixelData[e + 2] !== 0
-        ) {
-          newData.push({
-            x: n,
-            y: t,
-            color: [
-              pixelData[e],
-              pixelData[e + 1],
-              pixelData[e + 2],
-              pixelData[e + 3],
-            ],
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    const particles: any[] = [];
+
+    for (let y = 0; y < canvas.height; y += 2) {
+      for (let x = 0; x < canvas.width; x += 2) {
+        const i = (y * canvas.width + x) * 4;
+        if (imageData[i + 3] > 0) {
+          particles.push({
+            x,
+            y,
+            r: 1,
+            color: `rgba(${imageData[i]}, ${imageData[i + 1]}, ${imageData[i + 2]}, ${imageData[i + 3]})`,
           });
         }
       }
     }
 
-    newDataRef.current = newData.map(({ x, y, color }) => ({
-      x,
-      y,
-      r: 1,
-      color: `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3]})`,
-    }));
-  }, [value]);
+    particlesRef.current = particles;
+  };
 
-  useEffect(() => {
-    draw();
-  }, [value, draw]);
+  const animateParticles = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  const animate = (start: number) => {
-    const animateFrame = (pos: number = 0) => {
-      requestAnimationFrame(() => {
-        const newArr = [];
-        for (let i = 0; i < newDataRef.current.length; i++) {
-          const current = newDataRef.current[i];
-          if (current.x < pos) {
-            newArr.push(current);
-          } else {
-            if (current.r <= 0) {
-              current.r = 0;
-              continue;
-            }
-            current.x += Math.random() > 0.5 ? 1 : -1;
-            current.y += Math.random() > 0.5 ? 1 : -1;
-            current.r -= 0.05 * Math.random();
-            newArr.push(current);
-          }
-        }
-        newDataRef.current = newArr;
-        const ctx = canvasRef.current?.getContext('2d');
-        if (ctx) {
-          ctx.clearRect(pos, 0, 800, 800);
-          newDataRef.current.forEach((t) => {
-            const { x: n, y: i, r: s, color: color } = t;
-            if (n > pos) {
-              ctx.beginPath();
-              ctx.rect(n, i, s, s);
-              ctx.fillStyle = color;
-              ctx.strokeStyle = color;
-              ctx.stroke();
-            }
-          });
-        }
-        if (newDataRef.current.length > 0) {
-          animateFrame(pos - 8);
-        } else {
-          setValue('');
-          setAnimating(false);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    setAnimating(true);
+
+    const animate = () => {
+      if (!canvasRef.current) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particlesRef.current.forEach((p) => {
+        p.x += Math.random() > 0.5 ? 1 : -1;
+        p.y += Math.random() > 0.5 ? 1 : -1;
+        p.r -= 0.02;
+
+        if (p.r > 0) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
         }
       });
+
+      particlesRef.current = particlesRef.current.filter((p) => p.r > 0);
+
+      if (particlesRef.current.length > 0) {
+        frameRef.current = requestAnimationFrame(animate);
+      } else {
+        setAnimating(false);
+      }
     };
-    animateFrame(start);
+
+    animate();
   };
+
+  useEffect(() => {
+    drawTextToCanvas(text[currentIndex]);
+
+    timeoutRef.current = setTimeout(() => {
+      animateParticles();
+      setTimeout(() => {
+        setCurrentIndex((i) => (i + 1) % text.length);
+      }, 600);
+    }, 3000);
+
+    return () => {
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [currentIndex, text]);
+
   return (
-    <div className="absolute left-32 md:left-40 top-0 flex items-center rounded-full pointer-events-none">
+    <div className="relative h-[50px] w-full flex items-center justify-center">
+      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
       <AnimatePresence mode="wait">
-        {!value && (
+        {!animating && (
           <motion.span
-            initial={{
-              y: 5,
-              opacity: 0,
-            }}
-            key={`current-placeholder-${currentText}`}
-            animate={{
-              y: 0,
-              opacity: 1,
-            }}
-            exit={{
-              y: -15,
-              opacity: 0,
-            }}
-            transition={{
-              duration: 0.3,
-              ease: 'linear',
-            }}
-            className="dark:text-blue-400 text-neutral-500"
+            key={currentIndex}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -20, opacity: 0 }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
           >
-            {text[currentText]}
+            <span className="text-blue-400 font-semibold relative z-10 text-center">
+
+              {text[currentIndex]}
+            </span>
           </motion.span>
         )}
       </AnimatePresence>

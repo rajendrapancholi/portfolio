@@ -7,17 +7,13 @@ import { TextGenerateEffect } from './ui/TextGenerateEffect';
 import { TextMoveUp } from './ui/TextMoveUp';
 
 const Hero = () => {
-  const features = [
-    'Server-side rendering.',
-    'Static site generation.',
-    'Hybrid static and server rendering.',
-    'Automatic code splitting.',
-    'Fast refresh for instant feedback.',
-    'TypeScript support out-of-the-box.',
-    'API routes for serverless functions.',
-    'Image optimization for performance.',
-    'CSS-in-JS with styled-jsx.',
-    'File-based routing system.',
+  const highlights = [
+    'Modern UI with React & Next.js.',
+    'Performance-optimized web apps.',
+    'SEO-friendly architectures.',
+    'Clean, maintainable code.',
+    'Responsive, mobile-first design.',
+    'Production-ready deployments.',
   ];
   return (
     <div className="h-[80vh] relative overflow-x-clip p-6 w-full flex flex-col items-center justify-center gap-2">
@@ -33,22 +29,22 @@ const Hero = () => {
         <Spotlight className="left-80 top-28 h-[80vh] w-[50vw]" fill="blue" />
       </div>
       <h1 className="uppercase text-lg text-center mb-4">
-        dynamic web magic with next.js
+        Building high-performance web experiences
       </h1>
       <TextGenerateEffect
         className="text-4xl text-center font-bold md:max-w-[70vw]"
-        words="Turning your Dynamic data into Lightning-fast, SEO-friendly pages with NextJS."
+        words="I design and develop fast, scalable, and user-focused web applications."
       />
-      <div className="my-3 relative translate-x-3 w-[28rem] md:w-[34rem]">
-        <div className="font-bold text-md md:text-xl">
-          NextJS provides
-          <span>
-            <TextMoveUp text={features} />
-          </span>
+      <div className="w-full my-4 flex flex-col items-center text-center">
+        <div className="font-bold my-2 text-md md:text-xl">
+          What I focus on
         </div>
+        <span className='relative w-full flex justify-center'>
+          <TextMoveUp text={highlights} />
+        </span>
       </div>
       <p className="text-md my-2">
-        Hi, I&apos;m Rajendra, a Next.js Developer based in India
+        Hi, I&apos;m Rajendra, a Full Stack Developer specializing in MERN STACK, based in India.
       </p>
       <a href="#about" className="my-2">
         <Button
