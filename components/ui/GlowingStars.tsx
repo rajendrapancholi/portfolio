@@ -62,7 +62,7 @@ export const GlowingStarsTitle = ({
   );
 };
 
-export const Illustration = ({ mouseEnter }: { mouseEnter: boolean }) => {
+export const Illustration = ({ mouseEnter }: { mouseEnter: boolean; }) => {
   const stars = 108;
   const columns = 18;
 
@@ -114,7 +114,7 @@ export const Illustration = ({ mouseEnter }: { mouseEnter: boolean }) => {
   );
 };
 
-const Star = ({ isGlowing, delay }: { isGlowing: boolean; delay: number }) => {
+const Star = ({ isGlowing, delay }: { isGlowing: boolean; delay: number; }) => {
   return (
     <motion.div
       key={delay}
@@ -131,11 +131,12 @@ const Star = ({ isGlowing, delay }: { isGlowing: boolean; delay: number }) => {
         delay: delay,
       }}
       className={cn('bg-[#666] h-[1px] w-[1px] rounded-full relative z-20')}
+      {...({} as any)}
     ></motion.div>
   );
 };
 
-const Glow = ({ delay }: { delay: number }) => {
+const Glow = ({ delay }: { delay: number; }) => {
   return (
     <motion.div
       initial={{
@@ -153,6 +154,7 @@ const Glow = ({ delay }: { delay: number }) => {
         opacity: 0,
       }}
       className="absolute  left-1/2 -translate-x-1/2 z-10 h-[4px] w-[4px] rounded-full bg-blue-500 blur-[1px] shadow-2xl shadow-blue-400"
+      {...({} as any)}
     />
   );
 };

@@ -70,11 +70,14 @@ export function CardPattern({ mouseX, mouseY, desc, title }: any) {
       <div className="absolute inset-0 group-hover/card:opacity-100" />
       <motion.div
         className="absolute inset-0 bg-gradient-to-r from-blue-400 via-blue-600 to-blue-500 opacity-0  group-hover/card:opacity-100 backdrop-blur-xl transition duration-500"
-        style={style}
+        style={style as any} // cast style
+        {...({} as any)}
       />
       <motion.div
         className="absolute inset-0 opacity-0 mix-blend-overlay  group-hover/card:opacity-100"
-        style={style}
+        style={style as any} // cast style
+        {...({} as any)}
+
       >
         <p className="absolute inset-x-0 text-2xl md:text-3xl dark:text-black h-full font-bold transition duration-500 p-3 flex flex-col justify-center items-center ">
           <span className="text-3xl font-extrabold mb-3">{title}</span>
