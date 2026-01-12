@@ -53,6 +53,7 @@ export const config = {
       clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
     }),
   ],
+  trustHost: true,
   pages: {
     signIn: "/signin",
     newUser: "/register",
