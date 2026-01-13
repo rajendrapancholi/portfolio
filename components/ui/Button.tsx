@@ -15,7 +15,7 @@ const Button = ({
   otherClasses?: string;
 }) => {
   return (
-    <button
+    <div
       className="relative inline-flex h-12 w-full md:w-60 overflow-hidden rounded-lg p-[1px] focus:outline-none"
       onClick={handleClick}
     >
@@ -29,7 +29,7 @@ const Button = ({
         {title}
         {position === 'right' && icon}
       </span>
-    </button>
+    </div>
   );
 };
 

@@ -1,22 +1,26 @@
-import { auth } from '@/lib/auth';
-import { connectToDB } from '@/lib/database';
-import ProjectModel from '@/lib/models/ProjectModel';
+import { auth } from "@/lib/auth";
+import { connectToDB } from "@/lib/database";
+import ProjectModel from "@/lib/models/ProjectModel";
 
-export const GET = auth(async (...args: any) => {
-  const [req, { params }] = args;
+type Params = {
+  params: Promise<{ id: string }>;
+};
+
+export const GET = auth(async (req, context: Params) => {
+  const { id } = await context.params;
   if (!req.auth) {
     return Response.json(
-      { message: 'unauthorized' },
+      { message: "unauthorized" },
       {
         status: 401,
       }
     );
   }
   await connectToDB();
-  const project = await ProjectModel.findById(params.id);
+  const project = await ProjectModel.findById(id);
   if (!project) {
     return Response.json(
-      { message: 'project not found' },
+      { message: "project not found" },
       {
         status: 404,
       }
@@ -25,11 +29,11 @@ export const GET = auth(async (...args: any) => {
   return Response.json(project);
 }) as any;
 
-export const PUT = auth(async (...p: any) => {
-  const [req, { params }] = p;
+export const PUT = auth(async (req, context: Params) => {
+  const { id } = await context.params;
   if (!req.auth) {
     return Response.json(
-      { message: 'unauthorized' },
+      { message: "unauthorized" },
       {
         status: 401,
       }
@@ -41,7 +45,7 @@ export const PUT = auth(async (...p: any) => {
   try {
     await connectToDB();
 
-    const project = await ProjectModel.findById(params.id);
+    const project = await ProjectModel.findById(id);
     if (project) {
       project.title = title;
       project.des = des;
@@ -53,7 +57,7 @@ export const PUT = auth(async (...p: any) => {
       return Response.json(updatedProject);
     } else {
       return Response.json(
-        { message: 'Project not found' },
+        { message: "Project not found" },
         {
           status: 404,
         }
@@ -69,12 +73,12 @@ export const PUT = auth(async (...p: any) => {
   }
 }) as any;
 
-export const DELETE = auth(async (...args: any) => {
-  const [req, { params }] = args;
+export const DELETE = auth(async (req, context: Params) => {
+  const { id } = await context.params;
 
   if (!req.auth || !req.auth.user?.isAdmin) {
     return Response.json(
-      { message: 'unauthorized' },
+      { message: "unauthorized" },
       {
         status: 401,
       }
@@ -83,13 +87,13 @@ export const DELETE = auth(async (...args: any) => {
 
   try {
     await connectToDB();
-    const project = await ProjectModel.findById(params.id);
+    const project = await ProjectModel.findById(id);
     if (project) {
       await project.deleteOne();
-      return Response.json({ message: 'Project deleted successfully' });
+      return Response.json({ message: "Project deleted successfully" });
     } else {
       return Response.json(
-        { message: 'Project not found' },
+        { message: "Project not found" },
         {
           status: 404,
         }
