@@ -60,20 +60,17 @@ export const config = {
     error: "/signin",
   },
   callbacks: {
-    async jwt({ user, trigger, session, token }: any) {
+    async jwt({ token, user, _account }: any) {
+      // On first login (credentials or OAuth)
       if (user) {
+        // Fetch full user from DB to include isAdmin
+        await connectToDB();
+        const dbUser = await UserModel.findOne({ email: user.email });
         token.user = {
-          _id: user._id,
-          email: user.email,
-          name: user.name,
-          isAdmin: user.isAdmin,
-        };
-      }
-      if (trigger === "update" && session) {
-        token.user = {
-          ...token.user,
-          email: session.user.email,
-          name: session.user.name,
+          _id: dbUser?._id.toString(),
+          name: dbUser?.name,
+          email: dbUser?.email,
+          isAdmin: dbUser?.isAdmin || false,
         };
       }
       return token;
@@ -98,6 +95,7 @@ export const config = {
             name: profile.name,
             email: profile.email,
             image: profile.picture,
+            isAdmin: false,
           });
           existingUser = await newUser.save();
         }
