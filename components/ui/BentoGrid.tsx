@@ -1,19 +1,17 @@
 'use client';
 import { useState } from 'react';
-import { IoCopyOutline } from 'react-icons/io5';
 
 import animationData from '@/data/confetti.json';
 
 import { cn } from '@/lib/utils/cn';
 import { BackgroundGradientAnimation } from './GradientBg';
-import Button from './Button';
 import {
   GlowingStarsBackgroundCard,
 } from './GlowingStars';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import EmailCopySection from './EmailCopySelection';
 // Dynamically import Lottie to make it SSR-safe
-const Lottie = dynamic(() => import('react-lottie'), { ssr: false });
 
 export const BentoGrid = ({
   className,
@@ -54,23 +52,10 @@ export const BentoGridItem = ({
   titleClassName?: string;
   spareImg?: string;
 }) => {
-  const leftLists = ['NextJS', 'ReactJS', 'TypeScript'];
-  const rightLists = ['JavaScript', 'MongoDB', 'MySQL'];
+  const leftLists = ['NextJS', 'ReactJS', 'TypeScript', 'NodeJS', 'ExpressJS'];
+  const rightLists = ['JavaScript', 'MongoDB', 'MySQL', 'TailwindCSS', 'HTML & CSS'];
 
   const [copied, setCopied] = useState(false);
-  const defaultOptions = {
-    loop: copied,
-    autoplay: copied,
-    animationData,
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice',
-    },
-  };
-  const handleCopy = () => {
-    const text = 'rpancholi522@gmail.com';
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-  };
 
   return (
     <div
@@ -103,9 +88,8 @@ export const BentoGridItem = ({
           )}
         </div>
         <div
-          className={`absolute right-0 -bottom-5 ${
-            id === 5 && 'w-full opacity-80'
-          } `}
+          className={`absolute right-0 -bottom-5 ${id === 5 && 'w-full opacity-80'
+            } `}
         >
           {spareImg && (
             <Image
@@ -140,27 +124,25 @@ export const BentoGridItem = ({
 
           {/* Tech stack list div */}
           {id === 3 && (
-            <div className="flex gap-1 lg:gap-5 w-fit absolute right-3 lg:right-2">
-              {/* tech stack lists */}
-              <div className="flex flex-col gap-3">
-                {leftLists.map((item, i) => (
+            <div className="flex gap-1 lg:gap-5 w-fit absolute right-3 lg:right-2 top-0 bottom-0 my-auto h-fit">
+              {/* Left column – moves downward */}
+              <div className="flex flex-col gap-3 lg:gap-6 animate-scroll-up">
+                {[...leftLists, ...leftLists].map((item, i) => (
                   <span
                     key={i}
-                    className="lg:py-4 lg:px-3 py-2 px-3 text-xs lg:text-base opacity-50 
-                    lg:opacity-100 rounded-lg text-center bg-[#10132E]"
+                    className="lg:py-4 lg:px-5 py-3 px-4 text-xs lg:text-base opacity-50 lg:opacity-80 rounded-lg text-center bg-[#10132E] min-w-[130px] lg:min-w-[170px] border border-white/5"
                   >
                     {item}
                   </span>
                 ))}
-                <span className="lg:py-4 lg:px-3 py-4 px-3  rounded-lg text-center bg-[#10132E]"></span>
               </div>
-              <div className="flex flex-col gap-3 md:gap-3 lg:gap-8">
-                <span className="lg:py-4 lg:px-3 py-4 px-3  rounded-lg text-center bg-[#10132E]"></span>
-                {rightLists.map((item, i) => (
+
+              {/* Right column – moves upward */}
+              <div className="flex flex-col gap-3 lg:gap-6 animate-scroll-down">
+                {[...rightLists, ...rightLists].map((item, i) => (
                   <span
                     key={i}
-                    className="lg:py-4 lg:px-3 py-2 px-3 text-xs lg:text-base opacity-50 
-                    lg:opacity-100 rounded-lg text-center bg-[#10132E]"
+                    className="lg:py-4 lg:px-5 py-3 px-4 text-xs lg:text-base opacity-50 lg:opacity-80 rounded-lg text-center bg-[#10132E] min-w-[130px] lg:min-w-[170px] border border-white/5"
                   >
                     {item}
                   </span>
@@ -168,24 +150,23 @@ export const BentoGridItem = ({
               </div>
             </div>
           )}
-          {id === 6 && (
-            <div className="mt-5 relative">
-              <div
-                className={`absolute -bottom-5 right-0 ${
-                  copied ? 'block' : 'block'
-                }`}
-              >
-                <Lottie options={defaultOptions} height={200} width={400} />
-              </div>
+          {id === 6 && (<EmailCopySection />
+            // <div className="mt-5 relative">
+            //   <div
+            //     className={`absolute -bottom-5 right-0 ${copied ? 'block' : 'block'
+            //       }`}
+            //   >
+            //     <Lottie options={defaultOptions} height={200} width={400} />
+            //   </div>
 
-              <Button
-                title={copied ? 'Email is Copied!' : 'Copy my email address'}
-                icon={<IoCopyOutline />}
-                position="left"
-                handleClick={handleCopy}
-                otherClasses="!bg-[#161A31]"
-              />
-            </div>
+            //   <Button
+            //     title={copied ? 'Email is Copied!' : 'Copy my email address'}
+            //     icon={<IoCopyOutline />}
+            //     position="left"
+            //     handleClick={handleCopy}
+            //     otherClasses="!bg-[#161A31]"
+            //   />
+            // </div>
           )}
         </div>
       </div>

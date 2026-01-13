@@ -39,3 +39,99 @@ body {
 .shadow_cyan {
   @apply shadow-sm shadow-blue-500;
 }
+
+/* Infinite vertical marquee — two directions */
+@keyframes marquee-up {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes marquee-down {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-marquee-up {
+  animation: marquee-up 25s linear infinite;
+  /* Optional: reverse direction */
+  /* animation-direction: reverse; */
+}
+
+.animate-marquee-down {
+  animation: marquee-down 28s linear infinite reverse;
+  /* reverse makes it go down → up becomes up → down */
+}
+
+/* Pause on hover (very nice UX) */
+.animate-marquee-up:hover,
+.animate-marquee-down:hover {
+  animation-play-state: paused;
+}
+
+/* Vertical infinite scroll – seamless loop via duplication + translate -50% */
+@keyframes scroll-up {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes scroll-down {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-scroll-up {
+  animation: scroll-up 20s linear infinite;
+  /* Makes it move upward */
+}
+
+.animate-scroll-down {
+  animation: scroll-down 24s linear infinite reverse;
+  /* reverse → moves downward */
+}
+
+/* Nice extras */
+.animate-scroll-up,
+.animate-scroll-down {
+  will-change: transform; /* smoother on modern GPUs */
+}
+
+/* Pause animation on hover over the whole Bento card */
+.animate-scroll-up:hover,
+.animate-scroll-down:hover {
+  animation-play-state: paused;
+}
+
+/* Optional: soft fade in/out at edges (prevents hard cut-off) */
+.animate-scroll-up,
+.animate-scroll-down {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+}
