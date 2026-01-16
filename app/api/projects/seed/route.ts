@@ -4,16 +4,35 @@ import ProjectModel from "@/lib/models/ProjectModel";
 import UserModel from "@/lib/models/UserModel";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (request: NextRequest) => {
-  const { users, projects } = data;
-  await connectToDB();
-  await UserModel.insertMany(users);
+export const POST = async (request: NextRequest) => {
+  // Global kill switch for safety
+  if (process.env.SEED_ENABLED !== "true") {
+    return NextResponse.json({ message: "Seeding disabled" }, { status: 403 });
+  }
 
-  await ProjectModel.insertMany(projects);
+  // Authorization check
+  const secret = request.headers.get("x-admin-seed-secret");
+  if (!secret || secret !== process.env.SEED_SECRET) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
 
-  return NextResponse.json({
-    message: "seeded successfully",
-    users,
-    projects,
-  });
+  try {
+    await connectToDB();
+    const { users, projects } = data;
+
+    // Atomically clear and seed
+    await UserModel.deleteMany({});
+    await ProjectModel.deleteMany({});
+
+    await UserModel.insertMany(users);
+    await ProjectModel.insertMany(projects);
+
+    return NextResponse.json({ message: "Seeded successfully" });
+  } catch (error) {
+    console.error("Seed Error:", error);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 };

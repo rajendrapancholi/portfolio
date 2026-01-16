@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
       <body>
         <Providers>
-          <header>
+          <header className='relative'>
             <FloatingNavbar
               navItems={[
                 { name: 'Home', link: '/', icon: <FcHome /> },
@@ -34,7 +34,7 @@ export default function RootLayout({
               ]}
             />
           </header>
-          <main className="mx-auto">{children}</main>
+          <main className="relative overflow-x-clip">{children}</main>
           <Footer />
         </Providers>
       </body>

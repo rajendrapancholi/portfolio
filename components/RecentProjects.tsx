@@ -10,7 +10,7 @@ export default async function RecentProjects() {
   return (
     <div
       id="projects"
-      className="py-20 p-2 h-full w-full flex flex-col justify-center items-center"
+      className="py-20 h-full w-full flex flex-col justify-center items-center"
     >
       <div className="text-4xl md:text-5xl font-bold flex flex-col justify-center items-center">
         <h1>A small selection of</h1>

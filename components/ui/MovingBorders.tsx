@@ -10,10 +10,11 @@ import {
 import { useRef } from 'react';
 import { cn } from '@/lib/utils/cn';
 
-export function Button({
+export function MovingGrid({
   borderRadius = '1.75rem',
   children,
-  as: Component = 'button',
+  ComponentName,
+  as: Component = ComponentName ? ComponentName : 'button',
   containerClassName,
   borderClassName,
   duration,
@@ -21,6 +22,7 @@ export function Button({
   ...otherProps
 }: {
   borderRadius?: string;
+  ComponentName: "div" | "span" | "button" | "a";
   children: React.ReactNode;
   as?: any;
   containerClassName?: string;
@@ -31,9 +33,7 @@ export function Button({
 }) {
   return (
     <Component
-      className={cn(
-        // remove h-16 w-40, add  md:col-span-2
-        'bg-transparent relative text-xl p-[1px] overflow-hidden md:col-span-2 md:row-span-1',
+      className={cn('bg-transparent relative text-xl p-[1px] overflow-hidden md:col-span-2 md:row-span-1',
         containerClassName
       )}
       style={{

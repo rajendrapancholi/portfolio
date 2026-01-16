@@ -135,3 +135,7 @@ body {
     transparent 100%
   );
 }
+
+.redborder{
+  @apply border-2 border-red-500
+}

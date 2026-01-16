@@ -9,6 +9,8 @@ import {
 import { cn } from '@/lib/utils/cn';
 import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
+import UserMenu from './UserMenu';
+import { User } from '@/types';
 
 export const FloatingNavbar = ({
   navItems,
@@ -23,91 +25,84 @@ export const FloatingNavbar = ({
 }) => {
   const { data: session } = useSession();
   const { scrollYProgress } = useScroll();
-
   const [visible, setVisible] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useMotionValueEvent(scrollYProgress, 'change', (current) => {
-    // Check if current is not undefined and is a number
     if (typeof current === 'number') {
-      let direction = current! - scrollYProgress.getPrevious()!;
-
+      let direction = current - (scrollYProgress.getPrevious() ?? 0);
       if (scrollYProgress.get() < 0.05) {
         setVisible(false);
       } else {
-        if (direction < 0) {
-          setVisible(true);
-        } else {
-          setVisible(false);
-        }
+        setVisible(direction < 0);
       }
     }
   });
-  const signoutHandler = () => {
-    signOut({ callbackUrl: '/signin' });
-  };
 
-  const handleClick = () => {
-    (document.activeElement as HTMLElement).blur();
-  };
   return (
     <AnimatePresence mode="wait">
       <motion.nav
-        initial={{
-          opacity: 1,
-          y: -100,
-        }}
-        animate={{
-          y: visible ? 0 : -100,
-          opacity: visible ? 1 : 0,
-        }}
-        transition={{
-          duration: 0.2,
-        }}
+        key={"nav-bar"}
+        {...({} as any)}
+        initial={{ opacity: 0, y: -100 }}
+        animate={{ y: visible ? 0 : -100, opacity: visible ? 1 : 0 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
         className={cn(
-          'flex max-w-fit  fixed top-10 inset-x-0 mx-auto border border-transparent dark:border-white/[0.2] rounded-xl dark:bg-black bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[5000] pr-2 pl-8 py-2  items-center justify-center space-x-4',
+          "flex max-w-fit fixed top-10 inset-x-0 mx-auto z-[5000] px-4 py-2 items-center justify-center space-x-2 rounded-2xl border border-white/10 bg-black/60 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]",
           className
         )}
-        {...({} as any)}
       >
-        {navItems.map((navItem: any, idx: number) => (
+        {navItems.map((navItem, idx) => (
           <Link
-            key={`link=${idx}`}
+            key={navItem.name}
             href={navItem.link}
-            className={cn(
-              'relative dark:text-neutral-50 items-center flex space-x-1 text-neutral-600 dark:hover:text-neutral-300 hover:text-neutral-500'
-            )}
+            onMouseEnter={() => setHoveredIndex(idx)}
+            onMouseLeave={() => setHoveredIndex(null)}
+            className="relative px-1 md:px-4 md:py-2 transition-colors duration-200"
           >
-            <span className="flex flex-col justify-center items-center sm:hidden">
-              {navItem.icon} <p className="text-[8px]">{navItem.name}</p>
-            </span>
-            <span className="hidden sm:block text-sm">{navItem.name}</span>
+            {/* The Floating Pill Background */}
+            <AnimatePresence>
+              {hoveredIndex === idx && (
+                <motion.span
+                  {...({} as any)}
+                  key={"nav-menu"}
+                  layoutId="nav-pill"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0 bg-white/10 rounded-xl -z-10"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+            </AnimatePresence>
+
+            <div className="flex items-center space-x-2">
+              <span className="text-xl sm:text-base">{navItem.icon}</span>
+              <span className="hidden sm:block text-sm font-medium text-neutral-300 hover:text-white">
+                {navItem.name}
+              </span>
+            </div>
           </Link>
         ))}
+
+        <div className="h-4 w-[1px] bg-white/20 mx-2" /> {/* Divider */}
+
         {session?.user ? (
-          <div className="flex">
-            <Link
-              className="border text-sm font-medium relative border-neutral-200 dark:border-white/[0.2] text-black dark:text-white px-4 py-2 rounded-full"
-              href={'/profile'}
+          <div className="flex items-center gap-4">
+            <UserMenu user={session.user as User} />
+            <button
+              onClick={() => signOut({ callbackUrl: '/signin' })}
+              className="text-xs text-neutral-400 hover:text-red-400 transition-colors"
             >
-              {session.user.name}
-            </Link>
-            <button onClick={signoutHandler}>Sign Out</button>
+              Exit
+            </button>
           </div>
         ) : (
-          <button className="border text-sm font-medium relative border-neutral-200 dark:border-white/[0.2] text-black dark:text-white px-4 py-2 rounded-full">
-            <Link href={'/signin'} className="text-sm">
+          <Link href="/signin" className="relative group">
+            <button className="text-sm font-semibold text-white bg-gradient-to-br from-blue-600 to-indigo-700 px-6 py-2 rounded-xl shadow-lg shadow-blue-900/20 hover:shadow-blue-500/40 transition-all active:scale-95">
               Sign In
-            </Link>
-            <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent  h-px" />
-          </button>
-        )}
-        {session?.user && session.user.isAdmin && (
-          // {session?.user.isAdmin && (
-          <button type="button" onClick={handleClick}>
-            <Link href="/admin/dashboard" className="text-sm">
-              Admin Dashboard
-            </Link>
-          </button>
+            </button>
+          </Link>
         )}
       </motion.nav>
     </AnimatePresence>

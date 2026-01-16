@@ -1,8 +1,8 @@
 'use client';
-import { useMotionValue } from 'framer-motion';
-import React, { useState, useEffect } from 'react';
-import { useMotionTemplate, motion } from 'framer-motion';
+import { useMotionValue, useMotionTemplate, motion } from 'framer-motion';
+import React from 'react';
 import { cn } from '@/lib/utils/cn';
+
 export const EvervaultCard = ({
   phase,
   title,
@@ -14,11 +14,10 @@ export const EvervaultCard = ({
   desc?: string;
   className?: string;
 }) => {
-  const [description, setDescription] = useState('');
   let mouseX = useMotionValue(0);
   let mouseY = useMotionValue(0);
 
-  function onMouseMove({ currentTarget, clientX, clientY }: any) {
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
     let { left, top } = currentTarget.getBoundingClientRect();
     mouseX.set(clientX - left);
     mouseY.set(clientY - top);
@@ -27,13 +26,13 @@ export const EvervaultCard = ({
   return (
     <div
       className={cn(
-        'p-0.5  bg-transparent aspect-square  flex items-center justify-center w-full h-full relative',
+        'p-0.5 bg-transparent aspect-square flex items-center justify-center w-full h-full relative',
         className
       )}
     >
       <div
         onMouseMove={onMouseMove}
-        className="group/card rounded-3xl w-full relative overflow-hidden bg-transparent flex items-center justify-center h-full"
+        className="group/card rounded-3xl w-full relative overflow-hidden bg-gray-900 border border-white/[0.1] flex items-center justify-center h-full transition-all duration-500 hover:border-blue-500/50"
       >
         <CardPattern
           mouseX={mouseX}
@@ -41,18 +40,20 @@ export const EvervaultCard = ({
           title={title}
           desc={desc}
         />
-        <div className="group relative h-full w-full z-10 flex items-center justify-center">
-          <div className="relative h-44 w-44  rounded-full flex items-center justify-center title-white font-bold title-4xl group-hover:hidden">
+
+        {/* Phase Indicator (Hidden on Hover) */}
+        <div className="relative z-10 flex items-center justify-center group-hover/card:opacity-0 transition-opacity duration-500">
+          <div className="relative h-44 w-44 rounded-full flex items-center justify-center font-bold">
             <div
-              className="absolute w-full h-full  blur-sm rounded-full"
+              className="absolute w-full h-full blur-xl rounded-full opacity-50"
               style={{
-                background: 'rgb(4,7,29)',
-                backgroundColor:
-                  'linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)',
-                borderRadius: '100%',
+                background: 'linear-gradient(90deg, #4ade80 0%, #3b82f6 100%)',
               }}
             />
-            <span className="dark:text-purple-100 text-4xl z-20">{phase}</span>
+            <div className="absolute w-full h-full bg-zinc-950 rounded-full border border-white/10" />
+            <span className="text-white text-4xl z-20 font-black tracking-tighter">
+              {phase}
+            </span>
           </div>
         </div>
       </div>
@@ -61,28 +62,36 @@ export const EvervaultCard = ({
 };
 
 export function CardPattern({ mouseX, mouseY, desc, title }: any) {
-  let maskImage = useMotionTemplate`radial-gradient(250px at ${mouseX}px ${mouseY}px, white, transparent)`;
+  // Creating a vibrant radial gradient that follows the mouse
+  let maskImage = useMotionTemplate`radial-gradient(300px circle at ${mouseX}px ${mouseY}px, white, transparent)`;
   let style = { maskImage, WebkitMaskImage: maskImage };
 
   return (
     <div className="pointer-events-none">
-      {/* <div className="absolute inset-0 rounded-2xl  [mask-image:linear-gradient(white,transparent)] group-hover/card:opacity-100" /> */}
-      <div className="absolute inset-0 group-hover/card:opacity-100" />
+      {/* Background Glow */}
+      <div className="absolute inset-0 rounded-3xl [mask-image:linear-gradient(white,transparent)]" />
+
+      {/* Dynamic Hover Gradient Layer */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-blue-400 via-blue-600 to-blue-500 opacity-0  group-hover/card:opacity-100 backdrop-blur-xl transition duration-500"
-        style={style as any} // cast style
+        className="absolute inset-0 bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-600 opacity-0 group-hover/card:opacity-20 transition duration-500"
+        style={style}
         {...({} as any)}
       />
-      <motion.div
-        className="absolute inset-0 opacity-0 mix-blend-overlay  group-hover/card:opacity-100"
-        style={style as any} // cast style
-        {...({} as any)}
 
+      {/* Content Revealed on Hover */}
+      <motion.div
+        {...({} as any)}
+        className="absolute inset-0 opacity-0 group-hover/card:opacity-100 backdrop-blur-sm transition duration-500"
+        style={style}
       >
-        <p className="absolute inset-x-0 text-2xl md:text-3xl dark:text-black h-full font-bold transition duration-500 p-3 flex flex-col justify-center items-center ">
-          <span className="text-3xl font-extrabold mb-3">{title}</span>
-          {desc}
-        </p>
+        <div className="absolute inset-0 bg-zinc-950/80 p-6 flex flex-col justify-center items-center text-center">
+          <span className="text-blue-500 text-3xl font-extrabold mb-4 tracking-tight">
+            {title}
+          </span>
+          <p className="text-zinc-300 text-sm md:text-base leading-relaxed max-w-[80%]">
+            {desc}
+          </p>
+        </div>
       </motion.div>
     </div>
   );

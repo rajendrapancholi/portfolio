@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   return (
-    <div className="dark:bg-black px-2 ">
+    <div className="container flex flex-col mx-auto items-center justify-center dark:bg-black ">
       <Hero />
       <Grid />
       <RecentProjects />
