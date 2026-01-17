@@ -1,4 +1,4 @@
-import { createPageMetadata } from "@/lib/seo/metadata";
+import { Metadata } from 'next';
 
 export const metadata = createPageMetadata({
   title: "All Blogs",
@@ -6,8 +6,6 @@ export const metadata = createPageMetadata({
   canonical: "https://rajendrapancholi.vercel.app/blogs",
 });
 
-export default function BlogPage() {
-  return (
-    <div>page</div>
-  );
+export default async function page() {
+  return <div>page</div>;
 }
