@@ -1,10 +1,13 @@
-import { Metadata } from 'next';
+import { createPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: 'Blogs | Rajendra Pancholi',
-  description: 'Blogs Rajendra Pancholi',
-};
+export const metadata = createPageMetadata({
+  title: "All Blogs",
+  description: "Explore blogs, tutorials, and insights by Rajendra Pancholi.",
+  canonical: "https://rajendrapancholi.vercel.app/blogs",
+});
 
-export default async function page() {
-  return <div>page</div>;
+export default function BlogPage() {
+  return (
+    <div>page</div>
+  );
 }

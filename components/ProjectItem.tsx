@@ -8,7 +8,7 @@ import Button from './ui/Button';
 
 import { Meteors } from './ui/Meteors';
 
-export default function ProjectItem({ project }: { project: Project }) {
+export default function ProjectItem({ project }: { project: Project; }) {
   return (
     <div
       key={project._id}
@@ -48,7 +48,7 @@ export default function ProjectItem({ project }: { project: Project }) {
               ))}
             </div>
 
-            <Link href={project.link} className="z-50">
+            <Link href={project.link} target='_blank' className="z-50">
               <Button
                 title="View live"
                 position="right"
