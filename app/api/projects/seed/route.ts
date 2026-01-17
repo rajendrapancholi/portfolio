@@ -21,8 +21,8 @@ export const POST = async (request: NextRequest) => {
     const { users, projects } = data;
 
     // Atomically clear and seed
-    await UserModel.deleteMany({});
-    await ProjectModel.deleteMany({});
+    // await UserModel.deleteMany({});
+    // await ProjectModel.deleteMany({});
 
     await UserModel.insertMany(users);
     await ProjectModel.insertMany(projects);
