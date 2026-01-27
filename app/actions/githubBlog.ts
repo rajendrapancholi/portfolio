@@ -16,9 +16,14 @@ async function getFileDates(filePath: string) {
   try {
     const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits?path=${filePath}&page=1&per_page=1`;
     const res = await fetch(url, {
-      headers: BLOG_GITHUB_TOKEN
-        ? { Authorization: `token ${BLOG_GITHUB_TOKEN}` }
-        : {},
+      headers: {
+        ...(BLOG_GITHUB_TOKEN
+          ? { Authorization: `Bearer ${BLOG_GITHUB_TOKEN}` }
+          : {}),
+        "User-Agent": "RajePancholi-Blog",
+        Accept: "application/vnd.github+json", // API stability
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
       next: { revalidate: 3600 },
     });
 
