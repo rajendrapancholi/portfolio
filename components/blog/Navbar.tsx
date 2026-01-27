@@ -74,7 +74,7 @@ const Navbar: React.FC = () => {
 
                     {/* Logo */}
                     <div className="hidden xl:block">
-                        <RajeBrandLogo logoType="type3" secondText="blog" />
+                        <RajeBrandLogo logoType="mini" secondText="blog" />
                     </div>
 
                     {/* Center navigation */}
