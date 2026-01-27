@@ -66,7 +66,7 @@ const Navbar: React.FC = () => {
 
                     {/* Mobile menu button */}
                     <button
-                        className="sm:hidden p-2 text-gray-600 dark:text-gray-300"
+                        className="fixed left-2 top-4 sm:hidden p-2 text-gray-600 dark:text-gray-300"
                         onClick={() => setIsMobileMenuOpen(true)}
                     >
                         <TextAlignJustify />
