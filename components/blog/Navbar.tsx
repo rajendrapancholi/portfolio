@@ -61,7 +61,7 @@ const Navbar: React.FC = () => {
             transition={{ duration: 0.3 }}
             className="fixed inset-x-0 top-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-200 dark:border-white/10"
         >
-            <div className="mx-auto max-w-7xl px-4 h-full">
+            <div className="mx-auto px-4 h-full">
                 <div className="flex h-full items-center justify-between gap-3">
 
                     {/* Mobile menu button */}
