@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 const Button = ({
   title,
@@ -8,24 +8,30 @@ const Button = ({
   position,
   handleClick,
   otherClasses,
+  btnType = "button",
+  disabled,
 }: {
   title: string;
   icon: React.ReactNode;
   position: string;
-  handleClick?: () => void;
+  handleClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  btnType?: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
+  disabled?: boolean;
   otherClasses?: string;
 }) => {
   return (
     <motion.button
-      {...({} as any)}
+
       onClick={handleClick}
+      type={btnType}
+      disabled={disabled}
       // Micro-interactions: Button shrinks slightly when clicked, grows on hover
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       className="relative inline-flex h-12 w-full md:w-60 overflow-hidden rounded-xl p-[1.5px] focus:outline-none group"
     >
       {/* 1. The "Aurora" Border: Slower, more vibrant gradient for a premium feel */}
-      <span className="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#4F46E5_0%,#06B6D4_25%,#10B981_50%,#06B6D4_75%,#4F46E5_100%)] opacity-80" />
+      <span className="absolute inset-[-1000%] animate-spin-slow bg-[conic-gradient(from_90deg_at_50%_50%,#4F46E5_0%,#06B6D4_25%,#10B981_50%,#06B6D4_75%,#4F46E5_100%)] opacity-80" />
 
       {/* 2. The Button Body: Using Glassmorphism */}
       <span
@@ -51,7 +57,7 @@ const Button = ({
         )}
 
         {/* 3. The "Inner Shine": Adds a 3D glass effect at the top */}
-        <span className="absolute inset-0 rounded-xl bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+        <span className="absolute inset-0 rounded-xl bg-linear-to-b from-white/10 to-transparent pointer-events-none" />
       </span>
     </motion.button>
   );

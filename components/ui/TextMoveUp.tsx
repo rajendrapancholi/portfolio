@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, motion, MotionProps } from 'framer-motion';
+import { AnimatePresence, motion, MotionProps } from 'motion/react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 
 const MotionSpan = motion.span as React.FC<
@@ -149,7 +149,7 @@ export function TextMoveUp({ text }: { text: string[]; }) {
   }, [currentIndex, text, drawTextToCanvas]);
 
   return (
-    <div className="relative min-h-[100px] w-full flex items-center justify-center px-4 ">
+    <div className="relative min-h-25 w-full flex items-center justify-center px-4 ">
       <canvas
         ref={canvasRef}
         className="absolute inset-0 pointer-events-none z-20"

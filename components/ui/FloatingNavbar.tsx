@@ -1,16 +1,21 @@
 'use client';
-import React, { JSX, useState } from 'react';
+import { JSX, useState } from 'react';
 import {
   motion,
   AnimatePresence,
   useScroll,
   useMotionValueEvent,
-} from 'framer-motion';
+} from 'motion/react';
 import { cn } from '@/lib/utils/cn';
 import Link from 'next/link';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import UserMenu from './UserMenu';
 import { User } from '@/types';
+import { useAppDispatch } from '@/lib/features/hooks';
+import toast from 'react-hot-toast';
+import { clearCredentials } from '@/lib/features/auth/authSlice';
+import { logoutAction } from '@/app/actions/authActions';
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
 
 export const FloatingNavbar = ({
   navItems,
@@ -24,6 +29,7 @@ export const FloatingNavbar = ({
   className?: string;
 }) => {
   const { data: session } = useSession();
+  const dispatch = useAppDispatch();
   const { scrollYProgress } = useScroll();
   const [visible, setVisible] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -39,16 +45,32 @@ export const FloatingNavbar = ({
     }
   });
 
+  // Logout Handler
+  const handleLogout = async () => {
+    const toastId = toast.loading('Signing out...');
+    try {
+      dispatch(clearCredentials());
+      await logoutAction();
+      toast.success('Signed out successfully', { id: toastId });
+    } catch (error) {
+      if (isRedirectError(error)) {
+        toast.dismiss(toastId);
+        throw error;
+      }
+      toast.error('Failed to sign out', { id: toastId });
+    }
+  };
+
   return (
     <AnimatePresence mode="wait">
       <motion.nav
         key={"nav-bar"}
-        {...({} as any)}
+
         initial={{ opacity: 0, y: -100 }}
         animate={{ y: visible ? 0 : -100, opacity: visible ? 1 : 0 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className={cn(
-          "flex max-w-fit fixed top-10 inset-x-0 mx-auto z-[5000] px-4 py-2 items-center justify-center space-x-2 rounded-2xl border border-white/10 bg-black/60 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]",
+          "flex max-w-fit fixed top-10 inset-x-0 mx-auto z-5000 px-4 py-2 items-center justify-center space-x-2 rounded-2xl border border-white/10 bg-black/60 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]",
           className
         )}
       >
@@ -64,7 +86,7 @@ export const FloatingNavbar = ({
             <AnimatePresence>
               {hoveredIndex === idx && (
                 <motion.span
-                  {...({} as any)}
+
                   key={"nav-menu"}
                   layoutId="nav-pill"
                   initial={{ opacity: 0 }}
@@ -85,13 +107,13 @@ export const FloatingNavbar = ({
           </Link>
         ))}
 
-        <div className="h-4 w-[1px] bg-white/20 mx-2" /> {/* Divider */}
+        <div className="h-4 w-px bg-white/20 mx-2" /> {/* Divider */}
 
         {session?.user ? (
           <div className="flex items-center gap-4">
             <UserMenu user={session.user as User} />
             <button
-              onClick={() => signOut({ callbackUrl: '/signin' })}
+              onClick={handleLogout}
               className="text-xs text-neutral-400 hover:text-red-400 transition-colors"
             >
               Exit
@@ -99,7 +121,7 @@ export const FloatingNavbar = ({
           </div>
         ) : (
           <Link href="/signin" className="relative group">
-            <button className="text-sm font-semibold text-white bg-gradient-to-br from-blue-600 to-indigo-700 px-6 py-2 rounded-xl shadow-lg shadow-blue-900/20 hover:shadow-blue-500/40 transition-all active:scale-95">
+            <button className="text-sm font-semibold text-white bg-linear-to-br from-blue-600 to-indigo-700 px-6 py-2 rounded-xl shadow-lg shadow-blue-900/20 hover:shadow-blue-500/40 transition-all active:scale-95">
               Sign In
             </button>
           </Link>

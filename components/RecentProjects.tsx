@@ -1,7 +1,7 @@
 import React from 'react';
 import projectService from '@/lib/services/projectService';
 
-import { convertDocToObj } from '@/lib/utils';
+import { convertDocToObj } from '@/lib/utils/formatter';
 
 import ProjectItem from './ProjectItem';
 

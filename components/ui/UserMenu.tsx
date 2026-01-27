@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { User } from "@/types";
 import {
@@ -9,18 +9,41 @@ import {
     HiOutlinePencilSquare,
     HiOutlineRocketLaunch,
     HiOutlineArrowRightOnRectangle
-} from "react-icons/hi2";
+} from "react-icons/hi2";;
+import { IoCreateOutline } from "react-icons/io5";
+import toast from "react-hot-toast";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { logoutAction } from "@/app/actions/authActions";
+import { clearCredentials } from "@/lib/features/auth/authSlice";
+import { useAppDispatch } from "@/lib/features/hooks";
 
 export default function UserMenu({ user }: { user: User; }) {
     const [open, setOpen] = useState(false);
-
+    const dispatch = useAppDispatch();
     const menuItems = [
         { name: "Dashboard", href: "/admin/dashboard", icon: <HiOutlineSquares2X2 />, role: "admin" },
+        { name: "Create Blog", href: "/admin/blogs/create", icon: <IoCreateOutline />, role: "admin" },
         { name: "Settings", href: "/settings", icon: <HiOutlineCog6Tooth /> },
         { name: "Editor", href: "/editor", icon: <HiOutlinePencilSquare /> },
         { name: "Projects", href: "/projects", icon: <HiOutlineRocketLaunch /> },
-        { name: "Sign out", href: "/api/auth/signout", icon: <HiOutlineArrowRightOnRectangle />, color: "text-red-400" },
+
     ];
+    // Logout Handler
+    const handleLogout = async () => {
+        setOpen(false);
+        const toastId = toast.loading('Signing out...');
+        try {
+            dispatch(clearCredentials());
+            await logoutAction();
+            toast.success('Signed out successfully', { id: toastId });
+        } catch (error) {
+            if (isRedirectError(error)) {
+                toast.dismiss(toastId);
+                throw error;
+            }
+            toast.error('Failed to sign out', { id: toastId });
+        }
+    };
 
     return (
         <div className="relative">
@@ -30,7 +53,7 @@ export default function UserMenu({ user }: { user: User; }) {
                     e.stopPropagation();
                     setOpen(!open);
                 }}
-                className="relative flex items-center gap-2 text-sm font-semibold text-white bg-white/5 border border-white/10 px-4 py-2 rounded-xl hover:bg-white/10 transition-all active:scale-95 shadow-xl z-[70]"
+                className="relative flex items-center gap-2 text-sm font-semibold text-white bg-white/5 border border-white/10 px-4 py-2 rounded-xl hover:bg-white/10 transition-all active:scale-95 shadow-xl z-70"
             >
                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 {user?.name.split(" ")[0]}
@@ -42,7 +65,7 @@ export default function UserMenu({ user }: { user: User; }) {
             {/* Overlay: Fixed pure CSS approach */}
             {open && (
                 <div
-                    className="fixed inset-0 z-[60] h-screen w-screen bg-transparent cursor-default"
+                    className="fixed inset-0 z-60 h-screen w-screen bg-transparent cursor-default"
                     onClick={() => setOpen(false)}
                 />
             )}
@@ -50,7 +73,7 @@ export default function UserMenu({ user }: { user: User; }) {
             {/* Dropdown Menu: Using Tailwind Transitions instead of Framer Motion */}
             <div
                 className={`
-                    absolute top-14 right-0 z-[80] min-w-[220px] overflow-hidden rounded-2xl 
+                    absolute top-14 right-0 z-80 min-w-55 overflow-hidden rounded-2xl 
                     border border-white/10 bg-slate-900/95 backdrop-blur-xl 
                     shadow-[0_20px_50px_rgba(0,0,0,0.5)]
                     transition-all duration-200 ease-out origin-top-right
@@ -75,12 +98,7 @@ export default function UserMenu({ user }: { user: User; }) {
                                     href={item.href}
                                     prefetch={false}
                                     onClick={() => setOpen(false)}
-                                    className={`
-                                        flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg 
-                                        transition-all duration-150 hover:bg-white/10 group 
-                                        ${item.color || "text-slate-300 hover:text-white"}
-                                    `}
-                                >
+                                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-150 hover:bg-white/10 group  text-slate-300 hover:text-white">
                                     <span className="text-lg opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-transform">
                                         {item.icon}
                                     </span>
@@ -88,6 +106,18 @@ export default function UserMenu({ user }: { user: User; }) {
                                 </Link>
                             </li>
                         ))}
+                    <li>
+                        <button
+                            type="button"
+                            onClick={handleLogout}
+                            className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-150 hover:bg-white/10 group text-red-400"
+                        >
+                            <span className="text-lg opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-transform">
+                                <HiOutlineArrowRightOnRectangle />
+                            </span>
+                            Sign out
+                        </button>
+                    </li>
                 </ul>
             </div>
         </div>

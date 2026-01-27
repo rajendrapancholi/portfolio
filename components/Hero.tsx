@@ -4,6 +4,7 @@ import Button from './ui/Button';
 import { Spotlight } from './ui/Spotlights';
 import { TextGenerateEffect } from './ui/TextGenerateEffect';
 import { TextMoveUp } from './ui/TextMoveUp';
+import Link from 'next/link';
 
 const Hero = () => {
   const highlights = [
@@ -40,13 +41,23 @@ const Hero = () => {
       <p className="text-lg md:text-xl text-center">
         Hi, I&apos;m Rajendra, a Full Stack Developer specializing in MERN STACK, based in India.
       </p>
-      <a href="#about" className="my-8 inline-flex h-fit w-fit cursor-pointer items-center justify-center rounded-full bg-slate-950 px-7 py-1 text-sm font-medium text-white backdrop-blur-3xl gap-2">
-        <Button
-          title="Show My Works"
-          position="right"
-          icon={<FaLocationArrow />}
-        />
-      </a>
+      <span className='pt-6 flex justify-between items-center gap-5'>
+
+        <Link href="#about">
+          <Button
+            title="Show My Works"
+            position="right"
+            icon={<FaLocationArrow />}
+          />
+        </Link>
+        <Link href="/blogs">
+          <Button
+            title="Read blogs"
+            position="right"
+            icon={<FaLocationArrow />}
+          />
+        </Link>
+      </span>
     </div>
   );
 };

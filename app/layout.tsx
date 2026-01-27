@@ -1,41 +1,46 @@
 import type { Metadata } from 'next';
 import '@/styles/globals.css';
-import { FcAbout, FcContacts, FcHome, FcTemplate } from 'react-icons/fc';
-import { HiMiniRectangleGroup } from 'react-icons/hi2';
 import Providers from '@/components/Providers';
-import { FloatingNavbar } from '@/components/ui/FloatingNavbar';
-import Footer from '@/components/Footer';
-export const metadata: Metadata = {
-  title: 'Rajendra Pancholi',
-  description: 'This is my porfolio created by rajendra pancholi.',
-};
+import { generateDynamicJsonLd } from '@/lib/seo/jsonld';
+import { ENV } from '@/config/env';
+import { baseMetadata } from '@/lib/seo/metadata';
+import Script from 'next/script';
+import safeJSONStringify from '@/lib/utils/safeSanitize';
+
+export const metadata: Metadata = baseMetadata;
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const websiteUrl = ENV.BASE_URL ?? 'https://rajendrapancholi.vercel.app';
+
+  const jsonLd = generateDynamicJsonLd({
+    type: 'home',
+    url: websiteUrl,
+    logo: `${websiteUrl}/logo.png`,
+  });
+
   return (
-    <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          id="jsonld-global"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: safeJSONStringify(jsonLd) }}
+        />
+        <Script id="x-meta-tags" strategy="beforeInteractive">
+          {`
+          <meta name="x:card" content="summary_large_image" />
+          <meta name="x:site" content="@rajendrapancholi" />
+          <meta name="x:creator" content="@rajendrapancholi" />
+        `}
+        </Script>
+      </head>
       <body>
         <Providers>
-          <header className='relative'>
-            <FloatingNavbar
-              navItems={[
-                { name: 'Home', link: '/', icon: <FcHome /> },
-                {
-                  name: 'Blogs',
-                  link: '/blogs',
-                  icon: <HiMiniRectangleGroup />,
-                },
-                { name: 'About', link: '#about', icon: <FcAbout /> },
-                { name: 'Projects', link: '#projects', icon: <FcTemplate /> },
-                { name: 'Contact', link: '#contact', icon: <FcContacts /> },
-              ]}
-            />
-          </header>
-          <main className="relative overflow-x-clip">{children}</main>
-          <Footer />
+          {children}
         </Providers>
       </body>
     </html>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import { cn } from '@/lib/utils/cn';
 
 export const GlowingStarsBackgroundCard = ({
@@ -131,7 +131,7 @@ const Star = ({ isGlowing, delay }: { isGlowing: boolean; delay: number; }) => {
         delay: delay,
       }}
       className={cn('bg-[#666] h-[1px] w-[1px] rounded-full relative z-20')}
-      {...({} as any)}
+
     ></motion.div>
   );
 };
@@ -154,7 +154,7 @@ const Glow = ({ delay }: { delay: number; }) => {
         opacity: 0,
       }}
       className="absolute  left-1/2 -translate-x-1/2 z-10 h-[4px] w-[4px] rounded-full bg-blue-500 blur-[1px] shadow-2xl shadow-blue-400"
-      {...({} as any)}
+
     />
   );
 };

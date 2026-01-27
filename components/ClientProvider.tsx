@@ -2,7 +2,9 @@
 
 import { SWRConfig } from 'swr';
 import { ThemeProvider } from './ThemeProvider';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
+import ToastProvider from './ui/ToastProvider';
+import TopLoaderProvider from './TopLoaderProvider';
 export default function ClientProviders({
   children,
 }: {
@@ -25,20 +27,12 @@ export default function ClientProviders({
     >
       <ThemeProvider
         attribute="class"
-        defaultTheme="dark"
+        defaultTheme="system"
         enableSystem
         disableTransitionOnChange
       >
-        <Toaster
-          toastOptions={{
-            className: '',
-            style: {
-              borderRadius: '10px',
-              background: '#333',
-              color: '#fff',
-            },
-          }}
-        />
+        <TopLoaderProvider />
+        <ToastProvider position='top-center' />
         {children}
       </ThemeProvider>
     </SWRConfig>

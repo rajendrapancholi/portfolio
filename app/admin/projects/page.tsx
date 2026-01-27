@@ -1,16 +1,13 @@
-import AdminLayout from '@/components/admin/AdminLayout';
-
 import { Metadata } from 'next';
 import Projects from './Projects';
+import { ENV } from '@/config/env';
 
 export const metadata: Metadata = {
-  title: process.env.NEXT_PUBLIC_APP_NAME || 'Admin Projects',
+  title: ENV.NEXT_PUBLIC_APP_NAME || 'Admin Projects',
 };
 const AdminProductsPage = () => {
   return (
-    <AdminLayout activeItem="projects">
-      <Projects />
-    </AdminLayout>
+    <Projects />
   );
 };
 

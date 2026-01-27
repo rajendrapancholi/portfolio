@@ -1,5 +1,5 @@
 'use client';
-import { useMotionValue, useMotionTemplate, motion } from 'framer-motion';
+import { useMotionValue, useMotionTemplate, motion } from 'motion/react';
 import React from 'react';
 import { cn } from '@/lib/utils/cn';
 
@@ -75,12 +75,12 @@ export function CardPattern({ mouseX, mouseY, desc, title }: any) {
       <motion.div
         className="absolute inset-0 bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-600 opacity-0 group-hover/card:opacity-20 transition duration-500"
         style={style}
-        {...({} as any)}
+
       />
 
       {/* Content Revealed on Hover */}
       <motion.div
-        {...({} as any)}
+
         className="absolute inset-0 opacity-0 group-hover/card:opacity-100 backdrop-blur-sm transition duration-500"
         style={style}
       >

@@ -1,46 +1,476 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "daisyui";
+@plugin "@tailwindcss/typography";
+@plugin "tailwindcss-animate";
 
-body,
-* {
-  margin: 0;
-  padding: 0;
+/* 1. Define Layer Order */
+@layer theme, base, components, utilities;
+
+/* 2. Custom Variants */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* This maps 'bg-main' and 'text-main' to Slate colors */
+  --color-main-bg: var(--color-slate-200);
+  --color-main-text: var(--color-gray-950);
+
+  /* Custom Animations */
+  --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
+  --animate-first: moveVertical 30s ease infinite;
+  --animate-second: moveInCircle 20s reverse infinite;
+  --animate-third: moveInCircle 40s linear infinite;
+  --animate-fourth: moveHorizontal 40s ease infinite;
+  --animate-fifth: moveInCircle 20s ease infinite;
+  --animate-meteor-effect: meteor 5s linear infinite;
+  --animate-spin-slow: spin 3s linear infinite;
+
+  /* Custom Keyframes */
+  @keyframes spotlight {
+    0% {
+      opacity: 0;
+      transform: translate(-72%, -62%) scale(0.5);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -40%) scale(1);
+    }
+  }
+  @keyframes moveHorizontal {
+    0% {
+      transform: translateX(-50%) translateY(-10%);
+    }
+    50% {
+      transform: translateX(50%) translateY(10%);
+    }
+    100% {
+      transform: translateX(-50%) translateY(-10%);
+    }
+  }
+  @keyframes moveInCircle {
+    0% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(180deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes moveVertical {
+    0% {
+      transform: translateY(-50%);
+    }
+    50% {
+      transform: translateY(50%);
+    }
+    100% {
+      transform: translateY(-50%);
+    }
+  }
+  @keyframes meteor {
+    0% {
+      transform: rotate(215deg) translateX(0);
+      opacity: 1;
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      transform: rotate(215deg) translateX(-500px);
+      opacity: 0;
+    }
+  }
+  /* Box Shadows */
+  --shadow-input:
+    0px 2px 3px -1px rgba(0, 0, 0, 0.1), 0px 1px 0px 0px rgba(25, 28, 33, 0.02),
+    0px 0px 0px 1px rgba(25, 28, 33, 0.08);
+}
+@variant dark {
+  --color-main-bg: var(--color-slate-950);
+  --color-main-text: var(--color-slate-50);
 }
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
+@layer base {
+  *,
+  ::after,
+  ::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-@media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    /* Legacy variable support for your existing components */
+    --foreground-rgb: 15, 23, 42;
+    --background-start-rgb: 226, 232, 240;
+    --shimmer-color: rgba(89, 87, 87, 0.217);
+    --shimmer-highlight: rgba(39, 39, 39, 0.169);
+    color-scheme: light;
+  }
+
+  .dark {
+    --foreground-rgb: 248, 250, 252;
+    --background-start-rgb: 30, 41, 59;
+    --shimmer-color: rgba(136, 136, 136, 0.2);
+    --shimmer-highlight: rgba(47, 46, 46, 0.37);
+    color-scheme: dark;
+  }
+
+  body {
+    /* Uses the theme variables defined in step 2 */
+    background-color: var(--color-main-bg);
+    color: var(--color-main-text);
+    min-height: 100vh;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: black;
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::selection {
+  background-color: #76c3e4ba;
+}
+.dark ::selection {
+  background-color: #00a3ff59;
+}
+html {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+h2,
+h3 {
+  scroll-margin-top: 100px; /* Adjust this to your header height */
 }
 
+/* 4. Component Classes */
+@layer components {
+  .tooltip::before,
+  .tooltip::after {
+    z-index: 10000 !important;
+    /* Often needed to ensure it sits above fixed headers */
+    pointer-events: none;
+  }
+
+  .heading {
+    @apply text-4xl md:text-5xl font-bold text-center;
+  }
+  .shadow_cyan {
+    @apply shadow-sm dark:shadow-blue-500 shadow-blue-600/50;
+  }
+  .shadow-interactive-cyan {
+    @apply shadow-blue-500 transition-shadow duration-300 dark:shadow-lg dark:shadow-blue-900/80;
+  }
+
+  .shadow-interactive-cyan:hover {
+    @apply shadow-xl shadow-blue-600/40 transform transition-colors dark:shadow-blue-400/40;
+  }
+
+  .rdb {
+    @apply border-2 border-red-500;
+  }
+  .gnb {
+    @apply border-2 border-green-600;
+  }
+
+  .flex-end {
+    @apply flex justify-end items-center;
+  }
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+  .flex-start {
+    @apply flex justify-start items-center;
+  }
+
+  .group * {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .custom-tooltip {
+    @apply duration-300 before:duration-300 before:delay-500 after:duration-300 after:delay-500 before:text-slate-900 dark:before:text-white  before:bg-gray-300 after:bg-gray-300 dark:before:bg-gray-600 dark:after:bg-gray-600 transition-colors tooltip tooltip-bottom;
+  }
+  .markdown-render-theme {
+    @apply prose prose-slate max-w-none 
+    /* Light Mode */
+    in-prose-ul:bg-red-600
+    text-slate-900 
+    prose-headings:text-slate-900 
+    prose-strong:text-slate-900 
+    prose-em:text-slate-900
+    prose-blockquote:text-slate-700
+    prose-li:text-slate-900
+    prose-a:text-cyan-600 hover:prose-a:text-cyan-700
+    prose-ul:text-slate-900 
+    prose-ol:text-slate-900
+
+    /* Dark Mode */
+    dark:prose-invert 
+    dark:text-white 
+    dark:prose-headings:text-white
+    dark:prose-strong:text-white 
+    dark:prose-em:text-white
+    dark:prose-blockquote:text-slate-300
+    dark:prose-li:text-slate-200
+    dark:prose-a:text-cyan-400;
+  }
+  .markdown-render-theme pre code {
+    @apply bg-transparent border-none p-0 m-0;
+  }
+  .markdown-render-theme :not(pre) > code {
+    @apply text-pink-600 dark:text-pink-400 bg-slate-100 dark:bg-slate-800 px-1 rounded font-normal border-none!;
+  }
+
+  .markdown-render-blue-topaz {
+    background-color: transparent !important;
+    @apply prose max-w-none 
+    prose-table:border prose-table:border-slate-200 dark:prose-table:border-slate-700
+    text-[15px] leading-relaxed text-slate-700 dark:text-slate-300
+    prose-headings:font-bold prose-headings:tracking-tight;
+
+    @apply prose-h1:text-[#007acc] dark:prose-h1:text-[#4fa6ff] 
+    prose-h1:border-b prose-h1:pb-2 prose-h1:border-slate-200 dark:prose-h1:border-slate-800;
+
+    @apply prose-h2:text-[#008dbb] dark:prose-h2:text-[#5fc9f3]
+    prose-h3:text-[#009da1] dark:prose-h3:text-[#66e0e4]
+    prose-h4:text-[#2d8a57] dark:prose-h4:text-[#78d6a0]
+    prose-a:text-[#007acc] dark:prose-a:text-[#4fa6ff] prose-a:no-underline hover:prose-a:underline
+    prose-strong:text-slate-900 dark:prose-strong:text-white prose-strong:font-bold
+    prose-ul:list-disc prose-ol:list-decimal
+    prose-li:my-1;
+
+    @apply prose-blockquote:border-l-4 prose-blockquote:border-[#007acc] 
+    prose-blockquote:bg-slate-50 dark:prose-blockquote:bg-slate-900/50 
+    prose-blockquote:py-1 prose-blockquote:pr-4 prose-blockquote:not-italic;
+
+    @apply prose-code:before:content-none prose-code:after:content-none;
+  }
+  .markdown-render-blue-topaz :not(pre) > code {
+    @apply px-1.5 py-0.5 rounded-md font-mono text-sm
+           text-[#e96900] bg-[#fff5f0] 
+           dark:text-[#ffb454] dark:bg-[#2d2212]
+           dark:border-orange-900/30 border-none!;
+  }
+
+  .markdown-render-blue-topaz pre {
+    @apply bg-[#f8f9fb] dark:bg-[#161b22] 
+           border border-slate-200 dark:border-slate-800 
+           rounded-lg shadow-sm p-4;
+  }
+  .markdown-render-blue-topaz pre code {
+    @apply text-slate-800 dark:text-slate-300 bg-transparent! p-0! border-none!;
+  }
+
+  /* Task Lists */
+  .markdown-render-blue-topaz input[type="checkbox"] {
+    @apply rounded border-slate-300 text-[#007acc] focus:ring-[#007acc] mr-2 mb-1;
+  }
+  /* This targets the specific library container */
+  .markdown-render-blue-topaz .wmde-markdown {
+    overflow-x: hidden !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  /* Ensure code blocks don't push the width out, but scroll instead */
+  .markdown-render-blue-topaz .wmde-markdown pre {
+    white-space: pre !important;
+    overflow-x: auto !important;
+    max-width: 100% !important;
+  }
+}
+
+/* 5. Utility Classes */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Animations */
+  .animate-marquee-up {
+    animation: marquee-up 25s linear infinite;
+  }
+  .animate-marquee-down {
+    animation: marquee-down 28s linear infinite reverse;
+  }
+  .animate-scroll-up {
+    animation: scroll-up 20s linear infinite;
+  }
+  .animate-scroll-down {
+    animation: scroll-down 24s linear infinite reverse;
+  }
+
+  .animate-marquee-up:hover,
+  .animate-marquee-down:hover,
+  .animate-scroll-up:hover,
+  .animate-scroll-down:hover {
+    animation-play-state: paused;
+  }
+
+  .animate-scroll-up,
+  .animate-scroll-down {
+    will-change: transform;
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+  }
+
+  /* The base skeleton class */
+  .skeleton-md {
+    @apply relative overflow-hidden bg-slate-300/80 rounded-lg;
+  }
+
+  /* The shimmer animation effect */
+  .skeleton-md::after {
+    content: "";
+    @apply absolute inset-0 -translate-x-full;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      transparent 100%
+    );
+    animation: shimmer-skeleton 2s infinite;
+  }
+
+  /* Base style (Light Mode) */
+  .loading-md {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.375rem; /* rounded-md */
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  /* Dark Mode style (No :global needed) */
+  .dark .loading-md {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .loading-md::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+      90deg,
+      transparent 0,
+      var(--shimmer-color) 20%,
+      var(--shimmer-highlight) 60%,
+      transparent
+    );
+    animation: shimmer-skeleton 2.5s infinite;
+  }
 }
 
-.heading {
-  @apply text-4xl md:text-5xl font-bold text-center;
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
 }
-.shadow_cyan {
-  @apply shadow-sm shadow-blue-500;
+.animate-in-view {
+  animation: fadeInScale 0.4s ease-out forwards;
 }
 
-/* Infinite vertical marquee — two directions */
+/* Effects */
+.glass-input-focus:focus {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+}
+.glass-editor {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.glow-on-hover:hover {
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+}
+.editor-gradient-border {
+  background: linear-gradient(to right, #06b6d4, #3b82f6, #8b5cf6);
+  padding: 1px;
+}
+.glass-sidebar {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.hide-scrollbar {
+  /* For Internet Explorer and Edge */
+  -ms-overflow-style: none; /* */
+  /* For Firefox */
+  scrollbar-width: none; /* */
+  /* For Chrome, Safari, and Opera */
+  overflow-y: scroll; /* Retains scrolling functionality */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Hides the scrollbar visually for WebKit browsers */
+}
+/* 6. Scrollbars (Standard CSS) */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #334155 transparent;
+}
+
+/* Webkit Scrollbar Size */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #334155;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: #06b6d4;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #22d3ee;
+}
+
+/* 7. MDEditor Line Numbers */
+.w-md-editor-text-input {
+  counter-reset: line;
+}
+.w-md-editor-text-pre .bold {
+  display: inline-block;
+  width: 3rem;
+  text-align: right;
+  padding-right: 1rem;
+  margin-right: 1rem;
+  color: #4b5563;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  user-select: none;
+}
+.cm-lineNumbers {
+  display: block !important;
+  background-color: transparent !important;
+  color: #64748b !important;
+}
+.cm-gutterElement {
+  padding-left: 10px !important;
+}
+
+/* 8. Keyframes */
 @keyframes marquee-up {
   0% {
     transform: translateY(0%);
@@ -49,7 +479,6 @@ body {
     transform: translateY(-50%);
   }
 }
-
 @keyframes marquee-down {
   0% {
     transform: translateY(0%);
@@ -58,25 +487,6 @@ body {
     transform: translateY(-50%);
   }
 }
-
-.animate-marquee-up {
-  animation: marquee-up 25s linear infinite;
-  /* Optional: reverse direction */
-  /* animation-direction: reverse; */
-}
-
-.animate-marquee-down {
-  animation: marquee-down 28s linear infinite reverse;
-  /* reverse makes it go down → up becomes up → down */
-}
-
-/* Pause on hover (very nice UX) */
-.animate-marquee-up:hover,
-.animate-marquee-down:hover {
-  animation-play-state: paused;
-}
-
-/* Vertical infinite scroll – seamless loop via duplication + translate -50% */
 @keyframes scroll-up {
   0% {
     transform: translateY(0%);
@@ -85,7 +495,6 @@ body {
     transform: translateY(-50%);
   }
 }
-
 @keyframes scroll-down {
   0% {
     transform: translateY(0%);
@@ -94,48 +503,84 @@ body {
     transform: translateY(-50%);
   }
 }
-
-.animate-scroll-up {
-  animation: scroll-up 20s linear infinite;
-  /* Makes it move upward */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.98) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes shimmer {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes shimmer-skeleton {
+  100% {
+    transform: translateX(100%);
+  }
+}
+@keyframes glitch {
+  0% {
+    clip-path: inset(20% 0 50% 0);
+    transform: translate(-2px, 2px);
+  }
+  20% {
+    clip-path: inset(60% 0 10% 0);
+    transform: translate(2px, -2px);
+  }
+  40% {
+    clip-path: inset(10% 0 80% 0);
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    clip-path: inset(40% 0 30% 0);
+    transform: translate(2px, 2px);
+  }
+  80% {
+    clip-path: inset(80% 0 5% 0);
+    transform: translate(-2px, 2px);
+  }
+  100% {
+    clip-path: inset(10% 0 70% 0);
+    transform: translate(2px, -2px);
+  }
 }
 
-.animate-scroll-down {
-  animation: scroll-down 24s linear infinite reverse;
-  /* reverse → moves downward */
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(300%);
+  }
 }
 
-/* Nice extras */
-.animate-scroll-up,
-.animate-scroll-down {
-  will-change: transform; /* smoother on modern GPUs */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Pause animation on hover over the whole Bento card */
-.animate-scroll-up:hover,
-.animate-scroll-down:hover {
-  animation-play-state: paused;
-}
-
-/* Optional: soft fade in/out at edges (prevents hard cut-off) */
-.animate-scroll-up,
-.animate-scroll-down {
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 8%,
-    black 92%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 8%,
-    black 92%,
-    transparent 100%
-  );
-}
-
-.redborder{
-  @apply border-2 border-red-500
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
 }

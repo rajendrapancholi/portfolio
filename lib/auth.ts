@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import UserModel from "./models/UserModel";
 import NextAuth, { Account, Profile, User } from "next-auth";
 import { connectToDB } from "./database";
+import { ENV } from "@/config/env";
 
 export const config = {
   providers: [
@@ -21,18 +22,18 @@ export const config = {
         if (credentials == null) return null;
 
         const user = await UserModel.findOne({ email: credentials.email });
-
         if (user) {
           const isMatch = await bcrypt.compare(
             credentials.password as string,
-            user.password as string
+            user.password as string,
           );
           if (isMatch) {
             return {
               id: user._id.toString(), // Convert ObjectId to string
               email: user.email,
               name: user.name,
-              isAdmin: user.isAdmin,
+              role: user.role,
+              isAdmin: user.isAdmin && user.role === "admin",
             };
           }
         }
@@ -40,17 +41,17 @@ export const config = {
       },
     }),
     GitHubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      clientId: ENV.GITHUB_ID,
+      clientSecret: ENV.GITHUB_CLIENT_SECRET,
     }),
 
     GoogleProvider({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: ENV.GOOGLE_ID,
+      clientSecret: ENV.GOOGLE_CLIENT_SECRET,
     }),
     LinkedInProvider({
-      clientId: process.env.LINKEDIN_ID,
-      clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+      clientId: ENV.LINKEDIN_ID,
+      clientSecret: ENV.LINKEDIN_CLIENT_SECRET,
     }),
   ],
   trustHost: true,
@@ -70,6 +71,7 @@ export const config = {
           _id: dbUser?._id.toString(),
           name: dbUser?.name,
           email: dbUser?.email,
+          role: dbUser?.role || "viewer",
           isAdmin: dbUser?.isAdmin || false,
         };
       }
@@ -95,6 +97,7 @@ export const config = {
             name: profile.name,
             email: profile.email,
             image: profile.picture,
+            role: "viewer",
             isAdmin: false,
           });
           existingUser = await newUser.save();

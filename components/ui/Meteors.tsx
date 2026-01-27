@@ -1,51 +1,52 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { cn } from '@/lib/utils/cn';
-
-type Meteor = {
-  left: string;
-  delay: string;
-  duration: string;
-};
+import { cn } from "@/lib/utils/cn";
+import { motion } from "motion/react";
+import { useEffect, useState } from "react";
 
 export const Meteors = ({
-  number = 20,
+  number,
   className,
 }: {
   number?: number;
   className?: string;
 }) => {
-  const [meteors, setMeteors] = useState<Meteor[]>([]);
-
+  const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
-    const generated = Array.from({ length: number }).map(() => ({
-      left: Math.floor(Math.random() * 800 - 400) + 'px',
-      delay: Math.random() * (0.8 - 0.2) + 0.2 + 's',
-      duration: Math.floor(Math.random() * (10 - 2) + 2) + 's',
-    }));
+    setIsMounted(true);
+  }, []);
 
-    setMeteors(generated);
-  }, [number]);
+  const meteors = new Array(number || 20).fill(true);
+  if (!isMounted) return null;
 
   return (
-    <>
-      {meteors.map((m, idx) => (
-        <span
-          key={`meteor-${idx}`}
-          className={cn(
-            'animate-meteor-effect absolute top-1/2 left-1/2 h-0.5 w-0.5 rounded-[9999px] bg-slate-500 shadow-[0_0_0_1px_#ffffff10] rotate-[215deg]',
-            "before:content-[''] before:absolute before:top-1/2 before:-translate-y-1/2 before:w-[50px] before:h-[1px] before:bg-gradient-to-r before:from-[#64748b] before:to-transparent",
-            className
-          )}
-          style={{
-            top: 0,
-            left: m.left,
-            animationDelay: m.delay,
-            animationDuration: m.duration,
-          }}
-        />
-      ))}
-    </>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      {meteors.map((el, idx) => {
+        const meteorCount = number || 20;
+        // Calculate position to evenly distribute meteors across container width
+        const position = idx * (800 / meteorCount) - 400; // Spread across 800px range, centered
+
+        return (
+          <span
+            key={"meteor" + idx}
+            className={cn(
+              "animate-meteor-effect absolute h-0.5 w-0.5 rotate-12 rounded-[9999px] bg-slate-500 shadow-[0_0_0_1px_#ffffff10]",
+              "before:absolute before:top-1/2 before:h-px before:w-12.5 before:-translate-y-[50%] before:transform before:bg-linear-to-r before:from-[#64748b] before:to-transparent before:content-['']",
+              className,
+            )}
+            style={{
+              top: "-40px", // Start above the container
+              left: position + "px",
+              animationDelay: Math.random() * 5 + "s", // Random delay between 0-5s
+              animationDuration: Math.floor(Math.random() * (10 - 5) + 5) + "s", // Keep some randomness in duration
+            }}
+          ></span>
+        );
+      })}
+    </motion.div>
   );
 };

@@ -1,6 +1,8 @@
 import { SessionProvider } from 'next-auth/react';
 import ClientProviders from './ClientProvider';
 import { auth } from '@/lib/auth';
+import StoreProvider from './ReduxProvider';
+import SessionWatcher from './auth/SessionWatcher';
 
 export default async function Providers({
   children,
@@ -10,7 +12,13 @@ export default async function Providers({
   const session = await auth();
   return (
     <SessionProvider session={session}>
-      <ClientProviders>{children}</ClientProviders>
+      <StoreProvider session={session}>
+        <SessionWatcher>
+          <ClientProviders>
+            {children}
+          </ClientProviders>
+        </SessionWatcher>
+      </StoreProvider>
     </SessionProvider>
   );
 }

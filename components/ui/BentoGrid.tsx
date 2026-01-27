@@ -1,17 +1,11 @@
 'use client';
-import { useState } from 'react';
-
-import animationData from '@/data/confetti.json';
-
 import { cn } from '@/lib/utils/cn';
 import { BackgroundGradientAnimation } from './GradientBg';
 import {
   GlowingStarsBackgroundCard,
 } from './GlowingStars';
 import Image from 'next/image';
-import dynamic from 'next/dynamic';
 import EmailCopySection from './EmailCopySelection';
-// Dynamically import Lottie to make it SSR-safe
 
 export const BentoGrid = ({
   className,
@@ -37,7 +31,7 @@ export const BentoGridItem = ({
   id,
   title,
   description,
-  //   remove unecessary things here
+
   img,
   imgClassName,
   titleClassName,
@@ -52,15 +46,13 @@ export const BentoGridItem = ({
   titleClassName?: string;
   spareImg?: string;
 }) => {
-  const leftLists = ['NextJS', 'ReactJS', 'TypeScript', 'NodeJS', 'ExpressJS'];
-  const rightLists = ['JavaScript', 'MongoDB', 'MySQL', 'TailwindCSS', 'HTML & CSS'];
-
-  const [copied, setCopied] = useState(false);
+  const leftLists = ['ReactJS', 'NextJS', 'NodeJS', 'ExpressJS', 'MongoDB', 'MySQL', 'Git', 'Docker'];
+  const rightLists = ['TypeScript', 'JavaScript', 'TailwindCSS', 'HTML & CSS', 'C/C++'];
 
   return (
     <div
       className={cn(
-        'row-span-1 relative overflow-hidden rounded-3xl border border-white/[0.1] group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none justify-between flex flex-col space-y-4',
+        'row-span-1 relative overflow-hidden rounded-3xl border border-white/10 group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none justify-between flex flex-col space-y-4',
         className
       )}
       style={{
@@ -124,25 +116,25 @@ export const BentoGridItem = ({
 
           {/* Tech stack list div */}
           {id === 3 && (
-            <div className="flex gap-1 lg:gap-5 w-fit absolute right-3 lg:right-2 top-0 bottom-0 my-auto h-fit">
-              {/* Left column – moves downward */}
-              <div className="flex flex-col gap-3 lg:gap-6 animate-scroll-up">
+            <div className="flex gap-1 lg:gap-3 w-fit absolute -right-3 lg:right-2 top-0 bottom-0 h-full overflow-hidden">
+              {/* Left column - Scrolling Up */}
+              <div className="flex flex-col gap-3 lg:gap-8 animate-scroll-up py-4 px-2">
                 {[...leftLists, ...leftLists].map((item, i) => (
                   <span
-                    key={i}
-                    className="lg:py-4 lg:px-5 py-3 px-4 text-xs lg:text-base opacity-50 lg:opacity-80 rounded-lg text-center bg-[#10132E] min-w-[130px] lg:min-w-[170px] border border-white/5"
+                    key={`${item}-${i}`}
+                    className="lg:py-4 lg:px-3 py-2 px-3 text-xs lg:text-base opacity-50 lg:opacity-100 rounded-lg text-center bg-[#10132E] border border-white/10 min-w-30 lg:min-w-37.5 transition-all duration-300 hover:border-purple-500/50 hover:bg-[#161a3d]"
                   >
                     {item}
                   </span>
                 ))}
               </div>
 
-              {/* Right column – moves upward */}
-              <div className="flex flex-col gap-3 lg:gap-6 animate-scroll-down">
+              {/* Right column - Scrolling Down */}
+              <div className="flex flex-col gap-3 lg:gap-8 animate-scroll-down py-4 px-2">
                 {[...rightLists, ...rightLists].map((item, i) => (
                   <span
-                    key={i}
-                    className="lg:py-4 lg:px-5 py-3 px-4 text-xs lg:text-base opacity-50 lg:opacity-80 rounded-lg text-center bg-[#10132E] min-w-[130px] lg:min-w-[170px] border border-white/5"
+                    key={`${item}-${i}`}
+                    className="lg:py-4 lg:px-3 py-2 px-3 text-xs lg:text-base opacity-50 lg:opacity-100 rounded-lg text-center bg-[#10132E] border border-white/10 min-w-30 lg:min-w-37.5 transition-all duration-300 hover:border-purple-500/50 hover:bg-[#161a3d]"
                   >
                     {item}
                   </span>
@@ -150,23 +142,8 @@ export const BentoGridItem = ({
               </div>
             </div>
           )}
-          {id === 6 && (<EmailCopySection />
-            // <div className="mt-5 relative">
-            //   <div
-            //     className={`absolute -bottom-5 right-0 ${copied ? 'block' : 'block'
-            //       }`}
-            //   >
-            //     <Lottie options={defaultOptions} height={200} width={400} />
-            //   </div>
 
-            //   <Button
-            //     title={copied ? 'Email is Copied!' : 'Copy my email address'}
-            //     icon={<IoCopyOutline />}
-            //     position="left"
-            //     handleClick={handleCopy}
-            //     otherClasses="!bg-[#161A31]"
-            //   />
-            // </div>
+          {id === 6 && (<EmailCopySection />
           )}
         </div>
       </div>

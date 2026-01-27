@@ -3,12 +3,17 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'res.cloudinary.com',
+        protocol: "https",
+        hostname: "res.cloudinary.com",
       },
       {
-        protocol: 'http',
-        hostname: 'localhost',
+        protocol: "https",
+        hostname: "raw.githubusercontent.com",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3000",
       },
     ],
   },

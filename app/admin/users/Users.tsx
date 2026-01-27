@@ -4,7 +4,7 @@ import useSWRMutation from 'swr/mutation';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import Loading from '@/components/Loading';
-import { formatId } from '@/lib/utils';
+import { formatId } from '@/lib/utils/formatter';
 import Link from 'next/link';
 import {
   HiMiniTrash,
@@ -21,7 +21,7 @@ export default function User() {
   const { trigger: deleteUser } = useSWRMutation(
     `/api/admin/users`,
 
-    async (url, { arg }: { arg: { userId: string } }) => {
+    async (url, { arg }: { arg: { userId: string; }; }) => {
       const toastId = toast.loading('Deleting user...');
       const response = await fetch(`${url}/${arg.userId}`, {
         method: 'DELETE',
@@ -32,8 +32,8 @@ export default function User() {
       const data = await response.json();
       response.ok
         ? toast.success(data.message, {
-            id: toastId,
-          })
+          id: toastId,
+        })
         : toast.error(data.message, { id: toastId });
     }
   );
@@ -52,6 +52,7 @@ export default function User() {
                 <th>ID</th>
                 <th>NAME</th>
                 <th>EMAIL</th>
+                <th>ROLE</th>
                 <th>ADMIN</th>
                 <th>ACTIONS</th>
               </tr>
@@ -66,6 +67,7 @@ export default function User() {
                   <td>{formatId(user._id)}</td>
                   <td>{user.name}</td>
                   <td>{user.email}</td>
+                  <td>{user.role}</td>
                   <td>
                     {user.isAdmin ? (
                       <span className="flex-center gap-1">

@@ -8,14 +8,14 @@ import Button from './ui/Button';
 
 import { Meteors } from './ui/Meteors';
 
-export default function ProjectItem({ project }: { project: Project }) {
+export default function ProjectItem({ project }: { project: Project; }) {
   return (
     <div
       key={project._id}
       className="w-full h-full flex justify-center items-center"
     >
       <div className="group h-full w-full relative group">
-        <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-500 to-teal-500 transform scale-[0.80] bg-red-500 rounded-full blur-3xl" />
+        <div className="absolute inset-0 h-full w-full bg-linear-to-r from-blue-500 to-teal-500 transform scale-[0.80] bg-red-500 rounded-full blur-3xl" />
         <div className="relative shadow-xl bg-gray-900 border border-gray-800  px-4 py-8 h-full overflow-hidden rounded-2xl flex flex-col justify-end items-start">
           <Image
             src={project.img}
@@ -38,7 +38,7 @@ export default function ProjectItem({ project }: { project: Project }) {
               {project.iconLists.map((icon: any, i: number) => (
                 <div
                   key={i}
-                  className="border border-white/[.2] rounded-full bg-black lg:w-10 lg:h-10 w-8 h-8 flex justify-center items-center"
+                  className="border border-white/20 rounded-full bg-black lg:w-10 lg:h-10 w-8 h-8 flex justify-center items-center"
                   style={{
                     transform: `translateX(-${5 * i + 2}px)`,
                   }}
@@ -48,7 +48,7 @@ export default function ProjectItem({ project }: { project: Project }) {
               ))}
             </div>
 
-            <Link href={project.link} className="z-50">
+            <Link href={project.link} target='_blank' className="z-50">
               <Button
                 title="View live"
                 position="right"

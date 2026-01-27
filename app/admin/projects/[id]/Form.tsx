@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { ValidationRule, useForm } from 'react-hook-form';
 import { useEffect } from 'react';
-import { formatId } from '@/lib/utils';
+import { formatId } from '@/lib/utils/formatter';
 import { useRouter } from 'next/navigation';
 import { Project } from '@/lib/models/ProjectModel';
 import Loading from '@/components/Loading';
@@ -16,8 +16,9 @@ import Button from '@/components/ui/Button';
 import { HiClipboardDocumentCheck } from 'react-icons/hi2';
 import { Label } from '@/components/ui/Lable';
 import { Input } from '@/components/ui/Input';
+import { ENV } from '@/config/env';
 
-export default function ProjectEditForm({ projectId }: { projectId: string }) {
+export default function ProjectEditForm({ projectId }: { projectId: string; }) {
   const { data, error } = useSWR(`/api/admin/projects/${projectId}`);
   const router = useRouter();
   const { trigger: updateProject, isMutating: isUpdating } = useSWRMutation(
@@ -68,7 +69,7 @@ export default function ProjectEditForm({ projectId }: { projectId: string }) {
   const uploadHandler = async (e: any) => {
     const toastId = toast.loading('Uploading image...');
     try {
-      const resSign = await fetch('/api/cloudinary-sign', {
+      const resSign = await fetch('/api/cloudinary/porject-sign', {
         method: 'POST',
       });
       const { signature, timestamp } = await resSign.json();
@@ -77,9 +78,9 @@ export default function ProjectEditForm({ projectId }: { projectId: string }) {
       formData.append('file', file);
       formData.append('signature', signature);
       formData.append('timestamp', timestamp);
-      formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
+      formData.append('api_key', ENV.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
       const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`,
+        `https://api.cloudinary.com/v1_1/${ENV.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`,
         {
           method: 'POST',
           body: formData,
@@ -87,7 +88,6 @@ export default function ProjectEditForm({ projectId }: { projectId: string }) {
       );
       const data = await res.json();
       setValue('img', data.secure_url);
-      console.log(data);
       toast.success('File uploaded successfully', {
         id: toastId,
       });
@@ -229,14 +229,15 @@ export default function ProjectEditForm({ projectId }: { projectId: string }) {
               ))}
             </div>
           </div>
-          <button type="submit" disabled={isSubmitting} className="max-sm:w-28">
-            {isSubmitting && <span className="loading loading-spinner"></span>}
-            <Button
-              title="Update"
-              icon={<HiClipboardDocumentCheck />}
-              position="left"
-            />
-          </button>
+          <Button
+            title="Update"
+            btnType='submit'
+            disabled={isSubmitting}
+            icon={<HiClipboardDocumentCheck />}
+            position="left"
+            otherClasses='max-sm:w-28'
+          />
+          {isSubmitting && <span className="loading loading-spinner" />}
           <Link className="btn ml-4 " href="/admin/projects">
             Cancel
           </Link>
