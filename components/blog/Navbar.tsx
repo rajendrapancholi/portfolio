@@ -8,13 +8,18 @@ import {
     useMotionValueEvent,
 } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowLeftCircleIcon, Bell, BookOpenTextIcon, Home, Search, TextAlignJustify, X } from 'lucide-react';
+import {
+    ArrowLeftCircleIcon,
+    BookOpenTextIcon,
+    Home,
+    TextAlignJustify,
+} from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { FcTemplate } from 'react-icons/fc';
 
 import RajeBrandLogo from '../ui/RajeBrandLogo';
 import ThemeButton from '../ui/ThemeButton';
-import { usePathname } from 'next/navigation';
 import { NavbarCalendar } from '../ui/NavbarCalender';
-import { FcTemplate } from 'react-icons/fc';
 
 const Navbar: React.FC = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -24,7 +29,7 @@ const Navbar: React.FC = () => {
 
     useMotionValueEvent(scrollY, 'change', (latest) => {
         const prev = scrollY.getPrevious() ?? 0;
-        if ((latest > prev && latest > 150) && pathname.startsWith('/blogs/b/')) {
+        if (latest > prev && latest > 150 && pathname.startsWith('/blogs/b/')) {
             setIsCollapsed(true);
         } else {
             setIsCollapsed(false);
@@ -32,16 +37,17 @@ const Navbar: React.FC = () => {
     });
 
     const navigation = [
-        { name: 'Home', href: '/', icon: <Home size={14} />, current: true },
-        { name: 'Tutorials', href: '/blogs', icon: <BookOpenTextIcon size={14} />, current: false },
-        { name: 'Projects', href: '/#projects', icon: < FcTemplate size={14} />, current: false }
+        { name: 'Home', href: '/', icon: <Home size={14} /> },
+        { name: 'Tutorials', href: '/blogs', icon: <BookOpenTextIcon size={14} /> },
+        { name: 'Projects', href: '/#projects', icon: <FcTemplate size={14} /> },
     ];
 
     const updatedNavigation = navigation.map((item) => ({
         ...item,
-        current: item.href === '/'
-            ? pathname === '/'
-            : pathname.startsWith(item.href)
+        current:
+            item.href === '/'
+                ? pathname === '/'
+                : pathname.startsWith(item.href),
     }));
 
     return (
@@ -50,208 +56,127 @@ const Navbar: React.FC = () => {
             animate={isCollapsed ? 'collapsed' : 'expanded'}
             variants={{
                 expanded: { height: 72 },
-                collapsed: {
-                    height: 46,
-                    paddingTop: 2,
-                    paddingBottom: 1,
-                    backgroundColor: 'transparent',
-                },
+                collapsed: { height: 48 },
             }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="fixed top-0 pt-0.5 inset-x-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-200 dark:border-white/10"
+            transition={{ duration: 0.3 }}
+            className="fixed inset-x-0 top-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-200 dark:border-white/10"
         >
-            <div className="mx-auto px-4 sm:px-6 lg:px-8 h-full">
-                <div className="flex h-full items-center gap-4">
-                    {/* Mobile Toggle & Logo Group */}
-                    <div className={`sm:hidden flex z-51 items-center gap-4 `}>
-                        <button
-                            className="sm:hidden p-2 text-gray-600 dark:text-gray-300"
-                            onClick={() => setIsMobileMenuOpen(true)}
-                        >
-                            <TextAlignJustify />
-                        </button>
-                    </div>
+            <div className="mx-auto max-w-7xl px-4 h-full">
+                <div className="flex h-full items-center justify-between gap-3">
+
+                    {/* Mobile menu button */}
+                    <button
+                        className="sm:hidden p-2 text-gray-600 dark:text-gray-300"
+                        onClick={() => setIsMobileMenuOpen(true)}
+                    >
+                        <TextAlignJustify />
+                    </button>
+
                     {/* Logo */}
-                    <motion.div
-                        layout
-                        variants={{
-                            expanded: {
-                                opacity: 1,
-                                width: 'auto',
-                                scale: 1,
-                                pointerEvents: 'auto',
-                            },
-                            collapsed: {
-                                opacity: 0,
-                                width: 0,
-                                scale: 0.9,
-                                pointerEvents: 'none',
-                            },
-                        }}
-                        transition={{ duration: 0.3, ease: 'easeOut' }}
-                        className="overflow-hidden"
-                    >
-                        <div className='hidden md:block'>
-                            <RajeBrandLogo logoType="type3" secondText="blog" />
-                        </div>
-                        <div className=' md:hidden'>
-                            <RajeBrandLogo logoType="mini" secondText="blog" />
-                        </div>
-                    </motion.div>
-
-                    {/* Center Tabs */}
-                    <div className="flex-1 flex-center gap-0.5 sm:gap-2 md:gap-4">
-                        <motion.div
-                            layout
-                            transition={{ layout: { duration: 0.4, ease: 'easeInOut' } }}
-                            className="flex justify-center items-center md:my-2"
-                        >
-                            <motion.div
-                                layout
-                                className="flex-center space-x-1 p-0.5 py-0 sm:p-1 sm:py-1.5 rounded-full border border-gray-200 dark:border-white/10 bg-gray-100 dark:bg-white/5"
-                            >
-                                {updatedNavigation.map((item, idx) => (
-                                    <Link
-                                        key={item.name}
-                                        href={item.href}
-                                        aria-current={item.current ? 'page' : undefined}
-                                        className="relative px-1 py-0.5 sm:px-3 sm:py-1 text-sm sm:font-medium rounded-xs sm:rounded-full transition-colors"
-                                    >
-                                        {item.current && (
-                                            <motion.div
-                                                layoutId="activeTab"
-                                                className="absolute inset-0 rounded-md bg-cyan-800 sm:rounded-full"
-                                                transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                                            />
-                                        )}
-                                        <span
-                                            className={`relative z-10 ${item.current
-                                                ? 'text-white'
-                                                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                                                }`}
-                                        >
-                                            <p className='hidden sm:block'>{item.name}</p>
-                                            <p className='sm:hidden'>{item.icon}</p>
-                                        </span>
-                                    </Link>
-                                ))}
-                                <div className="relative flex-center text-sm font-medium rounded-full transition-colors">
-                                    <NavbarCalendar />
-                                </div>
-                            </motion.div>
-                        </motion.div>
-
-                        {/* Search (single morphing component) */}
-                        <motion.div
-                            layout
-                            variants={{
-                                expanded: { width: 220 },
-                                collapsed: { width: 44 },
-                            }}
-                            transition={{ duration: 0.35, ease: 'easeInOut' }}
-                            className="hidden lg:flex items-center overflow-hidden"
-                        >
-                            <Link
-                                href="/blogs/search"
-                                scroll={false}
-                                className="relative flex items-center w-full h-10 bg-gray-100 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl px-3 hover:border-cyan-800 dark:hover:border-gray-600 transition-colors"
-                            >
-                                {/* Icon */}
-                                <Search className="size-4 text-gray-400 shrink-0" />
-
-                                {/* Text */}
-                                <motion.span
-                                    variants={{
-                                        expanded: { opacity: 1, x: 0 },
-                                        collapsed: { opacity: 0, scale: 0.5, display: "none" },
-                                    }}
-                                    transition={{ duration: 0.2 }}
-                                    className="ml-3 text-sm text-gray-500 whitespace-nowrap"
-                                >
-                                    Search...
-                                </motion.span>
-
-                                {/* KBD */}
-                                <motion.kbd
-                                    variants={{
-                                        expanded: { opacity: 1, scale: 1 },
-                                        collapsed: { opacity: 0, scale: 0.5, display: "none" },
-                                    }}
-                                    transition={{ duration: 0.15 }}
-                                    className="ml-auto hidden md:inline-flex items-center gap-1 rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-1.5 text-[10px] font-medium text-gray-400"
-                                >
-                                    Ctrl+K
-                                </motion.kbd>
-                            </Link>
-                        </motion.div>
+                    <div className="hidden xl:block">
+                        <RajeBrandLogo logoType="type3" secondText="blog" />
                     </div>
-                    {/* Actions */}
-                    <motion.div
-                        layout
-                        variants={{
-                            expanded: {
-                                opacity: 1,
-                                width: 180,
-                                scale: 1,
-                                pointerEvents: 'auto',
-                            },
-                            collapsed: {
-                                opacity: 0,
-                                width: 0,
-                                scale: 0.9,
-                                pointerEvents: 'none',
-                            },
-                        }}
-                        transition={{ duration: 0.3, ease: 'easeOut' }}
-                        className="overflow-hidden flex items-center space-x-3"
-                    >
+
+                    {/* Center navigation */}
+                    <div className="flex flex-1 justify-center">
+                        <div className="flex items-center space-x-1 rounded-full border border-gray-200 dark:border-white/10 bg-gray-100 dark:bg-white/5 p-1">
+                            {updatedNavigation.map((item) => (
+                                <Link
+                                    key={item.name}
+                                    href={item.href}
+                                    className="relative px-3 py-1 rounded-full text-sm"
+                                >
+                                    {item.current && (
+                                        <motion.div
+                                            layoutId="activeTab"
+                                            className="absolute inset-0 rounded-full bg-cyan-800"
+                                        />
+                                    )}
+                                    <span
+                                        className={`relative z-10 ${item.current
+                                            ? 'text-white'
+                                            : 'text-gray-600 dark:text-gray-400'
+                                            }`}
+                                    >
+                                        <span className="hidden sm:block">{item.name}</span>
+                                        <span className="sm:hidden">{item.icon}</span>
+                                    </span>
+                                </Link>
+                            ))}
+                            <NavbarCalendar />
+                        </div>
+                    </div>
+
+                    {/* Desktop actions */}
+                    <div className="hidden md:flex items-center gap-3">
                         <ThemeButton />
-                        <Link href="/blogs/subscribe" className="hidden md:block">
+                        <Link href="/blogs/subscribe">
                             <button className="bg-cyan-800 text-white px-5 py-2 rounded-full text-sm font-bold">
                                 Subscribe
                             </button>
                         </Link>
-                    </motion.div>
-
-
+                    </div>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
+            {/* Mobile drawer */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <>
-                        <div
+                        {/* Overlay */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="fixed inset-0 h-screen z-55 backdrop-blur-sm sm:hidden"
+                            className="fixed inset-0 h-screen z-45 bg-black/30 backdrop-blur-sm sm:hidden"
                         />
-                        {/* Menu Panel */}
+
+                        {/* Drawer panel */}
                         <motion.div
                             initial={{ x: '-100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '-100%' }}
-                            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                            className="fixed top-0 rdb left-0 h-screen z-55 w-70 bg-white dark:bg-gray-900 p-6 shadow-xl sm:hidden"
+                            transition={{ type: 'spring', stiffness: 260, damping: 30 }}
+                            className="fixed top-0 rounded-r-2xl left-0 z-50 h-screen w-72 bg-white dark:bg-gray-900 p-6 shadow-interactive-cyan sm:hidden"
                         >
-                            <ArrowLeftCircleIcon onClick={() => setIsMobileMenuOpen(false)} className="absolute right-2" />
-                            <div className="flex flex-col gap-6">
-                                <RajeBrandLogo logoType="mini" secondText="blog" />
-                                <div className="flex flex-col gap-2">
-                                    {updatedNavigation.map((item) => (
-                                        <Link
-                                            key={item.name}
-                                            href={item.href}
-                                            className={`px-4 py-3 rounded-xl text-lg font-medium ${item.current
-                                                ? 'bg-cyan-800 text-white'
-                                                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5'
-                                                }`}
-                                        >
-                                            {item.name}
-                                        </Link>
-                                    ))}
+                            <ArrowLeftCircleIcon
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="absolute top-8 right-4 cursor-pointer"
+                            />
+
+                            <RajeBrandLogo logoType="mini" secondText="blog" />
+
+                            {/* Navigation */}
+                            <nav className="mt-6 flex flex-col gap-2">
+                                {updatedNavigation.map((item) => (
+                                    <Link
+                                        key={item.name}
+                                        href={item.href}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={`px-4 py-3 rounded-xl text-lg ${item.current
+                                            ? 'bg-cyan-800 text-white'
+                                            : 'text-gray-600 dark:text-gray-400'
+                                            }`}
+                                    >
+                                        {item.name}
+                                    </Link>
+                                ))}
+                            </nav>
+
+                            {/* Mobile actions */}
+                            <div className="flex-1 flex flex-col h-3/5 justify-between border-t border-gray-200 dark:border-white/10 pt-4 space-y-4">
+                                <div className='flex-center'>
+                                    <NavbarCalendar />
                                 </div>
-                                <div className="pt-6 overflow-y-auto h-fit border-t border-gray-100 dark:border-white/10">
-                                    <NavbarCalendar /> Calender
+
+                                <div className='flex justify-between items-center'>
+                                    <Link href="/blogs/subscribe">
+                                        <button className="px-2 bg-cyan-800 text-white py-3 rounded-xl text-sm font-bold">
+                                            Subscribe
+                                        </button>
+                                    </Link>
+                                    <ThemeButton />
                                 </div>
                             </div>
                         </motion.div>

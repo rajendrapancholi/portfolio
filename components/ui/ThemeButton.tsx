@@ -26,9 +26,9 @@ const ThemeButton = ({ position = "left" }: { position?: "top" | "right" | "bott
             aria-label="Toggle Theme"
         >
             {isDark ? (
-                <Sun className="size-3 md:size-5 text-yellow-500 animate-in zoom-in duration-300" />
+                <Sun className="size-5 text-yellow-500 animate-in zoom-in duration-300" />
             ) : (
-                <Moon className="size-3 md:size-5 text-[#007acc] animate-in zoom-in duration-300" />
+                <Moon className="size-5 text-[#007acc] animate-in zoom-in duration-300" />
             )}
         </button>
     );

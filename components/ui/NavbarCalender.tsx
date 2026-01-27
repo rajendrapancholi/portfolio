@@ -30,8 +30,8 @@ export function NavbarCalendar() {
                 onClick={() => setIsOpen(!isOpen)}
                 className="gap-2 flex-center text-gray-600 dark:text-gray-300"
             >
-                <CalendarIcon className="size-3 sm:size-4" />
-                <span className="hidden md:inline">Calender</span>
+                <CalendarIcon className="size-5" />
+                <span className="md:inline">Calender</span>
             </Button>
 
             {/* The Animated Popover Content */}
@@ -42,7 +42,7 @@ export function NavbarCalendar() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="absolute right-0 mt-2 z-100 shadow-2xl shadow-black/20"
+                        className="fixed max-sm:left-0 sm:absolute sm:mt-2 sm:right-2 z-100 shadow-2xl shadow-black/20"
                     >
                         {/* We use our pure custom Calendar here */}
                         <Calendar
