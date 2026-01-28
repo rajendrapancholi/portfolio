@@ -56,20 +56,25 @@ export default function safeJSONStringify(
 
 /**
  * Sanitizes a string into a URL-friendly format (slug).
- * 
+ *
  * This function performs the following:
- * 1. Removes all characters NOT a-z, 0-9, or hyphens.
- * 2. Collapses multiple consecutive hyphens into a single hyphen.
- * 3. Trims hyphens from the start and end of the result.
+ * 1. Converts the string to lowercase and replaces spaces/underscores with hyphens.
+ * 2. Removes all characters NOT a-z, 0-9, or hyphens.
+ * 3. Collapses multiple consecutive hyphens into a single hyphen.
+ * 4. Trims hyphens from the start and end of the result.
+ *
  * @param {string} slug - The raw string to be sanitized.
  * @returns {string} The cleaned, URL-safe string.
- * @example // returns "hello-world"
-sanitizeSlug("---Hello@World !!---");
+ * @example
+ * // returns "hello-world"
+ * sanitizeSlug("---Hello@World !!---");
  */
 export const sanitizeSlug = (slug: string): string => {
   return slug
     .toLowerCase()
-    .replace(/[^a-z0-9-]/g, "")
-    .replace(/-+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .trim()
+    .replace(/[\s_]+/g, "-") // 1. Convert spaces and underscores to hyphens
+    .replace(/[^\w-]+/g, "") // 2. Remove all non-word chars (except hyphens)
+    .replace(/-+/g, "-") // 3. Replace multiple hyphens with a single one
+    .replace(/^-+|-+$/g, ""); // 4. Trim hyphens from start and end
 };

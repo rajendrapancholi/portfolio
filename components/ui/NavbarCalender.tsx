@@ -28,10 +28,10 @@ export function NavbarCalendar() {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsOpen(!isOpen)}
-                className="gap-2 flex-center text-gray-600 dark:text-gray-300"
+                className="gap-2 flex-center text-gray-600 dark:text-gray-300 custom-tooltip" data-tip="Open calender"
             >
                 <CalendarIcon className="size-5" />
-                <span className="md:inline">Calender</span>
+                <span className="hidden md:inline">Calender</span>
             </Button>
 
             {/* The Animated Popover Content */}

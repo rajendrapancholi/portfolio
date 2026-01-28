@@ -45,8 +45,7 @@ export default function Blogs({ blogFmM, blogFmG }: { blogFmM: Blog[]; blogFmG: 
             {/* Grid Layout */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {allBlogs.map((blog) => {
-                    const isGit = blog.source === 'git';
-                    const href = isGit ? `/blogs/b/git/${blog.slug}` : `/blogs/b/mn/${blog.slug}`;
+                    const href = `/blogs/b/${blog.source}/${blog.slug}`;
                     const validDate = getValidDate(blog.createdAt);
                     return (
                         <Link
@@ -71,7 +70,7 @@ export default function Blogs({ blogFmM, blogFmG }: { blogFmM: Blog[]; blogFmG: 
                                     <span className="px-3 py-1 text-[10px] uppercase tracking-widest font-bold bg-blue-600 text-white rounded-full">
                                         {blog.type || "Code"}
                                     </span>
-                                    {isGit && (
+                                    {blog.source === 'git' && (
                                         <span className="px-3 py-1 text-[10px] uppercase tracking-widest font-bold bg-white/10 text-white backdrop-blur-md rounded-full border border-white/10">
                                             GitHub
                                         </span>
@@ -87,7 +86,7 @@ export default function Blogs({ blogFmM, blogFmG }: { blogFmM: Blog[]; blogFmG: 
                                     </time>
                                     <span className="w-1 h-1 bg-gray-700 rounded-full" />
                                     <span className="truncate">
-                                        {isGit ? blog.author?.name : "Author"}
+                                        {blog.source === 'git' ? blog.author?.name : "Author"}
                                     </span>
                                 </div>
 

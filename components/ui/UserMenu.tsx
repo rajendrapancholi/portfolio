@@ -17,7 +17,7 @@ import { logoutAction } from "@/app/actions/authActions";
 import { clearCredentials } from "@/lib/features/auth/authSlice";
 import { useAppDispatch } from "@/lib/features/hooks";
 
-export default function UserMenu({ user }: { user: User; }) {
+export default function UserMenu({ user, popupPos = "bottom" }: { user: User; popupPos?: "top" | "left" | "bottom" | "right" | "bottom-right" | "bottom-left" | "top-right" | "top-left"; }) {
     const [open, setOpen] = useState(false);
     const dispatch = useAppDispatch();
     const menuItems = [
@@ -45,15 +45,42 @@ export default function UserMenu({ user }: { user: User; }) {
         }
     };
 
+    const positionClasses = {
+        "bottom": "top-full mt-2 right-0 origin-top-right",
+        "top": "bottom-full mb-2 right-0 origin-bottom-right",
+        "left": "right-full mr-2 top-0 origin-top-right",
+        "right": "left-full ml-2 top-0 origin-top-left",
+        "bottom-right": "top-full mt-2 right-0 origin-top-right",
+        "bottom-left": "top-full mt-2 left-0 origin-top-left",
+        "top-right": "bottom-full mb-2 right-0 origin-bottom-right",
+        "top-left": "bottom-full mb-2 left-0 origin-bottom-left",
+    };
+    const translateClasses = {
+        "bottom": open ? "translate-y-0" : "-translate-y-2",
+        "top": open ? "translate-y-0" : "translate-y-2",
+        "left": open ? "translate-x-0" : "translate-x-2",
+        "right": open ? "translate-x-0" : "-translate-x-2",
+        "bottom-right": open ? "translate-y-0" : "-translate-y-2",
+        "bottom-left": open ? "translate-y-0" : "-translate-y-2",
+        "top-right": open ? "translate-y-0" : "translate-y-2",
+        "top-left": open ? "translate-y-0" : "translate-y-2",
+    };
+
     return (
-        <div className="relative">
+        <div className="relative inline-block">
             {/* Trigger Button */}
             <button
                 onClick={(e) => {
                     e.stopPropagation();
                     setOpen(!open);
                 }}
-                className="relative flex items-center gap-2 text-sm font-semibold text-white bg-white/5 border border-white/10 px-4 py-2 rounded-xl hover:bg-white/10 transition-all active:scale-95 shadow-xl z-70"
+                className="relative flex items-center gap-2 text-sm font-semibold 
+                   text-slate-700 dark:text-slate-200 
+                   bg-white dark:bg-white/5 
+                   border border-slate-200 dark:border-white/10 
+                   px-4 py-2 rounded-xl 
+                   hover:bg-slate-50 dark:hover:bg-white/10 
+                   transition-all active:scale-95 shadow-sm dark:shadow-xl z-70"
             >
                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 {user?.name.split(" ")[0]}
@@ -62,7 +89,7 @@ export default function UserMenu({ user }: { user: User; }) {
                 </span>
             </button>
 
-            {/* Overlay: Fixed pure CSS approach */}
+            {/* Overlay */}
             {open && (
                 <div
                     className="fixed inset-0 z-60 h-screen w-screen bg-transparent cursor-default"
@@ -70,22 +97,23 @@ export default function UserMenu({ user }: { user: User; }) {
                 />
             )}
 
-            {/* Dropdown Menu: Using Tailwind Transitions instead of Framer Motion */}
+            {/* Dropdown Menu */}
             <div
                 className={`
-                    absolute top-14 right-0 z-80 min-w-55 overflow-hidden rounded-2xl 
-                    border border-white/10 bg-slate-900/95 backdrop-blur-xl 
-                    shadow-[0_20px_50px_rgba(0,0,0,0.5)]
-                    transition-all duration-200 ease-out origin-top-right
-                    ${open
-                        ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
-                        : "opacity-0 scale-95 -translate-y-2 pointer-events-none"}
-                `}
+            absolute z-80 min-w-52 overflow-hidden rounded-2xl 
+            border border-slate-200 dark:border-white/10 
+            bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl 
+            shadow-xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)]
+            transition-all duration-200 ease-out
+            ${positionClasses[popupPos] || positionClasses.bottom}
+            ${translateClasses[popupPos] || translateClasses.bottom}
+            ${open ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}
+        `}
             >
                 {/* User Header */}
-                <div className="px-5 py-3 border-b border-white/5 bg-white/5">
-                    <p className="text-sm font-bold text-white truncate mt-1">{user?.name}</p>
-                    <p className="text-[11px] text-slate-500 truncate">{user?.email}</p>
+                <div className="px-5 py-3 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/5">
+                    <p className="text-sm font-bold text-slate-900 dark:text-white truncate mt-1">{user?.name}</p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{user?.email}</p>
                 </div>
 
                 {/* Links */}
@@ -98,8 +126,13 @@ export default function UserMenu({ user }: { user: User; }) {
                                     href={item.href}
                                     prefetch={false}
                                     onClick={() => setOpen(false)}
-                                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-150 hover:bg-white/10 group  text-slate-300 hover:text-white">
-                                    <span className="text-lg opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-transform">
+                                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg 
+                                       transition-all duration-150 
+                                       text-slate-600 dark:text-slate-300 
+                                       hover:bg-slate-100 dark:hover:bg-white/10 
+                                       hover:text-slate-900 dark:hover:text-white group"
+                                >
+                                    <span className="text-lg opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-transform">
                                         {item.icon}
                                     </span>
                                     {item.name}
@@ -110,7 +143,10 @@ export default function UserMenu({ user }: { user: User; }) {
                         <button
                             type="button"
                             onClick={handleLogout}
-                            className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-150 hover:bg-white/10 group text-red-400"
+                            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg 
+                               transition-all duration-150 
+                               text-red-500 dark:text-red-400 
+                               hover:bg-red-50 dark:hover:bg-red-500/10 group"
                         >
                             <span className="text-lg opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-transform">
                                 <HiOutlineArrowRightOnRectangle />
@@ -121,5 +157,6 @@ export default function UserMenu({ user }: { user: User; }) {
                 </ul>
             </div>
         </div>
+
     );
 }

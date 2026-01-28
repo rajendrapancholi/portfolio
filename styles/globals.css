@@ -92,6 +92,12 @@
 }
 
 @layer base {
+  @property --radialprogress {
+    syntax: "<percentage>";
+    inherits: true;
+    initial-value: 0%;
+  }
+
   *,
   ::after,
   ::before {
@@ -188,13 +194,15 @@ h3 {
   .flex-start {
     @apply flex justify-start items-center;
   }
-
+  .flex-between {
+    @apply flex justify-between items-center;
+  }
   .group * {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .custom-tooltip {
-    @apply duration-300 before:duration-300 before:delay-500 after:duration-300 after:delay-500 before:text-slate-900 dark:before:text-white  before:bg-gray-300 after:bg-gray-300 dark:before:bg-gray-600 dark:after:bg-gray-600 transition-colors tooltip tooltip-bottom;
+    @apply duration-300 before:duration-300 before:delay-200 after:duration-400 after:delay-200 before:text-slate-900 dark:before:text-white  before:bg-gray-300 after:bg-gray-300 dark:before:bg-gray-600 dark:after:bg-gray-600 transition-colors tooltip tooltip-bottom;
   }
   .markdown-render-theme {
     @apply prose prose-slate max-w-none 
@@ -422,7 +430,7 @@ h3 {
 }
 /* 6. Scrollbars (Standard CSS) */
 .custom-scrollbar {
-  scrollbar-width: thin;
+  scrollbar-width: thin; /* Firefox */
   scrollbar-color: #334155 transparent;
 }
 

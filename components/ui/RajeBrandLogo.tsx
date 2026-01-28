@@ -126,25 +126,25 @@ const RajeBrandLogo = ({ logoType, title = "MERN Stack Architect", firstText = "
 
         case "mini":
             return (
-                <Link href={path} className="group relative flex items-center gap-3 py-1 px-2 rounded-lg transition-all duration-500 hover:bg-white/5 max-w-fit">
+                <Link href={path} className="group relative flex items-center gap-3 py-1 px-2 rounded-lg transition-all duration-500 hover:bg-black/5 dark:hover:bg-white/5 max-w-fit">
                     <div className="relative perspective-normal shrink-0">
                         <div className="relative w-8 h-8 transition-all duration-700 transform-3d group-hover:transform-[rotateX(20deg)_rotateY(-20deg)]">
-                            <div className="absolute inset-0 bg-slate-900 border border-cyan-500/40 rounded-lg transform-[translateZ(10px)] flex items-center justify-center overflow-hidden">
-                                <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full shadow-[0_0_8px_#22d3ee]" />
+                            <div className="absolute inset-0 bg-slate-200 dark:bg-slate-900 border border-cyan-500/40 rounded-lg transform-[translateZ(10px)] flex items-center justify-center overflow-hidden">
+                                <div className="w-1.5 h-1.5 bg-cyan-600 dark:bg-cyan-400 rounded-full shadow-[0_0_8px_#22d3ee]" />
                             </div>
-                            <div className="absolute inset-0 bg-slate-800 border border-slate-700 rounded-lg transform-[translateZ(-5px)_translateX(5px)_rotateY(90deg)]" />
+                            <div className="absolute inset-0 bg-slate-200 dark:bg-slate-800 border border-slate-400 dark:border-slate-700 rounded-lg transform-[translateZ(-5px)_translateX(5px)_rotateY(90deg)]" />
                         </div>
                     </div>
                     <div className="flex flex-col -space-y-1">
                         <div className="flex items-center gap-1.5">
-                            <span className="text-xl font-black text-white tracking-tighter group-hover:text-cyan-400 transition-colors uppercase">
+                            <span className="text-xl font-black text-slate-700 dark:text-white tracking-tighter group-hover:text-cyan-700 dark:group-hover:text-cyan-400 transition-colors uppercase">
                                 {firstText}
                             </span>
-                            <span className="text-[8px] font-mono font-bold text-cyan-500/70 uppercase">
+                            <span className="text-[8px] font-mono font-bold dark:text-cyan-500/70 uppercase">
                                 v4.0
                             </span>
                         </div>
-                        <span className="text-[6px] font-bold text-slate-500 uppercase tracking-widest group-hover:text-slate-300 transition-colors">
+                        <span className="text-[6px] font-bold text-slate-800 dark:text-slate-500 uppercase tracking-widest group-hover:text-slate-800 dark:group-hover:text-slate-300 transition-colors">
                             {title}
                         </span>
                     </div>

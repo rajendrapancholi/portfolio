@@ -91,17 +91,19 @@ export default async function BlogPage({ params }: Props) {
     let blog = null;
     let success = false;
     try {
-        if (source == 'git') {
+        if (source === 'git') {
             const response = await getPostBySlug(actualSlug);
             success = response.success;
             blog = response?.data;
-        } else {
+        } else if (source === 'main') {
             const response = await getBlogBySlug(actualSlug);
             success = response.success;
             blog = response?.data;
+        } else {
+            throw new Error("Invalid url or blog not exists!");
         }
     } catch (error) {
-        console.error("Metadata fetch failed:", error);
+        console.error("Metadata fetch failed!", error);
     }
 
     if (!blog) notFound();
@@ -125,7 +127,7 @@ export default async function BlogPage({ params }: Props) {
         description: blog.description || `Read ${blog.title} by Rajendra Pancholi`,
         author: blog.author.name || "Rajendra Pancholi",
         publishedAt: blog.createdAt,
-        logo: `${baseUrl}/logo.png`,
+        logo: `${baseUrl}/android-chrome-192x192.png`,
         image: blog.thumbnail || '/default-blog-thumb-webp',
         updatedAt: blog.updatedAt,
         priceCurrency: "rs",

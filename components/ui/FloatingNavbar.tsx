@@ -80,7 +80,7 @@ export const FloatingNavbar = ({
             href={navItem.link}
             onMouseEnter={() => setHoveredIndex(idx)}
             onMouseLeave={() => setHoveredIndex(null)}
-            className="relative px-1 md:px-4 md:py-2 transition-colors duration-200"
+            className="relative px-0.5 md:px-4 flex-center md:py-2 transition-colors duration-200"
           >
             {/* The Floating Pill Background */}
             <AnimatePresence>
@@ -92,14 +92,14 @@ export const FloatingNavbar = ({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="absolute inset-0 bg-white/10 rounded-xl -z-10"
+                  className="absolute -translate-x-1 sm:translate-x-0 inset-0 bg-white/10 rounded-xl -z-10"
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
               )}
             </AnimatePresence>
 
-            <div className="flex items-center space-x-2">
-              <span className="text-xl sm:text-base">{navItem.icon}</span>
+            <div className="flex-center space-x-2">
+              <span className="text-md text-cyan-500 max-sm:py-2 px-0.5 sm:text-xl custom-tooltip" data-tip={navItem.name} >{navItem.icon}</span>
               <span className="hidden sm:block text-sm font-medium text-neutral-300 hover:text-white">
                 {navItem.name}
               </span>

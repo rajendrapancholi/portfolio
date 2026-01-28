@@ -140,7 +140,7 @@ export const baseMetadata: Metadata = {
     // yahoo: "your-yahoo-verification-code",
     other: {
       "github:card": "summary_large_image",
-      "github:site": "@rajendrapancholi",
+      "github:site": "https://github.com/rajendrapancholi",
       me: [
         "rpancholi522@gmail.com",
         "https://github.com/rajendrapancholi",

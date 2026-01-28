@@ -11,6 +11,7 @@ export const connectToDB = async () => {
 
   try {
     const db = await mongoose.connect(ENV.MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
       dbName: "portfolio",
       bufferCommands: false,
     });
@@ -31,6 +32,7 @@ export const connectToBlogDB = async () => {
   if (blogConnection && blogConnection.readyState === 1) return blogConnection;
   try {
     blogConnection = mongoose.createConnection(ENV.BLOG_MONGODB_URI!, {
+      serverSelectionTimeoutMS: 5000,
       dbName: "blogdb",
       bufferCommands: false,
     });

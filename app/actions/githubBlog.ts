@@ -149,7 +149,7 @@ export async function getPostBySlug(slug: string) {
 ---
 title: "How to fetch GitHub files"
 description: "A deep dive into using Next.js with GitHub API"
-author: ['name': 'Rajendra...', ...]
+author: ["name": "Rajendra...", "email":"rpancholi@gmail.com", "image": "https://rajendrapancholi.vercel.app/raje-avatar.jpeg"]
 created: "2024-05-20"
 updated: "2024-05-21"
 tags: [nextjs, typescript, github]

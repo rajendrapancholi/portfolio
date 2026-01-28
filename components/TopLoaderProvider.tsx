@@ -5,7 +5,7 @@ const TopLoaderProvider = () => {
             color="#06b6d4"      // Cyan color (Tailwind cyan-500)
             initialPosition={0.08}
             crawlSpeed={200}
-            height={3}           // Thickness of the bar
+            height={2}           // Thickness of the bar
             crawl={true}
             showSpinner={false}  // Disable the loading circle for a cleaner look
             easing="ease"

@@ -33,7 +33,7 @@ export const projectSlice = createSlice({
       if (!state.projects) return;
 
       const index = state.projects.findIndex(
-        (project) => project.id === action.payload.id
+        (project) => project.id === action.payload.id,
       );
 
       if (index !== -1) {
@@ -48,7 +48,7 @@ export const projectSlice = createSlice({
       if (!state.projects) return;
 
       state.projects = state.projects.filter(
-        (project) => project.id !== action.payload.id
+        (project) => project.id !== action.payload.id,
       );
     },
 
