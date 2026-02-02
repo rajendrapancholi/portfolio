@@ -1,10 +1,12 @@
-"use client";
-
 import { ReactNode } from "react";
 import Footer from "@/components/Footer";
 import { FloatingNavbar } from "@/components/ui/FloatingNavbar";
 import { HiMiniRectangleGroup } from "react-icons/hi2";
 import { FcAbout, FcContacts, FcHome, FcTemplate } from 'react-icons/fc';
+import { baseMetadata } from "@/lib/seo/metadata";
+
+
+export const metadata = baseMetadata;
 
 export default function FrontLayout({ children }: { children: ReactNode; }) {
   return (

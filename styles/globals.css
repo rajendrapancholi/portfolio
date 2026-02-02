@@ -113,6 +113,7 @@
     --shimmer-color: rgba(89, 87, 87, 0.217);
     --shimmer-highlight: rgba(39, 39, 39, 0.169);
     color-scheme: light;
+    --radialprogress: 0%;
   }
 
   .dark {
