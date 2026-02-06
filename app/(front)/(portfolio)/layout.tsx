@@ -5,7 +5,6 @@ import { HiMiniRectangleGroup } from "react-icons/hi2";
 import { FcAbout, FcContacts, FcHome, FcTemplate } from 'react-icons/fc';
 import { baseMetadata } from "@/lib/seo/metadata";
 
-
 export const metadata = baseMetadata;
 
 export default function FrontLayout({ children }: { children: ReactNode; }) {

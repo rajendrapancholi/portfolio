@@ -66,6 +66,7 @@ export const baseMetadata: Metadata = {
 
   keywords: [
     "Rajendra Pancholi",
+    "Pancholi",
     "Rajendra Pancholi Portfolio",
     "Rajendra Pancholi Developer",
     "RajPancholi",
@@ -73,6 +74,7 @@ export const baseMetadata: Metadata = {
     "Raje Pancholi",
     "RajendraPancholi",
     "rpancholi",
+    "rajendra",
     "pancholi",
     "raje",
     "Rajep",
