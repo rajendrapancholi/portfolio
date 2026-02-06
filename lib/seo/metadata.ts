@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ENV } from "@/config/env";
+import { blogsKeywords } from "./keywords";
 
 const SITE_NAME = "Rajendra Pancholi";
 const SITE_URL = ENV.BASE_URL ?? "https://rajendrapancholi.vercel.app";
@@ -264,7 +265,6 @@ export function createPageMetadata({
     absoluteImage = safeImage.startsWith("http")
       ? safeImage
       : new URL(safeImage, SITE_URL).toString();
-    console.log(" Debug Data: ", SITE_URL);
   }
   if (process.env.NODE_ENV === "development") {
     console.log("🚀 OG Image Path:", absoluteImage);
@@ -301,7 +301,7 @@ export function createPageMetadata({
       images: [absoluteImage],
     },
 
-    keywords: keywords ?? baseMetadata.keywords,
+    keywords: keywords ?? blogsKeywords,
 
     ...(noindex && {
       robots: {

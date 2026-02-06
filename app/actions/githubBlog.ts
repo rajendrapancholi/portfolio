@@ -48,8 +48,8 @@ export interface BlogResponse {
 
 export const getGithubMarkdownFiles = cache(async (): Promise<BlogResponse> => {
   try {
-    const res = await fetch(
-      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents`,
+    const treeRes = await fetch(
+      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/trees/main?recursive=1`,
       {
         headers: {
           ...(BLOG_GITHUB_TOKEN
@@ -63,20 +63,15 @@ export const getGithubMarkdownFiles = cache(async (): Promise<BlogResponse> => {
       },
     );
 
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      console.error(`GitHub API Error: ${res.status}`, errorData);
-      throw new Error(
-        `GitHub API failed with status ${res.status}: ${errorData.message || "Failed to fetch!"}`,
-      );
-    }
-    const files = await res.json();
+    const treeData = await treeRes.json();
+    const mdFiles = treeData.tree.filter(
+      (item: any) => item.type === "blob" && item.path.endsWith(".md"),
+    );
 
-    const mdFiles = files.filter((file: any) => file.name.endsWith(".md"));
-
-    const posts = await Promise.all<Blog[]>(
+    const posts = await Promise.all(
       mdFiles.map(async (file: any) => {
-        const contentRes = await fetch(file.download_url);
+        const rawUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${file.path}`;
+        const contentRes = await fetch(rawUrl);
         const rawContent = await contentRes.text();
 
         const { data, content: bodyContent } = parseMetadata(rawContent);
@@ -85,9 +80,9 @@ export const getGithubMarkdownFiles = cache(async (): Promise<BlogResponse> => {
         const gitDate = await getFileDates(file.path);
 
         return {
-          _id: file.sha || Math.random().toString(36).slice(2),
+          _id: file.sha,
           type: "Post",
-          slug: file.name.replace(".md", ""),
+          slug: file.path.replace(".md", ""),
           title: data.title || firstHeading || "Untitled",
           author: data.author || {
             name: "Rajendra Pancholi",
@@ -98,6 +93,7 @@ export const getGithubMarkdownFiles = cache(async (): Promise<BlogResponse> => {
           updatedAt: data.updated || gitDate || new Date().toISOString(),
           description: data.description || null,
           tags: Array.isArray(data.tags) ? data.tags : [],
+          keywords: Array.isArray(data.keywords) ? data.keywords : [],
           thumbnail: data.thumbnail
             ? `${RAW_URL_BASE}${data.thumbnail}`
             : "/default-blog-thumb.webp",
@@ -107,20 +103,96 @@ export const getGithubMarkdownFiles = cache(async (): Promise<BlogResponse> => {
       }),
     );
 
-    // Sort the posts by updated date
     posts.sort(
       (a, b) =>
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
     );
+
     return { success: true, data: posts };
   } catch (error) {
-    console.error("Error in getGithubMarkdownFiles:", error);
-    return {
-      success: false,
-      error: "Failed to retrieve blogs!",
-    };
+    console.error("Error:", error);
+    return { success: false, error: "Failed to retrieve blogs!" };
   }
 });
+
+export const getGithubMarkdownFiles22 = cache(
+  async (): Promise<BlogResponse> => {
+    try {
+      const res = await fetch(
+        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents`,
+        {
+          headers: {
+            ...(BLOG_GITHUB_TOKEN
+              ? { Authorization: `Bearer ${BLOG_GITHUB_TOKEN}` }
+              : {}),
+            "User-Agent": "RajePancholi-Blog",
+            Accept: "application/vnd.github+json", // API stability
+            "X-GitHub-Api-Version": "2022-11-28",
+          },
+          next: { revalidate: 3600 },
+        },
+      );
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        console.error(`GitHub API Error: ${res.status}`, errorData);
+        throw new Error(
+          `GitHub API failed with status ${res.status}: ${errorData.message || "Failed to fetch!"}`,
+        );
+      }
+      const files = await res.json();
+
+      const mdFiles = files.filter((file: any) => file.name.endsWith(".md"));
+
+      const posts = await Promise.all<Blog[]>(
+        mdFiles.map(async (file: any) => {
+          const contentRes = await fetch(file.download_url);
+          const rawContent = await contentRes.text();
+
+          const { data, content: bodyContent } = parseMetadata(rawContent);
+          const firstHeading =
+            bodyContent.match(/^#\s+(.*)$/m)?.[1] || "Untitled";
+          const gitDate = await getFileDates(file.path);
+
+          return {
+            _id: file.sha || Math.random().toString(36).slice(2),
+            type: "Post",
+            slug: file.name.replace(".md", ""),
+            title: data.title || firstHeading || "Untitled",
+            author: data.author || {
+              name: "Rajendra Pancholi",
+              email: "rpancholi522@gmail.com",
+              image: "",
+            },
+            createdAt: data.created || gitDate || new Date().toISOString(),
+            updatedAt: data.updated || gitDate || new Date().toISOString(),
+            description: data.description || null,
+            tags: Array.isArray(data.tags) ? data.tags : [],
+            keywords: Array.isArray(data.keywords) ? data.keywords : [],
+            thumbnail: data.thumbnail
+              ? `${RAW_URL_BASE}${data.thumbnail}`
+              : "/default-blog-thumb.webp",
+            content: bodyContent.trim(),
+            editUrl: `https://github.com/${REPO_OWNER}/${REPO_NAME}/edit/main/${file.path}`,
+          } as Blog;
+        }),
+      );
+
+      // Sort the posts by updated date
+      posts.sort(
+        (a, b) =>
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+      );
+      return { success: true, data: posts };
+    } catch (error) {
+      console.error("Error in getGithubMarkdownFiles:", error);
+      return {
+        success: false,
+        error: "Failed to retrieve blogs!",
+      };
+    }
+  },
+);
 
 /**
  * Fetch the posts list

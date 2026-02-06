@@ -53,6 +53,7 @@ export type Blog = {
   title: string;
   type: string;
   tags?: string[];
+  keywords?: string[];
   description: string;
   content?: string;
   published?: boolean;

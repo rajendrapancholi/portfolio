@@ -14,6 +14,15 @@ import { getHeadings } from "@/lib/utils/getHeadings";
 import { getPostBySlug } from "@/app/actions/githubBlog";
 import MarkdownRenderer from "@/components/blog/MarkdownRenderer";
 import fetchAllBlogs from "@/lib/utils/fetchAllBlogs";
+import React from "react";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/Breadcrumb";
 
 const baseUrl = ENV.BASE_URL ?? "https://rajendrapancholi.vercel.app";
 
@@ -31,9 +40,9 @@ export async function generateMetadata({ params }: Props) {
       category: "Blog-Not-Found!",
       isDynamic: true,
     });
-  let [src, acS] = slug;
+  const [src, ...pathSegments] = slug;
   const source = sanitizeSlug(src);
-  const actualSlug = sanitizeSlug(acS);
+  const actualSlug = sanitizeSlug(pathSegments.join("/"));
 
   let blog = null;
 
@@ -42,7 +51,8 @@ export async function generateMetadata({ params }: Props) {
       const response = await getPostBySlug(actualSlug);
       blog = response?.data;
     } else if (source === "main") {
-      const response = await getBlogBySlug(actualSlug);
+      const mongoSlug = pathSegments[pathSegments.length - 1];
+      const response = await getBlogBySlug(sanitizeSlug(mongoSlug));
       blog = response?.data;
     }
   } catch (error) {
@@ -65,7 +75,7 @@ export async function generateMetadata({ params }: Props) {
     description: blog.description || `Read ${blog.title} by Rajendra Pancholi`,
     canonical: `https://rajendrapancholi.vercel.app/blog/b/${source}/${actualSlug}`,
     image: blog.thumbnail ? blog.thumbnail : null,
-    keywords: blog.tags,
+    keywords: blog.keywords,
     isDynamic: blog.thumbnail ? false : true,
   });
 }
@@ -79,13 +89,11 @@ export async function generateStaticParams() {
 
 export default async function BlogPage({ params }: Props) {
   const { slug } = await params;
-  if (!slug || slug.length < 2) {
-    notFound();
-  }
-  let [src, acS] = slug;
-  const source = sanitizeSlug(src);
-  const actualSlug = sanitizeSlug(acS);
 
+  if (!slug || slug.length < 2) notFound();
+
+  const [source, ...pathSegments] = slug;
+  const actualSlug = sanitizeSlug(pathSegments.join("/"));
   const allBlogs = await fetchAllBlogs();
   let blog = null;
   let success = false;
@@ -94,15 +102,15 @@ export default async function BlogPage({ params }: Props) {
       const response = await getPostBySlug(actualSlug);
       success = response.success;
       blog = response?.data;
-    } else if (source === "main") {
-      const response = await getBlogBySlug(actualSlug);
+    } else {
+      const response = await getBlogBySlug(
+        pathSegments[pathSegments.length - 1],
+      );
       success = response.success;
       blog = response?.data;
-    } else {
-      throw new Error("Invalid url or blog not exists!");
     }
   } catch (error) {
-    console.error("Metadata fetch failed!", error);
+    console.error("Fetch failed!", error);
   }
 
   if (!blog) notFound();
@@ -132,6 +140,7 @@ export default async function BlogPage({ params }: Props) {
     priceCurrency: "rs",
   });
   const headings = getHeadings(blog.content);
+
   return (
     <>
       <Script
@@ -144,26 +153,82 @@ export default async function BlogPage({ params }: Props) {
       <div className="grid grid-cols-1 md:grid-cols-5 justify-between gap-2 mx-1.5">
         <article className="col-span-4 w-full px-2">
           <header className="mb-10">
-            <div className="flex items-center gap-2 text-xs font-medium text-cyan-600 dark:text-cyan-400 mb-4 dark:bg-cyan-400/10 bg-cyan-400/20 w-fit px-2 py-1 rounded">
-              <p className="text-gray-500">Last update: </p>
-              <time dateTime={new Date(blog.updatedAt).toISOString()}>
-                {new Date(blog.updatedAt).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
+            <Breadcrumb className="mt-10 mb-6 uppercase tracking-widest font-medium">
+              <BreadcrumbList className="text-[10px] md:text-xs">
+                {/* Base Link */}
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link
+                      href="/blogs"
+                      className="hover:text-cyan-400 transition-colors"
+                    >
+                      BLOGS
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+
+                {/* Dynamic Segments */}
+                {pathSegments.map((segment, i) => {
+                  const isLast = i === pathSegments.length - 1;
+                  const breadcrumbPath = `/blogs/b/${source}/${pathSegments.slice(0, i + 1).join("/")}`;
+
+                  return (
+                    <React.Fragment key={i}>
+                      <BreadcrumbSeparator />
+                      <BreadcrumbItem>
+                        {isLast ? (
+                          <BreadcrumbPage className="text-cyan-500 truncate max-w-37.5 md:max-w-none">
+                            {segment.replace(/-/g, " ")}
+                          </BreadcrumbPage>
+                        ) : (
+                          <BreadcrumbLink asChild>
+                            <Link
+                              href={breadcrumbPath}
+                              className="hover:text-cyan-400/80 transition-colors"
+                            >
+                              {segment.replace(/-/g, " ")}
+                            </Link>
+                          </BreadcrumbLink>
+                        )}
+                      </BreadcrumbItem>
+                    </React.Fragment>
+                  );
                 })}
-              </time>
-              <span className="text-slate-600">•</span>
-              <span>{blog.author.name}</span>
+              </BreadcrumbList>
+            </Breadcrumb>
+
+            {/* Metadata Badge */}
+            <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold mb-6">
+              <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-md bg-cyan-500/10 border border-cyan-500/20 text-cyan-500">
+                <span className="text-cyan-500/60 uppercase text-[9px]">
+                  Updated:
+                </span>
+                <time dateTime={new Date(blog.updatedAt).toISOString()}>
+                  {new Date(blog.updatedAt).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </time>
+              </div>
+
+              <span className="w-1 h-1 rounded-full bg-slate-700" />
+
+              <span className="text-slate-400 hover:text-slate-200 transition-colors cursor-default">
+                {blog.author.name}
+              </span>
             </div>
 
-            {headings?.length > 0 && headings[0].level !== 1 && (
-              <>
-                <h1 className="text-2xl md:text-4xl font-extrabold dark:text-white mb-6 leading-tight tracking-tight">
+            {/* Title Section */}
+            {(!headings ||
+              headings.length === 0 ||
+              headings[0].level !== 1) && (
+              <div className="space-y-4">
+                <h1 className="text-3xl md:text-5xl font-black text-white leading-[1.1] tracking-tighter">
                   {blog.title}
                 </h1>
-                <div className="h-1 w-20 bg-linear-to-r from-cyan-500 to-blue-500 rounded-full" />
-              </>
+                <div className="h-1.5 w-24 bg-linear-to-r from-cyan-500 to-blue-600 rounded-full" />
+              </div>
             )}
           </header>
           <MarkdownRenderer content={blog.content} />

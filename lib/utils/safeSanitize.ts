@@ -73,8 +73,10 @@ export const sanitizeSlug = (slug: string): string => {
   return slug
     .toLowerCase()
     .trim()
-    .replace(/[\s_]+/g, "-") // 1. Convert spaces and underscores to hyphens
-    .replace(/[^\w-]+/g, "") // 2. Remove all non-word chars (except hyphens)
-    .replace(/-+/g, "-") // 3. Replace multiple hyphens with a single one
-    .replace(/^-+|-+$/g, ""); // 4. Trim hyphens from start and end
+    .replace(/[\s_]+/g, "-") // 1. Spaces/underscores to hyphens
+    .replace(/[^\w\/-]+/g, "") // 2. ALLOW forward slashes (added \/) and hyphens
+    .replace(/-+/g, "-") // 3. Collapse multiple hyphens
+    .replace(/\/+/g, "/") // 4. Collapse multiple slashes (e.g. // to /)
+    .replace(/^-+|-+$/g, "") // 5. Trim hyphens from ends
+    .replace(/^\/+|\/+$/g, ""); // 6. Trim slashes from ends
 };

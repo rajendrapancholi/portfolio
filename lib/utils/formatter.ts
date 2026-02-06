@@ -67,20 +67,18 @@ export function parseMetadata(rawContent: string): {
   data: any;
   content: string;
 } {
-  // 1. Split Metadata from Body
-  // Supports both \n and \r\n line endings
   const match = rawContent.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
 
   if (!match) {
     return { data: {}, content: rawContent };
   }
 
-  const yamlBlock = match[1];
+  // Add a newline to the end of the block to ensure the regex lookahead matches the last field
+  const yamlBlock = match[1] + "\n";
   const bodyContent = match[2];
   const data: Record<string, any> = {};
 
-  // 2. Refined Regex for "key: value"
-  // Captures the key and the value, handling multi-line strings until the next key
+  // Improved Regex: the lookahead now handles the end of the block more gracefully
   const fieldRegex = /^([a-zA-Z0-9_-]+):\s*([\s\S]*?)(?=\n[a-zA-Z0-9_-]+:|$)/gm;
 
   let m;
@@ -88,24 +86,30 @@ export function parseMetadata(rawContent: string): {
     const key = m[1].trim();
     let value = m[2].trim();
 
-    // Remove surrounding quotes if they exist
+    // Remove outer quotes from the entire value string
     value = value.replace(/^["']([\s\S]*)["']$/, "$1");
 
     if (key === "author") {
-      // Special Handling for custom ['name': '...', 'email': '...'] format
       data[key] = parseAuthorString(value);
     } else if (value.startsWith("[") && value.endsWith("]")) {
-      // Improved Array Handling
-      data[key] = value
-        .slice(1, -1)
-        .split(",")
-        .map((item) => item.trim().replace(/^["'](.*)["']$/, "$1"))
+      const contentInsideBrackets = value.slice(1, -1);
+
+      // Regex split to ignore commas inside quotes
+      const items = contentInsideBrackets.split(
+        /,(?=(?:(?:[^"]*"){2})*[^"]*$)/,
+      );
+
+      data[key] = items
+        .map((item) => {
+          let clean = item.trim();
+          // Remove inner quotes around individual array items
+          return clean.replace(/^["'](.*)["']$/, "$1");
+        })
         .filter((item) => item !== "");
     } else {
       data[key] = value;
     }
   }
-
   return { data, content: bodyContent };
 }
 
@@ -134,6 +138,5 @@ function parseAuthorString(str: string) {
       obj[k] = v;
     }
   });
-
   return obj;
 }
