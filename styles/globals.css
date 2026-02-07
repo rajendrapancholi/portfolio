@@ -293,6 +293,29 @@ h3 {
     overflow-x: auto !important;
     max-width: 100% !important;
   }
+
+  .markdown-render-blue-topaz .anchor-icon {
+    @apply opacity-0 transition-opacity duration-200 mr-2 text-cyan-500 font-normal;
+    font-family: monospace;
+  }
+
+  /* Show it when the heading (h1, h2, etc.) is hovered */
+  .markdown-render-blue-topaz h1:hover .anchor-icon,
+  .markdown-render-blue-topaz h2:hover .anchor-icon,
+  .markdown-render-blue-topaz h3:hover .anchor-icon,
+  .markdown-render-blue-topaz h4:hover .anchor-icon,
+  .markdown-render-blue-topaz h5:hover .anchor-icon,
+  .markdown-render-blue-topaz h6:hover .anchor-icon {
+    @apply opacity-100;
+  }
+
+  /* Ensure headings have a relative position for proper alignment */
+  .markdown-render-blue-topaz h1,
+  .markdown-render-blue-topaz h2,
+  .markdown-render-blue-topaz h3,
+  .markdown-render-blue-topaz h4 {
+    @apply relative;
+  }
 }
 
 /* 5. Utility Classes */
