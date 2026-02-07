@@ -13,7 +13,6 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import { ENV } from "@/config/env";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { IoCloseCircle } from "react-icons/io5";
 import { XCircle } from "lucide-react";
 
 const RAW_URL_BASE = `https://raw.githubusercontent.com/${ENV.NEXT_PUBLIC_REPO_OWNER}/${ENV.NEXT_PUBLIC_REPO_NAME}/main`;
