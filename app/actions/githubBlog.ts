@@ -115,7 +115,7 @@ export const getGithubMarkdownFiles = cache(async (): Promise<BlogResponse> => {
   }
 });
 
-export const getGithubMarkdownFiles22 = cache(
+/* export const getGithubMarkdownFiles22 = cache(
   async (): Promise<BlogResponse> => {
     try {
       const res = await fetch(
@@ -192,7 +192,7 @@ export const getGithubMarkdownFiles22 = cache(
       };
     }
   },
-);
+); */
 
 /**
  * Fetch the posts list
