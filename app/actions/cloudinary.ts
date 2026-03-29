@@ -10,6 +10,16 @@ cloudinary.config({
   api_secret: ENV.BLOG_CLOUDINAR_API_SECRET,
 });
 
+console.log(
+  "Debug name: ENV.BLOG_CLOUDINAR_CLOUD_NAME",
+  ENV.BLOG_CLOUDINAR_CLOUD_NAME,
+);
+console.log("Debug ENV.BLOG_CLOUDINAR_API_KEY,: ", ENV.BLOG_CLOUDINAR_API_KEY);
+console.log(
+  "Debug ENV.BLOG_CLOUDINAR_API_SECRET,: ",
+  ENV.BLOG_CLOUDINAR_API_SECRET,
+);
+
 /**
  * Robust Public ID Extraction
  * Extracts the full path (including folders) but excludes the version and extension.
