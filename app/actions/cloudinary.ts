@@ -4,21 +4,11 @@ import { ENV } from "@/config/env";
 import { v2 as cloudinary } from "cloudinary";
 import { auth } from "../../lib/auth";
 
-cloudinary.config({
-  cloud_name: ENV.BLOG_CLOUDINAR_CLOUD_NAME,
-  api_key: ENV.BLOG_CLOUDINAR_API_KEY,
-  api_secret: ENV.BLOG_CLOUDINAR_API_SECRET,
-});
-
-console.log(
-  "Debug name: ENV.BLOG_CLOUDINAR_CLOUD_NAME",
-  ENV.BLOG_CLOUDINAR_CLOUD_NAME,
-);
-console.log("Debug ENV.BLOG_CLOUDINAR_API_KEY,: ", ENV.BLOG_CLOUDINAR_API_KEY);
-console.log(
-  "Debug ENV.BLOG_CLOUDINAR_API_SECRET,: ",
-  ENV.BLOG_CLOUDINAR_API_SECRET,
-);
+// cloudinary.config({
+//   cloud_name: ENV.BLOG_CLOUDINAR_CLOUD_NAME,
+//   api_key: ENV.BLOG_CLOUDINAR_API_KEY,
+//   api_secret: ENV.BLOG_CLOUDINAR_API_SECRET,
+// });
 
 /**
  * Robust Public ID Extraction
@@ -154,11 +144,11 @@ export const handleCloudinaryBlogDelete = async (
     }
     console.log(publicId);
     // Use the SDK directly—no fetch or signatures needed on the server!
-    cloudinary.config({
-      cloud_name: ENV.BLOG_CLOUDINAR_CLOUD_NAME,
-      api_key: ENV.BLOG_CLOUDINAR_API_KEY,
-      api_secret: ENV.BLOG_CLOUDINAR_API_SECRET,
-    });
+    // cloudinary.config({
+    //   cloud_name: ENV.BLOG_CLOUDINAR_CLOUD_NAME,
+    //   api_key: ENV.BLOG_CLOUDINAR_API_KEY,
+    //   api_secret: ENV.BLOG_CLOUDINAR_API_SECRET,
+    // });
     const result = await cloudinary.uploader.destroy(publicId, {
       invalidate: true,
     });
