@@ -17,7 +17,7 @@ import { Project } from "@/lib/models/ProjectModel";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
 import { FaLocationArrow, FaPen } from "react-icons/fa6";
-import { handleCloudinaryAdminDelete } from "@/app/actions/adminCloudinary";
+import { handleCloudinaryAdminDelete } from "@/lib/adminCloudinary";
 
 const Projects = () => {
   const { data: projects, error } = useSWR(`/api/admin/projects`);

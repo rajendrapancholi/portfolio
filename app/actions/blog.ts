@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { handleCloudinaryBlogDelete } from "@/app/actions/cloudinary";
+import { handleCloudinaryBlogDelete } from "@/lib/cloudinary";
 import { connectToDB } from "@/lib/database";
 import { Blog, getBlogModel } from "@/lib/models/BlogModel";
 import UserModel from "@/lib/models/UserModel";
