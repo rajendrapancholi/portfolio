@@ -10,15 +10,6 @@ cloudinary.config({
   api_secret: ENV.CLOUDINARY_SECRET,
 });
 
-console.log(
-  "Debug ENV.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,: ",
-  ENV.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-);
-console.log(
-  "Debug ENV.NEXT_PUBLIC_CLOUDINARY_API_KEY,: ",
-  ENV.NEXT_PUBLIC_CLOUDINARY_API_KEY,
-);
-console.log("Debug ENV.CLOUDINARY_SECRET,: ", ENV.CLOUDINARY_SECRET);
 /**
  * Robust Public ID Extraction
  * Extracts the full path (including folders) but excludes the version and extension.
