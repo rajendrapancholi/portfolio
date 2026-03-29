@@ -2,7 +2,7 @@
 
 import { ENV } from "@/config/env";
 import { v2 as cloudinary } from "cloudinary";
-import { auth } from "./auth";
+import { auth } from "../../lib/auth";
 
 cloudinary.config({
   cloud_name: ENV.BLOG_CLOUDINAR_CLOUD_NAME,

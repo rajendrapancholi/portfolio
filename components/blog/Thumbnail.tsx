@@ -1,11 +1,11 @@
 import {
   handleCloudinaryBlogDelete,
   handleCloudinaryBlogUpload,
-} from "@/lib/cloudinary";
+} from "@/app/actions/cloudinary";
 import {
   handleCloudinaryAdminDelete,
   handleCloudinaryAdminUpload,
-} from "@/lib/adminCloudinary";
+} from "@/app/actions/adminCloudinary";
 import {
   CheckCircle2,
   CloudUpload,
