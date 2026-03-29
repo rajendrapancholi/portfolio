@@ -4,9 +4,6 @@ import { ENV } from "@/config/env";
 import { auth } from "@/lib/auth";
 import { v2 as cloudinary } from "cloudinary";
 
-// CRITICAL: DO NOT configure at module level
-// cloudinary.config({ ... }); // REMOVED
-
 export const getPublicIdFromUrl = async (
   url: string,
 ): Promise<string | null> => {
@@ -41,7 +38,7 @@ export const handleCloudinaryAdminUpload = async (
   currentThumbnailUrl: string | null,
 ): Promise<string | null> => {
   try {
-    // STEP 1: Validate session FIRST
+    // Validate session FIRST
     const session = await auth();
     if (!session) {
       console.error("[ADMIN_UPLOAD] Authentication failed: No active session");
@@ -55,7 +52,7 @@ export const handleCloudinaryAdminUpload = async (
       throw new Error("Unauthorized: Insufficient privileges");
     }
 
-    // STEP 2: Configure Cloudinary at RUNTIME (not module load)
+    // Configure Cloudinary at RUNTIME (not module load)
     cloudinary.config({
       cloud_name: ENV.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
       api_key: ENV.NEXT_PUBLIC_CLOUDINARY_API_KEY,
@@ -73,12 +70,12 @@ export const handleCloudinaryAdminUpload = async (
       throw new Error("Cloudinary configuration failed: Missing credentials");
     }
 
-    // STEP 3: Extract and validate public ID
+    // Extract and validate public ID
     const oldPublicId = currentThumbnailUrl
       ? await getPublicIdFromUrl(currentThumbnailUrl)
       : null;
 
-    // STEP 4: Generate signature with current timestamp
+    // Generate signature with current timestamp
     const timestamp = Math.round(new Date().getTime() / 1000);
     const paramsToSign: any = {
       timestamp,
@@ -95,7 +92,7 @@ export const handleCloudinaryAdminUpload = async (
       ENV.CLOUDINARY_SECRET,
     );
 
-    // STEP 5: Prepare FormData
+    // Prepare FormData
     const formData = new FormData();
     formData.append("file", file);
     formData.append("signature", signature);
@@ -108,7 +105,7 @@ export const handleCloudinaryAdminUpload = async (
       formData.append("invalidate", "true");
     }
 
-    // STEP 6: Upload to Cloudinary with timeout
+    // Upload to Cloudinary with timeout
     const uploadUrl = `https://api.cloudinary.com/v1_1/${ENV.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
 
     const controller = new AbortController();
