@@ -1,17 +1,23 @@
-'use client';
-import { useState } from 'react';
-import { toast } from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
-import useSWR from 'swr';
-import useSWRMutation from 'swr/mutation';
-import Loading from '@/components/Loading';
-import { formatId } from '@/lib/utils/formatter';
-import Link from 'next/link';
-import { HiMiniTrash, HiOutlinePencilSquare, HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
-import { Project } from '@/lib/models/ProjectModel';
-import Image from 'next/image';
-import Button from '@/components/ui/Button';
-import { FaLocationArrow, FaPen } from 'react-icons/fa6';
+"use client";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
+import Loading from "@/components/Loading";
+import { formatId } from "@/lib/utils/formatter";
+import Link from "next/link";
+import {
+  HiMiniTrash,
+  HiOutlinePencilSquare,
+  HiChevronLeft,
+  HiChevronRight,
+} from "react-icons/hi2";
+import { Project } from "@/lib/models/ProjectModel";
+import Image from "next/image";
+import Button from "@/components/ui/Button";
+import { FaLocationArrow, FaPen } from "react-icons/fa6";
+import { handleCloudinaryAdminDelete } from "@/app/actions/adminCloudinary";
 
 const Projects = () => {
   const { data: projects, error } = useSWR(`/api/admin/projects`);
@@ -23,36 +29,39 @@ const Projects = () => {
 
   const { trigger: deleteProject } = useSWRMutation(
     `/api/admin/projects`,
-    async (url, { arg }: { arg: { projectId: string | any; }; }) => {
-      const toastId = toast.loading('Deleting project...');
+    async (url, { arg }: { arg: { projectId: string | any; img: string } }) => {
+      const toastId = toast.loading("Deleting project...");
       const response = await fetch(`${url}/${arg.projectId}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
       if (response.ok) {
-        toast.success('Project deleted successfully.', { id: toastId });
+        let succ = await handleCloudinaryAdminDelete(arg.img);
+        toast.success("Project deleted successfully.", { id: toastId });
+        if (succ) toast.success("img deleted!");
+        else toast.error(`img deletion failed! or imgurlis: ${arg.img}`);
       } else {
         toast.error(data.message, { id: toastId });
       }
-    }
+    },
   );
 
   const { trigger: createProject, isMutating: isCreating } = useSWRMutation(
     `/api/admin/projects`,
     async (url) => {
       const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
       if (!response.ok) return toast.error(data.message);
-      toast.success('Project created successfully.');
+      toast.success("Project created successfully.");
       router.push(`/admin/projects/${data.project._id}`);
-    }
+    },
   );
 
-  if (error) return 'An error has occurred.';
+  if (error) return "An error has occurred.";
   if (!projects) return <Loading />;
 
   // --- Pagination Logic ---
@@ -61,12 +70,12 @@ const Projects = () => {
   const currentProjects = projects.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(projects.length / itemsPerPage);
 
-  const today = new Date().toLocaleDateString('en-IN', {
-    timeZone: 'Asia/Kolkata',
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  const today = new Date().toLocaleDateString("en-IN", {
+    timeZone: "Asia/Kolkata",
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
   return (
     <div className="animate-in fade-in duration-500">
@@ -81,7 +90,9 @@ const Projects = () => {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          {isCreating && <span className="loading loading-spinner text-primary" />}
+          {isCreating && (
+            <span className="loading loading-spinner text-primary" />
+          )}
           <Button
             title="New Project"
             icon={<FaPen />}
@@ -114,8 +125,12 @@ const Projects = () => {
                   key={project._id}
                   className="group hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors cursor-default"
                 >
-                  <td className="font-mono text-xs opacity-50">{indexOfFirstItem + index + 1}</td>
-                  <td className="font-mono text-xs">{formatId(project._id!)}</td>
+                  <td className="font-mono text-xs opacity-50">
+                    {indexOfFirstItem + index + 1}
+                  </td>
+                  <td className="font-mono text-xs">
+                    {formatId(project._id!)}
+                  </td>
                   <td>
                     <div className="avatar group/img relative">
                       <div className="mask mask-squircle w-10 h-10 ring-2 ring-base-content/5 group-hover/img:ring-primary group-hover/img:scale-105 transition-all duration-300 cursor-zoom-in">
@@ -143,25 +158,37 @@ const Projects = () => {
                             <div className="absolute inset-0 bg-black/5 dark:bg-transparent pointer-events-none" />
                           </div>
                           <div className="px-2 py-1.5 group/prv">
-                            <div className='flex items-center' >
-                              <p className="text-[10px] font-bold uppercase tracking-wider opacity-50 dark:text-white">Project Preview</p>
-                              <Link href={project.link} target='_blank' className="text-cyan-400 transition-all duration-300 ease-out group-hover:translate-x-1 group-hover/prv:translate-x-2 group-hover/prv:scale-110 custom-tooltip tooltip-top" data-tip="View Live">
+                            <div className="flex items-center">
+                              <p className="text-[10px] font-bold uppercase tracking-wider opacity-50 dark:text-white">
+                                Project Preview
+                              </p>
+                              <Link
+                                href={project.link}
+                                target="_blank"
+                                className="text-cyan-400 transition-all duration-300 ease-out group-hover:translate-x-1 group-hover/prv:translate-x-2 group-hover/prv:scale-110 custom-tooltip tooltip-top"
+                                data-tip="View Live"
+                              >
                                 <FaLocationArrow />
                               </Link>
                             </div>
-                            <p className="text-xs font-semibold truncate w-40 dark:text-blue-400">{project.title}</p>
+                            <p className="text-xs font-semibold truncate w-40 dark:text-blue-400">
+                              {project.title}
+                            </p>
                           </div>
                         </div>
-
                       </div>
                     </div>
                   </td>
-                  <td className="font-bold text-base-content">{project.title}</td>
-                  <td className="max-w-50 truncate text-sm opacity-80">{project.des}</td>
+                  <td className="font-bold text-base-content">
+                    {project.title}
+                  </td>
+                  <td className="max-w-50 truncate text-sm opacity-80">
+                    {project.des}
+                  </td>
                   <td>
                     <Link
                       href={project.link}
-                      target='_blank'
+                      target="_blank"
                       className="btn btn-ghost btn-xs text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30"
                     >
                       Visit Site
@@ -170,9 +197,17 @@ const Projects = () => {
                   <td>
                     <div className="flex -space-x-2">
                       {project.iconLists.map((icon: any, i: number) => (
-                        <div key={i} className="avatar border-2 border-white dark:border-base-300 rounded-full bg-blend-color-burn">
+                        <div
+                          key={i}
+                          className="avatar border-2 border-white dark:border-base-300 rounded-full bg-blend-color-burn"
+                        >
                           <div className="w-6 h-6 p-0.5">
-                            <Image width={20} height={20} src={icon} alt="icon" />
+                            <Image
+                              width={20}
+                              height={20}
+                              src={icon}
+                              alt="icon"
+                            />
                           </div>
                         </div>
                       ))}
@@ -183,13 +218,20 @@ const Projects = () => {
                       <Link
                         href={`/admin/projects/${project._id}`}
                         className="btn btn-square btn-ghost btn-sm text-cyan-500 hover:bg-cyan-50 dark:hover:bg-cyan-900/20 tooltip tooltip-top tooltip-info"
-                        data-tip="Edit">
+                        data-tip="Edit"
+                      >
                         <HiOutlinePencilSquare size={18} />
                       </Link>
                       <button
-                        onClick={() => deleteProject({ projectId: project._id })}
+                        onClick={() => {
+                          deleteProject({
+                            projectId: project._id,
+                            img: project.img,
+                          });
+                        }}
                         className="btn btn-square btn-ghost btn-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 tooltip tooltip-top tooltip-error"
-                        data-tip="Delete">
+                        data-tip="Delete"
+                      >
                         <HiMiniTrash size={18} />
                       </button>
                     </div>
@@ -204,14 +246,17 @@ const Projects = () => {
         <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-5 bg-base-200/30 dark:bg-base-100/10 border-t border-base-content/5">
           <div className="flex items-center gap-2 text-sm text-base-content/60">
             <span>Showing</span>
-            <span className="badge badge-outline badge-sm font-bold">{indexOfFirstItem + 1} - {Math.min(indexOfLastItem, projects.length)}</span>
+            <span className="badge badge-outline badge-sm font-bold">
+              {indexOfFirstItem + 1} -{" "}
+              {Math.min(indexOfLastItem, projects.length)}
+            </span>
             <span>of {projects.length} entries</span>
           </div>
 
           <div className="join bg-base-100 dark:bg-base-200 border border-base-content/10 shadow-sm mt-4 sm:mt-0">
             <button
               disabled={currentPage === 1}
-              onClick={() => setCurrentPage(prev => prev - 1)}
+              onClick={() => setCurrentPage((prev) => prev - 1)}
               className="join-item btn btn-sm hover:btn-primary border-none disabled:bg-transparent"
             >
               <HiChevronLeft size={18} />
@@ -221,10 +266,11 @@ const Projects = () => {
               <button
                 key={i + 1}
                 onClick={() => setCurrentPage(i + 1)}
-                className={`join-item btn btn-sm border-none min-w-10 ${currentPage === i + 1
-                  ? 'btn-primary shadow-md shadow-blue-500/40'
-                  : 'bg-transparent hover:bg-base-content/10'
-                  }`}
+                className={`join-item btn btn-sm border-none min-w-10 ${
+                  currentPage === i + 1
+                    ? "btn-primary shadow-md shadow-blue-500/40"
+                    : "bg-transparent hover:bg-base-content/10"
+                }`}
               >
                 {i + 1}
               </button>
@@ -232,7 +278,7 @@ const Projects = () => {
 
             <button
               disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(prev => prev + 1)}
+              onClick={() => setCurrentPage((prev) => prev + 1)}
               className="join-item btn btn-sm hover:btn-primary border-none disabled:bg-transparent"
             >
               <HiChevronRight size={18} />

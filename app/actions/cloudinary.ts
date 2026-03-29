@@ -2,14 +2,14 @@
 
 import { ENV } from "@/config/env";
 import { v2 as cloudinary } from "cloudinary";
-import { headers } from "next/headers";
-import { auth } from "./auth";
+import { auth } from "../../lib/auth";
 
 cloudinary.config({
   cloud_name: ENV.BLOG_CLOUDINAR_CLOUD_NAME,
   api_key: ENV.BLOG_CLOUDINAR_API_KEY,
   api_secret: ENV.BLOG_CLOUDINAR_API_SECRET,
 });
+
 /**
  * Robust Public ID Extraction
  * Extracts the full path (including folders) but excludes the version and extension.
@@ -33,7 +33,7 @@ export const getPublicIdFromUrl = async (
  * Handles the logic for uploading a new file or replacing an existing one.
  * Returns the secure_url on success, or null on failure.
  */
-export const handleCloudinaryUpload = async (
+export const handleCloudinaryBlogUpload = async (
   file: File,
   currentThumbnailUrl: string | null,
 ): Promise<string | null> => {
@@ -133,16 +133,26 @@ export const handleCloudinaryDeleteByFetch = async (
   }
 };
 
-// used in server actions
-export const handleCloudinaryDelete = async (url: string): Promise<boolean> => {
+export const handleCloudinaryBlogDelete = async (
+  url: string,
+): Promise<boolean> => {
   try {
     const publicId = await getPublicIdFromUrl(url); // Use your existing helper
-    if (!publicId) return false;
-
+    if (!publicId) {
+      console.error("Invalid publicid!");
+      return false;
+    }
+    console.log(publicId);
     // Use the SDK directly—no fetch or signatures needed on the server!
+    cloudinary.config({
+      cloud_name: ENV.BLOG_CLOUDINAR_CLOUD_NAME,
+      api_key: ENV.BLOG_CLOUDINAR_API_KEY,
+      api_secret: ENV.BLOG_CLOUDINAR_API_SECRET,
+    });
     const result = await cloudinary.uploader.destroy(publicId, {
       invalidate: true,
     });
+    console.error("Debug result: ", result);
     return result.result === "ok";
   } catch (err) {
     console.error("Cloudinary Delete Error:", err);

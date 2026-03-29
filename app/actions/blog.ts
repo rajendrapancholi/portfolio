@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { handleCloudinaryDelete } from "@/lib/cloudinary";
+import { handleCloudinaryBlogDelete } from "@/app/actions/cloudinary";
 import { connectToDB } from "@/lib/database";
 import { Blog, getBlogModel } from "@/lib/models/BlogModel";
 import UserModel from "@/lib/models/UserModel";
@@ -248,7 +248,7 @@ export async function deleteBlog(id: string): Promise<BlogDeleteResponse> {
       };
 
     if (blog.thumbnail && blog.thumbnail.includes("cloudinary")) {
-      const cloudSuccess = await handleCloudinaryDelete(blog.thumbnail);
+      const cloudSuccess = await handleCloudinaryBlogDelete(blog.thumbnail);
       if (!cloudSuccess) {
         return {
           success: false,
