@@ -55,13 +55,10 @@ const Thumbnail = ({
     }
     if (uploadedUrl && onUpload) {
       toast.success("Successfully uploaded!", { id: toastId });
-      console.log("Debug uploadurl: ", uploadedUrl);
       onUpload(uploadedUrl);
     } else {
       toast.error("Failed to upload thumbnail!", { id: toastId });
     }
-    alert("currurl " + currentUrl);
-    alert("uploadurl" + uploadedUrl);
     setIsUploading(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
@@ -73,7 +70,6 @@ const Thumbnail = ({
       return;
     }
 
-    alert(currentUrl);
     setIsDeleting(true);
     let success = false;
     if (type === "project") {
