@@ -97,7 +97,7 @@ const Navbar: React.FC = () => {
         <div className="flex h-full items-center justify-between gap-3">
           {/* Mobile menu button */}
           <button
-            className="fixed w-fit left-3 z-40 top-0 bottom-0 sm:hidden text-gray-600 dark:text-gray-300 duration-300 before:duration-300 before:delay-200 after:duration-400 after:delay-200 before:text-slate-900 dark:before:text-white  before:bg-gray-300 after:bg-gray-300 dark:before:bg-gray-600 dark:after:bg-gray-600 transition-colors before:translate-x-12 after:translate-x-2.5 tooltip-bottom tooltip "
+            className="fixed w-fit left-3 z-40 top-0 bottom-0 sm:hidden text-gray-600 dark:text-gray-300 duration-300 before:duration-300 before:delay-200 after:duration-400 after:delay-200 before:text-slate-900 dark:before:text-white  before:bg-gray-300 after:bg-gray-300 dark:before:bg-gray-600 dark:after:bg-gray-600 transition-colors before:translate-x-12 after:translate-x-2.5 tooltip-bottom tooltip"
             data-tip="Open sidebar"
             onClick={(e) => {
               e.stopPropagation();
