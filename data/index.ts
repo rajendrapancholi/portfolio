@@ -114,11 +114,11 @@ export const socialMedia = [
 
 export const iconList = [
   { img: "/next.svg", title: "NextJS" },
-  { img: "/re.svg", title: "ReactJS" },
+  { img: "/re.svg", title: "ReactJS/ReactNative" },
   { img: "/ts.svg", title: "TypeScript" },
   { img: "/pgsql.svg", title: "PostgreSQL" },
   { img: "/mysql.svg", title: "MySQL" },
-  { img: "/mndb.svg", title: "MongoDb" },
+  { img: "/mndb.svg", title: "MongoDB" },
   { img: "/expjs.svg", title: "ExpressJS" },
   { img: "/ndjs.svg", title: "NodeJS" },
   { img: "/tail.svg", title: "TailwindCSS" },
@@ -127,4 +127,6 @@ export const iconList = [
   { img: "/stream.svg", title: "SteamJS" },
   { img: "/three.svg", title: "Three.JS" },
   { img: "/py.svg", title: "Python" },
+  { img: "/socketio.svg", title: "Socket.io" },
+  { img: "/bun.svg", title: "Bun" },
 ];
