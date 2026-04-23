@@ -1,20 +1,20 @@
-import { createPageMetadata } from "@/lib/seo/metadata";
-import { ENV } from "@/config/env";
-import { generateDynamicJsonLd } from "@/lib/seo/jsonld";
-import { getBlogBySlug } from "@/app/actions/blog";
-import Script from "next/script";
-import safeJSONStringify, { sanitizeSlug } from "@/lib/utils/safeSanitize";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { FaGithub } from "react-icons/fa6";
-import { ArrowLeft, ArrowRight, Heart } from "lucide-react";
-import Feedback from "@/components/blog/Feedback";
-import TocSidebar from "@/components/blog/TOCSidebar";
-import { getHeadings } from "@/lib/utils/getHeadings";
-import { getPostBySlug } from "@/app/actions/githubBlog";
-import MarkdownRenderer from "@/components/blog/MarkdownRenderer";
-import fetchAllBlogs from "@/lib/utils/fetchAllBlogs";
-import React from "react";
+import { createPageMetadata } from '@/lib/seo/metadata';
+import { ENV } from '@/config/env';
+import { generateDynamicJsonLd } from '@/lib/seo/jsonld';
+import { getBlogBySlug } from '@/app/actions/blog';
+import Script from 'next/script';
+import safeJSONStringify, { sanitizeSlug } from '@/lib/utils/safeSanitize';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import { FaGithub } from 'react-icons/fa6';
+import { ArrowLeft, ArrowRight, Heart } from 'lucide-react';
+import Feedback from '@/components/blog/Feedback';
+import TocSidebar from '@/components/blog/TOCSidebar';
+import { getHeadings } from '@/lib/utils/getHeadings';
+import { getPostBySlug } from '@/app/actions/githubBlog';
+import MarkdownRenderer from '@/components/blog/MarkdownRenderer';
+import fetchAllBlogs from '@/lib/utils/fetchAllBlogs';
+import React from 'react';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,9 +22,9 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/Breadcrumb";
+} from '@/components/ui/Breadcrumb';
 
-const baseUrl = ENV.BASE_URL ?? "https://rajendrapancholi.vercel.app";
+const baseUrl = ENV.BASE_URL ?? 'https://rajendrapancholi.vercel.app';
 
 type Props = {
   params: Promise<{ slug: string[] }>;
@@ -34,49 +34,50 @@ export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   if (!slug || slug.length < 2)
     return createPageMetadata({
-      title: "Invalid URL",
-      description: "The requested blog post could not be found.",
-      canonical: "/blogs/b/invalid-url",
-      category: "Blog-Not-Found!",
+      title: 'Invalid URL',
+      description: 'The requested blog post could not be found.',
+      canonical: '/blogs/b/invalid-url',
+      category: 'Blog-Not-Found!',
       isDynamic: true,
     });
   const [src, ...pathSegments] = slug;
   const source = sanitizeSlug(src);
-  const actualSlug = sanitizeSlug(pathSegments.join("/"));
+  const actualSlug = sanitizeSlug(pathSegments.join('/'));
 
   let blog = null;
 
   try {
-    if (source === "git") {
+    if (source === 'git') {
       const response = await getPostBySlug(actualSlug);
       blog = response?.data;
-    } else if (source === "main") {
+    } else if (source === 'main') {
       const mongoSlug = pathSegments[pathSegments.length - 1];
       const response = await getBlogBySlug(sanitizeSlug(mongoSlug));
       blog = response?.data;
     }
   } catch (error) {
-    console.error("Metadata fetch failed:", error);
+    console.error('Metadata fetch failed:', error);
   }
 
   if (!blog) {
     return createPageMetadata({
-      title: "Blog Not Found!",
-      description: "The requested blog post could not be found.",
-      canonical: `https://rajendrapancholi.vercel.app/blog/b/blog-not-found`,
-      category: "Blog Not Found!",
+      title: 'Blog Not Found!',
+      description: 'The requested blog post could not be found.',
+      canonical: `https://rajendrapancholi.vercel.app/blogs/b/blog-not-found`,
+      category: 'Blog Not Found!',
       isDynamic: true,
     });
   }
 
   return createPageMetadata({
-    type: "article",
+    type: 'article',
     title: blog.title,
     description: blog.description || `Read ${blog.title} by Rajendra Pancholi`,
-    canonical: `https://rajendrapancholi.vercel.app/blog/b/${source}/${actualSlug}`,
+    canonical: `https://rajendrapancholi.vercel.app/blogs/b/${source}/${actualSlug}`,
     image: blog.thumbnail ? blog.thumbnail : null,
     keywords: blog.keywords,
     isDynamic: blog.thumbnail ? false : true,
+    category: blog.type || 'Post',
   });
 }
 
@@ -93,12 +94,12 @@ export default async function BlogPage({ params }: Props) {
   if (!slug || slug.length < 2) notFound();
 
   const [source, ...pathSegments] = slug;
-  const actualSlug = sanitizeSlug(pathSegments.join("/"));
+  const actualSlug = sanitizeSlug(pathSegments.join('/'));
   const allBlogs = await fetchAllBlogs();
   let blog = null;
   let success = false;
   try {
-    if (source === "git") {
+    if (source === 'git') {
       const response = await getPostBySlug(actualSlug);
       success = response.success;
       blog = response?.data;
@@ -110,7 +111,7 @@ export default async function BlogPage({ params }: Props) {
       blog = response?.data;
     }
   } catch (error) {
-    console.error("Fetch failed!", error);
+    console.error('Fetch failed!', error);
   }
 
   if (!blog) notFound();
@@ -128,16 +129,16 @@ export default async function BlogPage({ params }: Props) {
     currentIndex < allBlogs.length - 1 ? allBlogs[currentIndex + 1] : null;
 
   const jsonLd = generateDynamicJsonLd({
-    type: "blog",
-    title: blog.title || "Rajendra Pancholi",
+    type: 'blog',
+    title: blog.title || 'Rajendra Pancholi',
     url: baseUrl,
     description: blog.description || `Read ${blog.title} by Rajendra Pancholi`,
-    author: blog.author.name || "Rajendra Pancholi",
+    author: blog.author.name || 'Rajendra Pancholi',
     publishedAt: blog.createdAt,
     logo: `${baseUrl}/android-chrome-192x192.png`,
-    image: blog.thumbnail || "/default-blog-thumb-webp",
+    image: blog.thumbnail || '/default-blog-thumb-webp',
     updatedAt: blog.updatedAt,
-    priceCurrency: "rs",
+    priceCurrency: 'rs',
   });
   const headings = getHeadings(blog.content);
 
@@ -170,7 +171,7 @@ export default async function BlogPage({ params }: Props) {
                 {/* Dynamic Segments */}
                 {pathSegments.map((segment, i) => {
                   const isLast = i === pathSegments.length - 1;
-                  const breadcrumbPath = `/blogs/b/${source}/${pathSegments.slice(0, i + 1).join("/")}`;
+                  const breadcrumbPath = `/blogs/b/${source}/${pathSegments.slice(0, i + 1).join('/')}`;
 
                   return (
                     <React.Fragment key={i}>
@@ -178,7 +179,7 @@ export default async function BlogPage({ params }: Props) {
                       <BreadcrumbItem>
                         {isLast ? (
                           <BreadcrumbPage className="text-cyan-500 truncate max-w-37.5 md:max-w-none">
-                            {segment.replace(/-/g, " ")}
+                            {segment.replace(/-/g, ' ')}
                           </BreadcrumbPage>
                         ) : (
                           <BreadcrumbLink asChild>
@@ -186,7 +187,7 @@ export default async function BlogPage({ params }: Props) {
                               href={breadcrumbPath}
                               className="hover:text-cyan-400/80 transition-colors"
                             >
-                              {segment.replace(/-/g, " ")}
+                              {segment.replace(/-/g, ' ')}
                             </Link>
                           </BreadcrumbLink>
                         )}
@@ -204,10 +205,10 @@ export default async function BlogPage({ params }: Props) {
                   Updated:
                 </span>
                 <time dateTime={new Date(blog.updatedAt).toISOString()}>
-                  {new Date(blog.updatedAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
+                  {new Date(blog.updatedAt).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
                   })}
                 </time>
               </div>
@@ -301,9 +302,9 @@ export default async function BlogPage({ params }: Props) {
               {/* Utility Layer: GitHub & Socials */}
               <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-slate-800/40 gap-6">
                 <p className="text-slate-500 text-sm">
-                  &#64; {" " + blog.author.name}
+                  &#64; {' ' + blog.author.name}
                 </p>
-                {source === "git" ||
+                {source === 'git' ||
                   (blog.editUrl && (
                     <Link
                       href={blog.editUrl}
