@@ -263,9 +263,10 @@ export function createPageMetadata({
     absoluteImage = dynamicUrl.toString();
   } else {
     absoluteImage = safeImage.startsWith('http')
-      ? safeImage
+      ? `${SITE_URL}/_next/image?url=${encodeURIComponent(safeImage)}&w=1200&q=75`
       : new URL(safeImage, SITE_URL).toString();
   }
+
   if (process.env.NODE_ENV === 'development') {
     console.log('🚀 OG Image Path:', absoluteImage);
   }
