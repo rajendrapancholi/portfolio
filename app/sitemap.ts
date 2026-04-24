@@ -1,6 +1,9 @@
-import { ENV } from "@/config/env";
-import fetchAllBlogs from "@/lib/utils/fetchAllBlogs";
-import { MetadataRoute } from "next";
+import { ENV } from '@/config/env';
+import fetchAllBlogs from '@/lib/utils/fetchAllBlogs';
+import { MetadataRoute } from 'next';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export default async function sitemap() {
   const baseUrl = ENV.BASE_URL;
@@ -12,9 +15,9 @@ export default async function sitemap() {
     const validDate = isNaN(date.getTime()) ? new Date() : date;
 
     return {
-      url: encodeURI(`${baseUrl}/blogs/${blog.slug}`),
+      url: `${baseUrl}/blogs/${blog.slug}`,
       lastModified: validDate,
-      changeFrequency: "weekly",
+      changeFrequency: 'weekly',
       priority: 0.7,
     };
   });
@@ -23,19 +26,19 @@ export default async function sitemap() {
     {
       url: `${baseUrl}`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
+      changeFrequency: 'monthly',
       priority: 1,
     },
     {
       url: `${baseUrl}/signin`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
+      changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
       url: `${baseUrl}/blogs`,
       lastModified: new Date(),
-      changeFrequency: "weekly",
+      changeFrequency: 'weekly',
       priority: 0.7,
     },
   ];
