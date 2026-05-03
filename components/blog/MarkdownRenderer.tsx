@@ -1,19 +1,17 @@
-"use client";
+'use client';
 
-import MarkdownPreview from "@uiw/react-markdown-preview";
-import rehypeRaw from "rehype-raw";
-import remarkGfm from "remark-gfm";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import Loading from "@/components/Loading";
+import MarkdownPreview from '@uiw/react-markdown-preview';
+import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
+import Loading from '@/components/Loading';
 
-import "@uiw/react-markdown-preview/markdown.css";
-import "@uiw/react-md-editor/markdown-editor.css";
-
-import { ENV } from "@/config/env";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import { XCircle } from "lucide-react";
+import { ENV } from '@/config/env';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { XCircle } from 'lucide-react';
+import { createPortal } from 'react-dom';
 
 const RAW_URL_BASE = `https://raw.githubusercontent.com/${ENV.NEXT_PUBLIC_REPO_OWNER}/${ENV.NEXT_PUBLIC_REPO_NAME}/main`;
 
@@ -21,7 +19,7 @@ const MarkdownComponents = {
   a: ({ href, children, ...props }: any) => {
     if (!href) return <>{children}</>;
     const pathname = usePathname();
-    if (href.startsWith("#")) {
+    if (href.startsWith('#')) {
       return (
         <Link href={`${pathname}${href}`} className="absolute left-0 w-full">
           {children}
@@ -30,9 +28,9 @@ const MarkdownComponents = {
     }
 
     const isRelative =
-      href.startsWith("./") ||
-      (!href.startsWith("http") && href.endsWith(".md"));
-    const isGitHubRaw = href.includes("raw.githubusercontent.com");
+      href.startsWith('./') ||
+      (!href.startsWith('http') && href.endsWith('.md'));
+    const isGitHubRaw = href.includes('raw.githubusercontent.com');
 
     // 2. Handle Markdown/GitHub links
     if (isRelative || isGitHubRaw) {
@@ -41,7 +39,7 @@ const MarkdownComponents = {
         const parts = href.split(/\/main\/|\/master\//);
         cleanPath = parts.length > 1 ? parts[1] : href;
       }
-      const localHref = `/blogs/b/git/${cleanPath.replace(/^\.\//, "").replace(".md", "")}`;
+      const localHref = `/blogs/b/git/${cleanPath.replace(/^\.\//, '').replace('.md', '')}`;
       return (
         <Link
           href={localHref}
@@ -64,7 +62,9 @@ const MarkdownComponents = {
     );
   },
   img: ({ src, alt, ...props }: any) => {
-    const imageSrc = typeof src === "string" ? src : "";
+    const imageSrc = typeof src === 'string' ? src : '';
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
 
     const openModal = (id: string) => {
       const dialog = document.getElementById(id) as HTMLDialogElement;
@@ -76,7 +76,7 @@ const MarkdownComponents = {
       dialog?.close();
     };
 
-    const modalId = `modal-${imageSrc.split("/").pop()?.split(".")[0] || Math.random()}`;
+    const modalId = `modal-${imageSrc.split('/').pop()?.split('.')[0] || Math.random()}`;
 
     return (
       <>
@@ -88,7 +88,7 @@ const MarkdownComponents = {
             <img
               {...props}
               src={imageSrc}
-              alt={alt || ""}
+              alt={alt || ''}
               loading="lazy"
               className="w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
             />
@@ -103,28 +103,32 @@ const MarkdownComponents = {
             </span>
           )}
         </span>
-        <dialog
-          id={modalId}
-          className="fixed inset-0 p-0 m-auto bg-transparent backdrop:bg-black/80 backdrop:backdrop-blur-sm open:flex items-center justify-center w-screen h-screen outline-none border-none overflow-visible group/modal"
-          onClick={() => closeModal(modalId)}
-        >
-          <span className="relative w-full h-full flex items-center justify-center">
-            <img
-              src={imageSrc}
-              alt={alt}
-              className="w-full h-[90vh] rounded-lg shadow-2xl object-contain cursor-zoom-out animate-in zoom-in-95 duration-200"
-            />
-            <button
-              className="absolute top-0.5 right-0.5 text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white text-lg font-bold p-2 cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                closeModal(modalId);
-              }}
+        {mounted &&
+          createPortal(
+            <dialog
+              id={modalId}
+              className="fixed inset-0 p-0 m-auto bg-transparent backdrop:bg-black/80 backdrop:backdrop-blur-sm open:flex items-center justify-center w-screen h-screen outline-none border-none overflow-visible group/modal"
+              onClick={() => closeModal(modalId)}
             >
-              <XCircle size={48} />
-            </button>
-          </span>
-        </dialog>
+              <span className="relative w-full h-full flex items-center justify-center">
+                <img
+                  src={imageSrc}
+                  alt={alt}
+                  className="w-full h-[90vh] rounded-lg shadow-2xl object-contain cursor-zoom-out animate-in zoom-in-95 duration-200"
+                />
+                <button
+                  className="absolute top-0.5 right-0.5 text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white text-lg font-bold p-2 cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    closeModal(modalId);
+                  }}
+                >
+                  <XCircle size={48} />
+                </button>
+              </span>
+            </dialog>,
+            document.body,
+          )}
       </>
     );
   },
@@ -132,14 +136,14 @@ const MarkdownComponents = {
 
 const MarkdownRenderer = ({ content }: { content: string }) => {
   const pathname = usePathname();
-  const isGit = pathname.includes("/b/git");
+  const isGit = pathname.includes('/b/git');
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  type ColorMode = "light" | "dark";
+  type ColorMode = 'light' | 'dark';
   useEffect(() => {
     setMounted(true);
   }, []);
-  const currentTheme = (mounted ? resolvedTheme : "light") as ColorMode;
+  const currentTheme = (mounted ? resolvedTheme : 'light') as ColorMode;
 
   if (!mounted) {
     return <Loading />;
@@ -154,11 +158,11 @@ const MarkdownRenderer = ({ content }: { content: string }) => {
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
         urlTransform={(uri) => {
-          if (uri.startsWith("#") || uri.startsWith("http")) {
+          if (uri.startsWith('#') || uri.startsWith('http')) {
             return uri;
           }
-          if (isGit && !uri.startsWith("http")) {
-            return `${RAW_URL_BASE}/${uri.replace(/^\.\//, "")}`;
+          if (isGit && !uri.startsWith('http')) {
+            return `${RAW_URL_BASE}/${uri.replace(/^\.\//, '')}`;
           }
           return uri;
         }}

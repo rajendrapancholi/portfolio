@@ -1,37 +1,36 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   motion,
   AnimatePresence,
   useScroll,
   useMotionValueEvent,
-} from "framer-motion";
-import Link from "next/link";
+} from 'framer-motion';
+import Link from 'next/link';
 import {
   ArrowLeftCircleIcon,
   BookOpenTextIcon,
   Home,
   Search,
   TextAlignJustify,
-} from "lucide-react";
-import { usePathname } from "next/navigation";
-import { FcTemplate } from "react-icons/fc";
-import RajeBrandLogo from "../ui/RajeBrandLogo";
-import ThemeButton from "../ui/ThemeButton";
-import { NavbarCalendar } from "../ui/NavbarCalender";
-import SearchBar from "./SearchBar";
-import AnimatedLink from "./AnimatedLink";
-import { useBlogs } from "@/lib/features/blog/hook";
-import Loading from "../Loading";
-import UserMenu from "../ui/UserMenu";
-import { User } from "@/types";
-import toast from "react-hot-toast";
-import { clearCredentials } from "@/lib/features/auth/authSlice";
-import { logoutAction } from "@/app/actions/authActions";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { useSession } from "next-auth/react";
-import { useAppDispatch } from "@/lib/features/hooks";
+} from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { FcTemplate } from 'react-icons/fc';
+import RajeBrandLogo from '../ui/RajeBrandLogo';
+import ThemeButton from '../ui/ThemeButton';
+import SearchBar from './SearchBar';
+import AnimatedLink from './AnimatedLink';
+import { useBlogs } from '@/lib/features/blog/hook';
+import Loading from '../Loading';
+import UserMenu from '../ui/UserMenu';
+import { User } from '@/types';
+import toast from 'react-hot-toast';
+import { clearCredentials } from '@/lib/features/auth/authSlice';
+import { logoutAction } from '@/app/actions/authActions';
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
+import { useSession } from 'next-auth/react';
+import { useAppDispatch } from '@/lib/features/hooks';
 
 const Navbar: React.FC = () => {
   const { data: session } = useSession();
@@ -42,9 +41,9 @@ const Navbar: React.FC = () => {
   const { scrollY } = useScroll();
   const pathname = usePathname();
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
+  useMotionValueEvent(scrollY, 'change', (latest) => {
     const prev = scrollY.getPrevious() ?? 0;
-    if (latest > prev && latest > 150 && pathname.startsWith("/blogs/b/")) {
+    if (latest > prev && latest > 150 && pathname.startsWith('/blogs/b/')) {
       setIsCollapsed(true);
     } else {
       setIsCollapsed(false);
@@ -52,29 +51,29 @@ const Navbar: React.FC = () => {
   });
 
   const navigation = [
-    { name: "Home", href: "/", icon: <Home size={14} /> },
-    { name: "Tutorials", href: "/blogs", icon: <BookOpenTextIcon size={14} /> },
-    { name: "Projects", href: "/#projects", icon: <FcTemplate size={14} /> },
+    { name: 'Home', href: '/', icon: <Home size={14} /> },
+    { name: 'Tutorials', href: '/blogs', icon: <BookOpenTextIcon size={14} /> },
+    { name: 'Projects', href: '/#projects', icon: <FcTemplate size={14} /> },
   ];
 
   const updatedNavigation = navigation.map((item) => ({
     ...item,
     current:
-      item.href === "/" ? pathname === "/" : pathname.startsWith(item.href),
+      item.href === '/' ? pathname === '/' : pathname.startsWith(item.href),
   }));
   // Logout Handler
   const handleLogout = async () => {
-    const toastId = toast.loading("Signing out...");
+    const toastId = toast.loading('Signing out...');
     try {
       dispatch(clearCredentials());
       await logoutAction();
-      toast.success("Signed out successfully", { id: toastId });
+      toast.success('Signed out successfully', { id: toastId });
     } catch (error) {
       if (isRedirectError(error)) {
         toast.dismiss(toastId);
         throw error;
       }
-      toast.error("Failed to sign out", { id: toastId });
+      toast.error('Failed to sign out', { id: toastId });
     }
   };
   useEffect(() => {
@@ -85,7 +84,7 @@ const Navbar: React.FC = () => {
   return (
     <motion.nav
       initial={false}
-      animate={isCollapsed ? "collapsed" : "expanded"}
+      animate={isCollapsed ? 'collapsed' : 'expanded'}
       variants={{
         expanded: { height: 70 },
         collapsed: { height: 48 },
@@ -130,8 +129,8 @@ const Navbar: React.FC = () => {
                   <span
                     className={`relative z-10 ${
                       item.current
-                        ? "text-white"
-                        : "text-gray-600 dark:text-gray-400"
+                        ? 'text-white'
+                        : 'text-gray-600 dark:text-gray-400'
                     }`}
                   >
                     <span className="hidden sm:block">{item.name}</span>
@@ -139,7 +138,6 @@ const Navbar: React.FC = () => {
                   </span>
                 </Link>
               ))}
-              <NavbarCalendar />
             </div>
             {/* seachbar */}
             <motion.div
@@ -148,22 +146,22 @@ const Navbar: React.FC = () => {
                 expanded: { width: 220 },
                 collapsed: { width: 44 },
               }}
-              transition={{ duration: 0.35, ease: "easeInOut" }}
-              className="hidden lg:flex items-center overflow-hidden"
+              transition={{ duration: 0.35, ease: 'easeInOut' }}
+              className="hidden lg:flex items-center overflow-hidden lg:ml-1"
             >
               <Link
                 href="/blogs/search"
                 scroll={false}
-                className="relative flex items-center w-full h-10 bg-gray-100 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl px-3 hover:border-cyan-800 dark:hover:border-gray-600 transition-colors"
+                className="relative flex items-center w-full h-10 bg-gray-100 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-full px-3 lg:px-2 hover:border-cyan-800 dark:hover:border-gray-600 transition-colors"
               >
                 {/* Icon */}
-                <Search className="size-4 text-gray-400 shrink-0" />
+                <Search size={24} className="text-gray-400 shrink-0" />
 
                 {/* Text */}
                 <motion.span
                   variants={{
                     expanded: { opacity: 1, x: 0 },
-                    collapsed: { opacity: 0, scale: 0.5, display: "none" },
+                    collapsed: { opacity: 0, scale: 0.5, display: 'none' },
                   }}
                   transition={{ duration: 0.2 }}
                   className="ml-3 text-sm text-gray-500 whitespace-nowrap"
@@ -175,10 +173,10 @@ const Navbar: React.FC = () => {
                 <motion.kbd
                   variants={{
                     expanded: { opacity: 1, scale: 1 },
-                    collapsed: { opacity: 0, scale: 0.5, display: "none" },
+                    collapsed: { opacity: 0, scale: 0.5, display: 'none' },
                   }}
                   transition={{ duration: 0.15 }}
-                  className="ml-auto hidden md:inline-flex items-center gap-1 rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-1.5 text-[10px] font-medium text-gray-400"
+                  className="ml-auto hidden md:inline-flex items-center gap-1 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-1.5 text-[10px] font-medium text-gray-400"
                 >
                   Ctrl+K
                 </motion.kbd>
@@ -215,10 +213,10 @@ const Navbar: React.FC = () => {
 
             {/* Drawer panel */}
             <motion.div
-              initial={{ x: "-100%" }}
+              initial={{ x: '-100%' }}
               animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ type: "spring", stiffness: 260, damping: 30 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', stiffness: 260, damping: 30 }}
               className="fixed top-0 rounded-r-2xl h-screen left-0 z-50 w-72 bg-white dark:bg-gray-900 px-4 py-6 shadow-interactive-cyan sm:hidden flex flex-col"
             >
               {/* Header Section */}
@@ -243,7 +241,7 @@ const Navbar: React.FC = () => {
                       key={item.name}
                       href={item.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={`px-4 py-1 rounded-xl text-lg custom-tooltip tooltip-right font-semibold ${item.current ? "bg-cyan-800 text-white" : "text-gray-600 dark:text-gray-400"}`}
+                      className={`px-4 py-1 rounded-xl text-lg custom-tooltip tooltip-right font-semibold ${item.current ? 'bg-cyan-800 text-white' : 'text-gray-600 dark:text-gray-400'}`}
                       data-tip={item.name}
                     >
                       {item.name}
