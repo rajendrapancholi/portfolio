@@ -126,7 +126,9 @@ export default async function BlogPage({ params }: Props) {
 
   const nextBlog = currentIndex > 0 ? allBlogs[currentIndex - 1] : null;
   const prevBlog =
-    currentIndex < allBlogs.length - 1 ? allBlogs[currentIndex + 1] : null;
+    currentIndex !== -1 && currentIndex < allBlogs.length - 1
+      ? allBlogs[currentIndex + 1]
+      : null;
 
   const jsonLd = generateDynamicJsonLd({
     type: 'blog',
