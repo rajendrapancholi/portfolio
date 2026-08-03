@@ -12,10 +12,40 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { XCircle } from 'lucide-react';
 import { createPortal } from 'react-dom';
+import Mermaid from '../ui/Mermaid';
 
 const RAW_URL_BASE = `https://raw.githubusercontent.com/${ENV.NEXT_PUBLIC_REPO_OWNER}/${ENV.NEXT_PUBLIC_REPO_NAME}/main`;
 
+// Helper: recursively extract raw text from a hast/mdast node tree
+function getCodeString(nodeChildren: any[] = []): string {
+  return nodeChildren
+    .map((node) => {
+      if (node.type === 'text') return node.value;
+      if (node.children) return getCodeString(node.children);
+      return '';
+    })
+    .join('');
+}
+
 const MarkdownComponents = {
+  code: ({ inline, className, children, node, ...props }: any) => {
+    const match = /language-(\w+)/.exec(className || '');
+    const lang = match?.[1];
+    const raw = node?.children
+      ? getCodeString(node.children).replace(/\n$/, '')
+      : String(children).replace(/\n$/, '');
+
+    if (!inline && lang === 'mermaid') {
+      return <Mermaid chart={raw} />;
+    }
+
+    return (
+      <code className={className} {...props}>
+        {children}
+      </code>
+    );
+  },
+
   a: ({ href, children, ...props }: any) => {
     if (!href) return <>{children}</>;
     const pathname = usePathname();
