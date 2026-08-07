@@ -1,4 +1,6 @@
-@import "tailwindcss";
+/* old css */
+
+@import 'tailwindcss';
 @plugin "daisyui";
 @plugin "@tailwindcss/typography";
 @plugin "tailwindcss-animate";
@@ -93,7 +95,7 @@
 
 @layer base {
   @property --radialprogress {
-    syntax: "<percentage>";
+    syntax: '<percentage>';
     inherits: true;
     initial-value: 0%;
   }
@@ -277,7 +279,7 @@ h3 {
   }
 
   /* Task Lists */
-  .markdown-render-blue-topaz input[type="checkbox"] {
+  .markdown-render-blue-topaz input[type='checkbox'] {
     @apply rounded border-slate-300 text-[#007acc] focus:ring-[#007acc] mr-2 mb-1;
   }
   /* This targets the specific library container */
@@ -371,7 +373,7 @@ h3 {
 
   /* The shimmer animation effect */
   .skeleton-md::after {
-    content: "";
+    content: '';
     @apply absolute inset-0 -translate-x-full;
     background: linear-gradient(
       90deg,
@@ -396,7 +398,7 @@ h3 {
   }
 
   .loading-md::after {
-    content: "";
+    content: '';
     position: absolute;
     inset: 0;
     transform: translateX(-100%);
