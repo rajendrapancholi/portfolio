@@ -3,14 +3,12 @@
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
-import {@/src/components/ui/Sidebar
+import {
   Sidebar,
   SidebarBody,
   SidebarButton,
   SidebarLink,
 } from '@/components/ui/Sidebar';
-import { logoutAction } from '@/@/src/lib/features/hooksActions';
-import { IconChevronRight } from '@/lib/features/auth/authSlice
 import RajeBrandLogo from '../ui/RajeBrandLogo';
 import { LogOutIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -18,6 +16,8 @@ import { useAppDispatch } from '@/lib/features/hooks';
 import { clearCredentials } from '@/lib/features/auth/authSlice';
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import ThemeButton from '../ui/ThemeButton';
+import { IconChevronRight } from '@tabler/icons-react';
+import { logoutAction } from '@/app/actions/authActions';
 
 type MenuItem = {
   title: string;

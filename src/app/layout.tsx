@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import '@/styles/globals.css';
+import './globals.css';
 import Providers from '@/components/Providers';
 import { generateDynamicJsonLd } from '@/lib/seo/jsonld';
 import { ENV } from '@/config/env';
