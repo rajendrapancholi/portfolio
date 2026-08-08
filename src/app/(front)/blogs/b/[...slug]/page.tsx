@@ -167,7 +167,7 @@ export default async function BlogPage({ params }: Props) {
       <div className="flex relative">
         <article className="min-w-0 flex-1 md:px-2 overflow-visible">
           <div
-            className="sticky z-15 py-1 mt-3 mb-4 backdrop-blur-md border-b border-border/50 transition-[top] duration-300 ease-out"
+            className="sticky z-15 py-0.5 mt-2 mb-3 backdrop-blur-md border-b border-border/50 transition-[top] duration-300 ease-out"
             style={{ top: 'var(--navbar-height, 70px)' }}
           >
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
@@ -218,7 +218,7 @@ export default async function BlogPage({ params }: Props) {
               </div>
 
               <div className="flex shrink-0 items-center gap-2 text-[11px] font-semibold mr-1">
-                <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-md bg-primary/10 border border-primary/20 text-primary whitespace-nowrap">
+                <div className="flex items-center gap-1.5 py-0.5 px-2.5 rounded-md bg-primary/10 border border-primary/20 text-primary whitespace-nowrap">
                   <span className="text-muted-foreground">
                     {blog.author.name}
                   </span>
