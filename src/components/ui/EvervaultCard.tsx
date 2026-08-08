@@ -14,11 +14,11 @@ export const EvervaultCard = ({
   desc?: string;
   className?: string;
 }) => {
-  let mouseX = useMotionValue(0);
-  let mouseY = useMotionValue(0);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
   function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-    let { left, top } = currentTarget.getBoundingClientRect();
+    const { left, top } = currentTarget.getBoundingClientRect();
     mouseX.set(clientX - left);
     mouseY.set(clientY - top);
   }
@@ -26,13 +26,13 @@ export const EvervaultCard = ({
   return (
     <div
       className={cn(
-        'p-0.5 bg-transparent aspect-square flex items-center justify-center w-full h-full relative',
+        'p-px bg-transparent aspect-square flex items-center justify-center w-full h-full relative',
         className,
       )}
     >
       <div
         onMouseMove={onMouseMove}
-        className="group/card rounded-3xl w-full relative overflow-hidden bg-gray-900 border border-white/[0.1] flex items-center justify-center h-full transition-all duration-500 hover:border-blue-500/50"
+        className="group/card rounded-3xl w-full relative overflow-hidden bg-card border border-border/80 flex items-center justify-center h-full transition-all duration-500 hover:border-primary/40 hover:shadow-elevated"
       >
         <CardPattern
           mouseX={mouseX}
@@ -41,17 +41,17 @@ export const EvervaultCard = ({
           desc={desc}
         />
 
-        {/* Phase Indicator (Hidden on Hover) */}
         <div className="relative z-10 flex items-center justify-center group-hover/card:opacity-0 transition-opacity duration-500">
-          <div className="relative h-44 w-44 rounded-full flex items-center justify-center font-bold">
+          <div className="relative h-40 w-40 md:h-44 md:w-44 rounded-full flex items-center justify-center font-bold">
             <div
-              className="absolute w-full h-full blur-xl rounded-full opacity-50"
+              className="absolute w-full h-full blur-2xl rounded-full opacity-60"
               style={{
-                background: 'linear-gradient(90deg, #4ade80 0%, #3b82f6 100%)',
+                background:
+                  'linear-gradient(135deg, var(--color-success) 0%, var(--color-info) 50%, var(--color-primary) 100%)',
               }}
             />
-            <div className="absolute w-full h-full bg-zinc-950 rounded-full border border-white/10" />
-            <span className="text-white text-4xl z-20 font-black tracking-tighter">
+            <div className="absolute w-full h-full bg-background rounded-full border border-border shadow-inner" />
+            <span className="text-foreground text-4xl md:text-5xl z-20 font-black tracking-tighter">
               {phase}
             </span>
           </div>
@@ -62,31 +62,27 @@ export const EvervaultCard = ({
 };
 
 export function CardPattern({ mouseX, mouseY, desc, title }: any) {
-  // Creating a vibrant radial gradient that follows the mouse
-  let maskImage = useMotionTemplate`radial-gradient(300px circle at ${mouseX}px ${mouseY}px, white, transparent)`;
-  let style = { maskImage, WebkitMaskImage: maskImage };
+  const maskImage = useMotionTemplate`radial-gradient(280px circle at ${mouseX}px ${mouseY}px, white, transparent)`;
+  const style = { maskImage, WebkitMaskImage: maskImage };
 
   return (
     <div className="pointer-events-none">
-      {/* Background Glow */}
-      <div className="absolute inset-0 rounded-3xl [mask-image:linear-gradient(white,transparent)]" />
+      <div className="absolute inset-0 rounded-3xl mask-[linear-gradient(white,transparent)]" />
 
-      {/* Dynamic Hover Gradient Layer */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-600 opacity-0 group-hover/card:opacity-20 transition duration-500"
+        className="absolute inset-0 bg-linear-to-br from-success via-brand to-primary opacity-0 group-hover/card:opacity-25 transition duration-500"
         style={style}
       />
 
-      {/* Content Revealed on Hover */}
       <motion.div
-        className="absolute inset-0 opacity-0 group-hover/card:opacity-100 backdrop-blur-sm transition duration-500"
+        className="absolute inset-0 opacity-0 group-hover/card:opacity-100 backdrop-blur-[2px] transition duration-500"
         style={style}
       >
-        <div className="absolute inset-0 bg-zinc-950/80 p-6 flex flex-col justify-center items-center text-center">
-          <span className="text-blue-500 text-3xl font-extrabold mb-4 tracking-tight">
+        <div className="absolute inset-0 bg-background/90 p-7 flex flex-col justify-center items-center text-center">
+          <span className="text-primary text-2xl md:text-3xl font-extrabold mb-3 tracking-tight">
             {title}
           </span>
-          <p className="text-zinc-300 text-sm md:text-base leading-relaxed max-w-[80%]">
+          <p className="text-muted-foreground text-sm md:text-[0.95rem] leading-relaxed max-w-[85%]">
             {desc}
           </p>
         </div>

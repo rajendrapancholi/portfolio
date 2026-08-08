@@ -14,7 +14,7 @@ export default async function RecentProjects() {
     >
       <div className="text-4xl md:text-5xl font-bold flex flex-col justify-center items-center">
         <h1>A small selection of</h1>
-        <span className="text-blue-400">recent projects</span>
+        <span className="text-primary">recent projects</span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 p-4 gap-16 mt-10">
         {recentProjects.map((project, i) => (

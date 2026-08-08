@@ -36,8 +36,8 @@ export default function ProjectItem({ project }: { project: Project }) {
         className="w-full h-full flex justify-center items-center"
       >
         <div className="group h-full w-full relative group">
-          <div className="absolute inset-0 h-full w-full bg-linear-to-r from-blue-500 to-teal-500 transform scale-[0.80] bg-red-500 rounded-full blur-3xl" />
-          <div className="relative shadow-xl bg-gray-900 border border-gray-800  px-4 py-8 h-full overflow-hidden rounded-2xl flex flex-col justify-end items-start">
+          <div className="absolute inset-0 h-full w-full bg-linear-to-r from-primary to-brand transform scale-[0.80] rounded-full blur-3xl opacity-60" />
+          <div className="relative shadow-xl bg-card border border-border  px-4 py-8 h-full overflow-hidden rounded-2xl flex flex-col justify-end items-start">
             <div
               onClick={() => setIsOpen(true)}
               className="relative w-full h-48 sm:h-56 overflow-hidden rounded-xl mb-4 cursor-zoom-in"
@@ -50,11 +50,11 @@ export default function ProjectItem({ project }: { project: Project }) {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
               />
             </div>
-            <h1 className="font-bold mt-2 text-xl text-white mb-4 relative z-50">
+            <h1 className="font-bold mt-2 text-xl text-card-foreground mb-4 relative z-50">
               {project.title}
             </h1>
 
-            <p className="font-normal text-base text-slate-500 mb-4 relative z-50">
+            <p className="font-normal text-base text-muted-foreground mb-4 relative z-50">
               {project.des}
             </p>
 
@@ -64,7 +64,7 @@ export default function ProjectItem({ project }: { project: Project }) {
                 {project.iconLists.map((icon: any, i: number) => (
                   <div
                     key={i}
-                    className="border border-white/20 rounded-full bg-black lg:w-10 lg:h-10 w-8 h-8 flex justify-center items-center"
+                    className="border border-border rounded-full bg-background lg:w-10 lg:h-10 w-8 h-8 flex justify-center items-center"
                     style={{
                       transform: `translateX(-${5 * i + 2}px)`,
                     }}
@@ -74,7 +74,7 @@ export default function ProjectItem({ project }: { project: Project }) {
                       height={70}
                       width={70}
                       alt="icon5"
-                      className="bg-white/30 rounded-full p-0.5"
+                      className="bg-foreground/10 rounded-full p-0.5"
                     />
                   </div>
                 ))}
