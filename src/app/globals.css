@@ -1,131 +1,127 @@
 @import 'tailwindcss';
 @plugin "@tailwindcss/typography";
 @plugin "tailwindcss-animate";
-/* daisyUI has been removed. Every component below (.btn, .badge, .tooltip,
-   .join, .table, .kbd, .avatar, .card, .alert, .input …) is hand-written,
-   theme-aware CSS built with Tailwind v4's @utility API — no external
-   component library. */
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* LIGHT MODE VARIABLES */
-  --main-bg: #e2e8f0; /* slate-200 */
-  --main-text: #030712; /* gray-950 */
+  /* Core */
+  --main-bg: #f6f5fb;
+  --main-text: #0f0e17;
 
-  /* Surfaces / elevation */
   --card: #ffffff;
-  --card-foreground: #020617; /* slate-950 */
+  --card-foreground: #0f0e17;
   --popover: #ffffff;
-  --popover-foreground: #020617;
-  --shadow-color: 2 6 23; /* slate-950 rgb triplet */
+  --popover-foreground: #0f0e17;
+  --shadow-color: 30 27 75;
 
-  /* Brand / accents */
-  --primary: #0891b2; /* cyan-600 */
+  /* Brand / Primary – richer violet */
+  --primary: #7c3aed;
   --primary-foreground: #ffffff;
-  --secondary: #f1f5f9; /* slate-100 */
-  --secondary-foreground: #0f172a; /* slate-900 */
-  --accent: #ecfeff; /* cyan-50 */
-  --accent-foreground: #0e7490; /* cyan-700 */
-  --neutral: #1e293b; /* slate-800 */
+  --secondary: #f3f0ff;
+  --secondary-foreground: #1e1b4b;
+  --accent: #eef2ff;
+  --accent-foreground: #4338ca;
+  --neutral: #1e1b4b;
   --neutral-foreground: #ffffff;
 
-  --muted: #f1f5f9; /* slate-100 */
-  --muted-foreground: #64748b; /* slate-500 */
-  --border: #e2e8f0; /* slate-200 */
-  --input: #e2e8f0;
-  --ring: #06b6d4; /* cyan-500 */
+  --muted: #f1f0f7;
+  --muted-foreground: #6b6880;
+  --border: #e4e2f0;
+  --input: #e4e2f0;
+  --ring: #8b5cf6;
 
-  /* Semantic / feedback */
-  --destructive: #dc2626; /* red-600 */
+  /* Accent brand (cyan) */
+  --brand: #4e6bdf;
+  --brand-foreground: #ffffff;
+
+  /* Semantic */
+  --destructive: #e11d48;
   --destructive-foreground: #ffffff;
-  --error: #dc2626;
+  --error: #e11d48;
   --error-foreground: #ffffff;
-  --success: #059669; /* emerald-600 */
+  --success: #16a34a;
   --success-foreground: #ffffff;
-  --warning: #f59e0b; /* amber-500 */
-  --warning-foreground: #451a03; /* amber-950 */
-  --info: #0ea5e9; /* sky-500 */
+  --warning: #d97706;
+  --warning-foreground: #451a03;
+  --info: #0284c7;
   --info-foreground: #ffffff;
 
-  /* Surface scale (replaces daisyUI base-100/200/300/content) */
   --base-100: #ffffff;
-  --base-200: #f1f5f9;
-  --base-300: #e2e8f0;
-  --base-content: #0f172a;
+  --base-200: #f1f0f7;
+  --base-300: #e4e2f0;
+  --base-content: #0f0e17;
 
-  /* Legacy variable support for existing components */
-  --foreground-rgb: 15, 23, 42;
-  --background-start-rgb: 226, 232, 240;
-  --shimmer-color: rgba(89, 87, 87, 0.217);
-  --shimmer-highlight: rgba(39, 39, 39, 0.169);
+  --foreground-rgb: 15, 14, 23;
+  --background-start-rgb: 246, 245, 251;
+  --shimmer-color: rgba(124, 58, 237, 0.08);
+  --shimmer-highlight: rgba(124, 58, 237, 0.16);
   color-scheme: light;
   --radialprogress: 0%;
 }
 
 .dark {
-  /* DARK MODE VARIABLES */
-  --main-bg: #020617; /* slate-950 */
-  --main-text: #f8fafc; /* slate-50 */
+  --main-bg: #07060d;
+  --main-text: #f5f3ff;
 
-  --card: #0f172a; /* slate-900 */
-  --card-foreground: #f8fafc;
-  --popover: #0f172a;
-  --popover-foreground: #f8fafc;
+  --card: #12101c;
+  --card-foreground: #f5f3ff;
+  --popover: #151329;
+  --popover-foreground: #f5f3ff;
   --shadow-color: 0 0 0;
 
-  --primary: #22d3ee; /* cyan-400 */
-  --primary-foreground: #020617;
-  --secondary: #1e293b; /* slate-800 */
-  --secondary-foreground: #f1f5f9;
-  --accent: #083344; /* cyan-950 */
-  --accent-foreground: #67e8f9; /* cyan-300 */
-  --neutral: #e2e8f0;
-  --neutral-foreground: #020617;
+  --primary: #a78bfa;
+  --primary-foreground: #1a0b2e;
+  --secondary: #1c1930;
+  --secondary-foreground: #e9e7f7;
+  --accent: #1e1b3f;
+  --accent-foreground: #c4b5fd;
+  --neutral: #e7e5f1;
+  --neutral-foreground: #1a0b2e;
 
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8; /* slate-400 */
-  --border: #1e293b;
-  --input: #334155; /* slate-700 */
-  --ring: #22d3ee;
+  --muted: #1a182c;
+  --muted-foreground: #a6a2c0;
+  --border: #2a2745;
+  --input: #2a2745;
+  --ring: #a78bfa;
 
-  --destructive: #ef4444; /* red-500 */
-  --destructive-foreground: #ffffff;
-  --error: #ef4444;
-  --error-foreground: #ffffff;
-  --success: #34d399; /* emerald-400 */
-  --success-foreground: #020617;
-  --warning: #fbbf24; /* amber-400 */
+  --brand: #22d3ee;
+  --brand-foreground: #04242b;
+
+  --destructive: #fb7185;
+  --destructive-foreground: #2b0410;
+  --error: #fb7185;
+  --error-foreground: #2b0410;
+  --success: #4ade80;
+  --success-foreground: #052e12;
+  --warning: #fbbf24;
   --warning-foreground: #451a03;
-  --info: #38bdf8; /* sky-400 */
-  --info-foreground: #020617;
+  --info: #38bdf8;
+  --info-foreground: #04242b;
 
-  --base-100: #0f172a;
-  --base-200: #1e293b;
-  --base-300: #334155;
-  --base-content: #f1f5f9;
+  --base-100: #12101c;
+  --base-200: #1a182c;
+  --base-300: #2a2745;
+  --base-content: #f5f3ff;
 
-  --foreground-rgb: 248, 250, 252;
-  --background-start-rgb: 30, 41, 59;
-  --shimmer-color: rgba(136, 136, 136, 0.2);
-  --shimmer-highlight: rgba(47, 46, 46, 0.37);
+  --foreground-rgb: 245, 243, 255;
+  --background-start-rgb: 18, 16, 28;
+  --shimmer-color: rgba(167, 139, 250, 0.12);
+  --shimmer-highlight: rgba(167, 139, 250, 0.22);
   color-scheme: dark;
 }
 
 @theme inline {
-  /* Page background / text */
   --color-main-bg: var(--main-bg);
   --color-main-text: var(--main-text);
   --color-background: var(--main-bg);
   --color-foreground: var(--main-text);
 
-  /* Surfaces */
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
 
-  /* Brand / accents */
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
@@ -134,6 +130,8 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-neutral: var(--neutral);
   --color-neutral-foreground: var(--neutral-foreground);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
 
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
@@ -141,7 +139,6 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* Semantic / feedback */
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-error: var(--error);
@@ -153,20 +150,21 @@
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
 
-  /* Surface scale */
   --color-base-100: var(--base-100);
   --color-base-200: var(--base-200);
   --color-base-300: var(--base-300);
   --color-base-content: var(--base-content);
 
-  --radius: 0.65rem;
+  --radius: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
 
-  /* System transitions */
   --transition-property-cinema:
-    color, background-color, border-color, transform, box-shadow, filter;
-  --transition-duration-cinema: 250ms;
+    color, background-color, border-color, transform, box-shadow, filter,
+    opacity;
+  --transition-duration-cinema: 280ms;
 
-  /* Custom Animations */
   --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
   --animate-first: moveVertical 30s ease infinite;
   --animate-second: moveInCircle 20s reverse infinite;
@@ -174,12 +172,12 @@
   --animate-fourth: moveHorizontal 40s ease infinite;
   --animate-fifth: moveInCircle 20s ease infinite;
   --animate-meteor-effect: meteor 5s linear infinite;
-  --animate-spin-slow: spin 3s linear infinite;
-  --animate-fade-in: fade-in 0.35s ease-out forwards;
-  --animate-slide-up: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  --animate-toast-in: toast-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-spin-slow: spin 1s linear infinite;
+  --animate-fade-in: fade-in 0.4s ease-out forwards;
+  --animate-slide-up: slide-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-toast-in: toast-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-float: float 6s ease-in-out infinite;
 
-  /* Custom Keyframes */
   @keyframes spotlight {
     0% {
       opacity: 0;
@@ -247,7 +245,7 @@
   @keyframes slide-up {
     0% {
       opacity: 0;
-      transform: translateY(12px);
+      transform: translateY(14px);
     }
     100% {
       opacity: 1;
@@ -257,18 +255,36 @@
   @keyframes toast-in {
     0% {
       opacity: 0;
-      transform: translateY(-8px) scale(0.98);
+      transform: translateY(-10px) scale(0.97);
     }
     100% {
       opacity: 1;
       transform: translateY(0) scale(1);
     }
   }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
 
-  /* Box Shadows */
   --shadow-input:
-    0px 2px 3px -1px rgba(0, 0, 0, 0.1), 0px 1px 0px 0px rgba(25, 28, 33, 0.02),
-    0px 0px 0px 1px rgba(25, 28, 33, 0.08);
+    0px 2px 3px -1px rgba(0, 0, 0, 0.08),
+    0px 1px 0px 0px rgba(25, 28, 33, 0.02),
+    0px 0px 0px 1px rgba(25, 28, 33, 0.06);
+  --shadow-soft:
+    0 4px 20px -4px rgb(var(--shadow-color) / 0.12),
+    0 1px 3px rgb(var(--shadow-color) / 0.06);
+  --shadow-elevated:
+    0 12px 40px -12px rgb(var(--shadow-color) / 0.22),
+    0 4px 12px -4px rgb(var(--shadow-color) / 0.1);
+  --shadow-glow:
+    0 0 0 1px color-mix(in oklab, var(--color-primary) 25%, transparent),
+    0 8px 30px -8px color-mix(in oklab, var(--color-primary) 35%, transparent);
 }
 
 * {
@@ -301,12 +317,12 @@
     @apply bg-main-bg text-main-text antialiased;
     min-height: 100vh;
     transition:
-      background-color 0.3s ease,
-      color 0.3s ease;
+      background-color 0.35s ease,
+      color 0.35s ease;
   }
 
   ::selection {
-    @apply bg-primary/20 text-foreground;
+    @apply bg-primary/25 text-foreground;
   }
 
   :focus-visible {
@@ -330,35 +346,38 @@
   animation: none;
   mix-blend-mode: normal;
 }
+
 html {
   transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
-}
-h2,
-h3 {
-  scroll-margin-top: 100px; /* Adjust this to your header height */
+    background-color 0.35s ease,
+    color 0.35s ease;
 }
 
-/* Buttons */
+h2,
+h3 {
+  scroll-margin-top: 100px;
+}
+
+/* ========== Buttons ========== */
 @utility btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   white-space: nowrap;
-  border-radius: 0.6rem;
-  height: 2.5rem;
-  padding: 0 1rem;
+  border-radius: 0.75rem;
+  height: 2.75rem;
+  padding: 0 1.25rem;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   border: 1px solid transparent;
   background-color: var(--color-secondary);
   color: var(--color-secondary-foreground);
   cursor: pointer;
   user-select: none;
   transition: var(--transition-property-cinema)
-    var(--transition-duration-cinema) ease;
+    var(--transition-duration-cinema) cubic-bezier(0.16, 1, 0.3, 1);
   &:disabled {
     opacity: 0.45;
     pointer-events: none;
@@ -367,19 +386,37 @@ h3 {
     transform: scale(0.97);
   }
 }
+
 @utility btn-primary {
   @apply btn;
   background-color: var(--color-primary);
   color: var(--color-primary-foreground);
   border-color: transparent;
-  box-shadow: 0 1px 2px 0 rgb(var(--shadow-color) / 0.1);
+  box-shadow:
+    0 1px 2px 0 rgb(var(--shadow-color) / 0.12),
+    0 4px 12px -4px color-mix(in oklab, var(--color-primary) 40%, transparent);
+  &:hover {
+    filter: brightness(1.08);
+    box-shadow:
+      0 2px 4px 0 rgb(var(--shadow-color) / 0.15),
+      0 8px 20px -6px color-mix(in oklab, var(--color-primary) 45%, transparent);
+  }
 }
+
 @utility btn-secondary {
   @apply btn;
   background-color: var(--color-secondary);
   color: var(--color-secondary-foreground);
   border-color: var(--color-border);
+  &:hover {
+    background-color: color-mix(
+      in oklab,
+      var(--color-secondary) 85%,
+      var(--color-primary)
+    );
+  }
 }
+
 @utility btn-ghost {
   background-color: transparent;
   border-color: transparent;
@@ -388,14 +425,21 @@ h3 {
     background-color: var(--color-muted);
   }
 }
+
 @utility btn-outline {
   background-color: transparent;
   border-color: var(--color-border);
   color: var(--color-foreground);
   &:hover {
     background-color: var(--color-muted);
+    border-color: color-mix(
+      in oklab,
+      var(--color-primary) 40%,
+      var(--color-border)
+    );
   }
 }
+
 @utility btn-danger {
   @apply btn;
   background-color: var(--color-destructive);
@@ -404,41 +448,48 @@ h3 {
     filter: brightness(1.1);
   }
 }
+
 @utility btn-circle {
   padding: 0;
   width: auto;
   aspect-ratio: 1 / 1;
   border-radius: 9999px;
 }
+
 @utility btn-square {
   padding: 0;
   width: auto;
   aspect-ratio: 1 / 1;
-  border-radius: 0.5rem;
-}
-@utility btn-icon {
-  @apply btn-square btn-ghost;
-  height: 2.5rem;
-}
-@utility btn-xs {
-  height: 1.5rem;
-  padding: 0 0.5rem;
-  font-size: 0.7rem;
-  border-radius: 0.4rem;
-}
-@utility btn-sm {
-  height: 2rem;
-  padding: 0 0.75rem;
-  font-size: 0.8rem;
-  border-radius: 0.5rem;
-}
-@utility btn-lg {
-  height: 3rem;
-  padding: 0 1.5rem;
-  font-size: 1rem;
+  border-radius: 0.65rem;
 }
 
-/* Badges */
+@utility btn-icon {
+  @apply btn-square btn-ghost;
+  height: 2.75rem;
+}
+
+@utility btn-xs {
+  height: 1.6rem;
+  padding: 0 0.55rem;
+  font-size: 0.7rem;
+  border-radius: 0.45rem;
+}
+
+@utility btn-sm {
+  height: 2.15rem;
+  padding: 0 0.85rem;
+  font-size: 0.8rem;
+  border-radius: 0.55rem;
+}
+
+@utility btn-lg {
+  height: 3.15rem;
+  padding: 0 1.6rem;
+  font-size: 1rem;
+  border-radius: 0.85rem;
+}
+
+/* ========== Badges ========== */
 @utility badge {
   display: inline-flex;
   align-items: center;
@@ -446,27 +497,32 @@ h3 {
   line-height: 1.25;
   border-radius: 9999px;
   border: 1px solid transparent;
-  padding: 0.15rem 0.6rem;
+  padding: 0.2rem 0.7rem;
   font-size: 0.75rem;
   font-weight: 600;
+  letter-spacing: 0.01em;
   background-color: var(--color-secondary);
   color: var(--color-secondary-foreground);
 }
+
 @utility badge-outline {
   background-color: transparent;
   border-color: var(--color-border);
   color: var(--color-foreground);
 }
+
 @utility badge-primary {
   background-color: var(--color-primary);
   color: var(--color-primary-foreground);
 }
+
 @utility badge-success {
   @apply badge;
-  background-color: color-mix(in oklab, var(--color-success) 15%, transparent);
+  background-color: color-mix(in oklab, var(--color-success) 14%, transparent);
   color: var(--color-success);
-  border-color: color-mix(in oklab, var(--color-success) 30%, transparent);
+  border-color: color-mix(in oklab, var(--color-success) 28%, transparent);
 }
+
 @utility badge-danger {
   @apply badge;
   background-color: color-mix(
@@ -475,100 +531,109 @@ h3 {
     transparent
   );
   color: var(--color-destructive);
-  border-color: color-mix(in oklab, var(--color-destructive) 30%, transparent);
+  border-color: color-mix(in oklab, var(--color-destructive) 28%, transparent);
 }
+
 @utility badge-sm {
-  padding: 0.05rem 0.45rem;
+  padding: 0.08rem 0.5rem;
   font-size: 0.65rem;
 }
 
-/* Cards */
+/* ========== Cards ========== */
 @utility card {
   position: relative;
-  border-radius: 1rem;
+  border-radius: 1.15rem;
   border: 1px solid var(--color-border);
   background-color: var(--color-card);
   color: var(--color-card-foreground);
   box-shadow:
-    0 1px 2px rgb(var(--shadow-color) / 0.06),
-    0 8px 24px -12px rgb(var(--shadow-color) / 0.18);
+    0 1px 2px rgb(var(--shadow-color) / 0.05),
+    0 10px 28px -14px rgb(var(--shadow-color) / 0.18);
   transition: var(--transition-property-cinema)
-    var(--transition-duration-cinema) ease;
+    var(--transition-duration-cinema) cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 @utility card-hover {
   @apply card;
   cursor: pointer;
   &:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     border-color: color-mix(
       in oklab,
-      var(--color-primary) 30%,
+      var(--color-primary) 35%,
       var(--color-border)
     );
     box-shadow:
-      0 4px 10px rgb(var(--shadow-color) / 0.08),
-      0 16px 32px -14px rgb(var(--shadow-color) / 0.28);
+      0 4px 12px rgb(var(--shadow-color) / 0.08),
+      0 20px 40px -16px rgb(var(--shadow-color) / 0.28);
   }
 }
+
 @utility card-glass {
   @apply card;
-  background-color: color-mix(in oklab, var(--color-card) 70%, transparent);
-  backdrop-filter: blur(20px) saturate(150%);
+  background-color: color-mix(in oklab, var(--color-card) 72%, transparent);
+  backdrop-filter: blur(20px) saturate(160%);
+  border-color: color-mix(in oklab, var(--color-border) 70%, transparent);
 }
+
 @utility card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 1rem 1.25rem;
+  padding: 1.1rem 1.35rem;
   border-bottom: 1px solid var(--color-border);
 }
+
 @utility card-body {
-  padding: 1rem 1.25rem;
+  padding: 1.1rem 1.35rem;
 }
+
 @utility card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 1rem 1.25rem;
+  padding: 1.1rem 1.35rem;
   border-top: 1px solid var(--color-border);
   background-color: var(--color-muted);
-  border-radius: 0 0 1rem 1rem;
+  border-radius: 0 0 1.15rem 1.15rem;
 }
+
 @utility card-title {
   font-size: 1.5rem;
   font-weight: 700;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
-/* Loading spinner */
+/* ========== Loading / Join / Tooltip ========== */
 @utility loading {
   display: inline-block;
 }
+
 @utility loading-spinner {
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 1.15rem;
+  height: 1.15rem;
   border-radius: 9999px;
   border: 2px solid currentColor;
   border-right-color: transparent;
-  animation: tw-spin 0.6s linear infinite;
+  animation: tw-spin 0.65s linear infinite;
 }
 
-/* Join (segmented button groups, e.g. pagination) */
 @utility join {
   display: inline-flex;
   align-items: stretch;
 }
+
 @utility join-item {
   border-radius: 0;
   &:first-child {
-    border-top-left-radius: 0.5rem;
-    border-bottom-left-radius: 0.5rem;
+    border-top-left-radius: 0.6rem;
+    border-bottom-left-radius: 0.6rem;
   }
   &:last-child {
-    border-top-right-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
+    border-top-right-radius: 0.6rem;
+    border-bottom-right-radius: 0.6rem;
   }
   &:not(:first-child) {
     margin-left: -1px;
@@ -590,14 +655,14 @@ h3 {
     color: var(--tt-fg);
     font-size: 0.7rem;
     font-weight: 500;
-    padding: 0.3rem 0.6rem;
-    border-radius: 0.4rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 0.45rem;
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
     transition:
-      opacity 0.15s ease-out,
-      transform 0.15s ease-out;
+      opacity 0.18s ease-out,
+      transform 0.18s ease-out;
   }
   &::after {
     content: '';
@@ -611,7 +676,7 @@ h3 {
     transform: translateX(-50%) rotate(45deg);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.15s ease-out;
+    transition: opacity 0.18s ease-out;
   }
   &:hover::before,
   &:focus-visible::before {
@@ -623,12 +688,14 @@ h3 {
     opacity: 1;
   }
 }
+
 @utility tooltip-visible {
   &::before,
   &::after {
     opacity: 1;
   }
 }
+
 @utility tooltip-bottom {
   &::before {
     bottom: auto;
@@ -644,6 +711,7 @@ h3 {
     transform: translateX(-50%) translateY(0);
   }
 }
+
 @utility tooltip-left {
   &::before {
     bottom: auto;
@@ -664,6 +732,7 @@ h3 {
     transform: translateY(-50%) translateX(0);
   }
 }
+
 @utility tooltip-right {
   &::before {
     bottom: auto;
@@ -682,14 +751,17 @@ h3 {
     transform: translateY(-50%) translateX(0);
   }
 }
+
 @utility tooltip-info {
   --tt-bg: var(--color-info);
   --tt-fg: var(--color-info-foreground);
 }
+
 @utility tooltip-error {
   --tt-bg: var(--color-error);
   --tt-fg: var(--color-error-foreground);
 }
+
 @utility tooltip-success {
   --tt-bg: var(--color-success);
   --tt-fg: var(--color-success-foreground);
@@ -701,39 +773,52 @@ h3 {
   }
 }
 
-/* Forms */
+/* ========== Inputs / Labels / Alerts ========== */
 @utility input {
   appearance: none;
   width: 100%;
   background-color: transparent;
   outline: none;
 }
+
 @utility input-bordered {
   border: 1px solid var(--color-border);
 }
+
 @utility input-sm {
   font-size: 0.8rem;
 }
+
 @utility label-base {
   display: block;
-  margin-bottom: 0.375rem;
+  margin-bottom: 0.4rem;
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   color: var(--color-muted-foreground);
 }
 
-/* Alert */
 @utility alert {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  border-radius: 0.75rem;
+  gap: 0.55rem;
+  border-radius: 0.85rem;
   border: 1px solid var(--color-border);
-  background-color: color-mix(in oklab, var(--color-muted) 50%, transparent);
-  padding: 0.75rem 1rem;
+  background-color: color-mix(in oklab, var(--color-muted) 55%, transparent);
+  padding: 0.85rem 1.1rem;
   font-size: 0.875rem;
+}
+
+/* ========== Nav ========== */
+@utility nav-item {
+  @apply flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium
+         text-muted-foreground transition-all duration-200
+         hover:text-primary hover:bg-primary/8;
+}
+
+@utility nav-item-active {
+  @apply nav-item bg-primary/12 text-primary;
 }
 
 @layer components {
@@ -746,17 +831,19 @@ h3 {
   }
 
   .heading {
-    @apply text-4xl md:text-5xl font-bold text-center;
+    @apply text-4xl md:text-5xl font-bold text-center tracking-tight;
   }
+
   .shadow_cyan {
-    @apply shadow-sm dark:shadow-blue-500 shadow-blue-600/50;
+    @apply shadow-sm dark:shadow-primary shadow-primary/50;
   }
+
   .shadow-interactive-cyan {
-    @apply shadow-blue-500 transition-shadow duration-300 dark:shadow-lg dark:shadow-blue-900/80;
+    @apply shadow-primary transition-shadow duration-300 dark:shadow-lg dark:shadow-primary/40;
   }
 
   .shadow-interactive-cyan:hover {
-    @apply shadow-xl shadow-blue-600/40 transform transition-colors dark:shadow-blue-400/40;
+    @apply shadow-xl shadow-primary/40 transform transition-colors dark:shadow-primary/40;
   }
 
   .rdb {
@@ -778,18 +865,15 @@ h3 {
   .flex-between {
     @apply flex justify-between items-center;
   }
+
   .group * {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* custom-tooltip re-uses the .tooltip / .tooltip-bottom geometry above,
-     while colors stay driven by the `before:` / `after:` Tailwind variants
-     already present on each consumer (e.g. before:bg-gray-300). */
   .custom-tooltip {
     @apply duration-300 before:duration-300 before:delay-200 after:duration-400 after:delay-200 before:text-slate-900 dark:before:text-white before:bg-gray-300 after:bg-gray-300 dark:before:bg-gray-600 dark:after:bg-gray-600 transition-colors tooltip tooltip-bottom;
   }
 
-  /* Table */
   .table {
     width: 100%;
     border-collapse: collapse;
@@ -797,7 +881,7 @@ h3 {
     text-align: left;
   }
   .table th {
-    padding: 0.75rem 1rem;
+    padding: 0.8rem 1.1rem;
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -805,14 +889,13 @@ h3 {
     color: var(--color-muted-foreground);
   }
   .table td {
-    padding: 0.75rem 1rem;
+    padding: 0.8rem 1.1rem;
   }
   .table tbody tr.hover:hover,
   .table tbody tr:hover {
     background-color: var(--color-muted);
   }
 
-  /* Avatar / image mask */
   .avatar {
     position: relative;
     display: inline-flex;
@@ -827,7 +910,6 @@ h3 {
     border-radius: 30%;
   }
 
-  /* Kbd */
   .kbd {
     @apply inline-flex items-center justify-center rounded-md border border-border px-1.5 py-0.5 font-mono font-semibold shadow-sm;
   }
@@ -839,25 +921,22 @@ h3 {
     padding: 0 0.25rem;
   }
 
+  /* Markdown themes kept intact + slight polish */
   .markdown-render-theme {
-    @apply prose prose-slate max-w-none 
-    /* Light Mode */
-    in-prose-ul:bg-red-600
-    text-slate-900 
-    prose-headings:text-slate-900 
-    prose-strong:text-slate-900 
+    @apply prose prose-slate max-w-none
+    text-slate-900
+    prose-headings:text-slate-900
+    prose-strong:text-slate-900
     prose-em:text-slate-900
     prose-blockquote:text-slate-700
     prose-li:text-slate-900
     prose-a:text-cyan-600 hover:prose-a:text-cyan-700
-    prose-ul:text-slate-900 
+    prose-ul:text-slate-900
     prose-ol:text-slate-900
-
-    /* Dark Mode */
-    dark:prose-invert 
-    dark:text-white 
+    dark:prose-invert
+    dark:text-white
     dark:prose-headings:text-white
-    dark:prose-strong:text-white 
+    dark:prose-strong:text-white
     dark:prose-em:text-white
     dark:prose-blockquote:text-slate-300
     dark:prose-li:text-slate-200
@@ -872,12 +951,12 @@ h3 {
 
   .markdown-render-blue-topaz {
     background-color: transparent !important;
-    @apply prose max-w-none 
+    @apply prose max-w-none
     prose-table:border prose-table:border-slate-200 dark:prose-table:border-slate-700
     text-[15px] leading-relaxed text-slate-700 dark:text-slate-300
     prose-headings:font-bold prose-headings:tracking-tight;
 
-    @apply prose-h1:text-[#007acc] dark:prose-h1:text-[#4fa6ff] 
+    @apply prose-h1:text-[#007acc] dark:prose-h1:text-[#4fa6ff]
     prose-h1:border-b prose-h1:pb-2 prose-h1:border-slate-200 dark:prose-h1:border-slate-800;
 
     @apply prose-h2:text-[#008dbb] dark:prose-h2:text-[#5fc9f3]
@@ -888,40 +967,38 @@ h3 {
     prose-ul:list-disc prose-ol:list-decimal
     prose-li:my-1;
 
-    @apply prose-blockquote:border-l-4 prose-blockquote:border-[#007acc] 
-    prose-blockquote:bg-slate-50 dark:prose-blockquote:bg-slate-900/50 
+    @apply prose-blockquote:border-l-4 prose-blockquote:border-[#007acc]
+    prose-blockquote:bg-slate-50 dark:prose-blockquote:bg-slate-900/50
     prose-blockquote:py-1 prose-blockquote:pr-4 prose-blockquote:not-italic;
 
     @apply prose-code:before:content-none prose-code:after:content-none;
   }
   .markdown-render-blue-topaz :not(pre) > code {
     @apply px-1.5 py-0.5 rounded-md font-mono text-sm
-           text-[#e96900] bg-[#fff5f0] 
+           text-[#e96900] bg-[#fff5f0]
            dark:text-[#ffb454] dark:bg-[#2d2212]
            dark:border-orange-900/30 border-none!;
   }
 
   .markdown-render-blue-topaz pre {
-    @apply bg-[#f8f9fb] dark:bg-[#161b22] 
-           border border-slate-200 dark:border-slate-800 
+    @apply bg-[#f8f9fb] dark:bg-[#161b22]
+           border border-slate-200 dark:border-slate-800
            rounded-lg shadow-sm p-4;
   }
   .markdown-render-blue-topaz pre code {
     @apply text-slate-800 dark:text-slate-300 bg-transparent! p-0! border-none!;
   }
 
-  /* Task Lists */
   .markdown-render-blue-topaz input[type='checkbox'] {
     @apply rounded border-slate-300 text-[#007acc] focus:ring-[#007acc] mr-2 mb-1;
   }
-  /* This targets the specific library container */
+
   .markdown-render-blue-topaz .wmde-markdown {
     overflow-x: hidden !important;
     word-break: break-word !important;
     overflow-wrap: anywhere !important;
   }
 
-  /* Ensure code blocks don't push the width out, but scroll instead */
   .markdown-render-blue-topaz .wmde-markdown pre {
     white-space: pre !important;
     overflow-x: auto !important;
@@ -933,7 +1010,6 @@ h3 {
     font-family: monospace;
   }
 
-  /* Show it when the heading (h1, h2, etc.) is hovered */
   .markdown-render-blue-topaz h1:hover .anchor-icon,
   .markdown-render-blue-topaz h2:hover .anchor-icon,
   .markdown-render-blue-topaz h3:hover .anchor-icon,
@@ -943,7 +1019,6 @@ h3 {
     @apply opacity-100;
   }
 
-  /* Ensure headings have a relative position for proper alignment */
   .markdown-render-blue-topaz h1,
   .markdown-render-blue-topaz h2,
   .markdown-render-blue-topaz h3,
@@ -952,13 +1027,11 @@ h3 {
   }
 }
 
-/* 5. Utility Classes */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 
-  /* Animations */
   .animate-marquee-up {
     animation: marquee-up 25s linear infinite;
   }
@@ -998,12 +1071,10 @@ h3 {
     );
   }
 
-  /* The base skeleton class */
   .skeleton-md {
     @apply relative overflow-hidden bg-slate-300/80 rounded-lg;
   }
 
-  /* The shimmer animation effect */
   .skeleton-md::after {
     content: '';
     @apply absolute inset-0 -translate-x-full;
@@ -1016,15 +1087,13 @@ h3 {
     animation: shimmer-skeleton 2s infinite;
   }
 
-  /* Base style (Light Mode) */
   .loading-md {
     position: relative;
     overflow: hidden;
-    border-radius: 0.375rem; /* rounded-md */
+    border-radius: 0.4rem;
     background-color: rgba(0, 0, 0, 0.05);
   }
 
-  /* Dark Mode style (No :global needed) */
   .dark .loading-md {
     background-color: rgba(255, 255, 255, 0.05);
   }
@@ -1046,31 +1115,30 @@ h3 {
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.5s ease-out forwards;
+  animation: fadeInUp 0.55s ease-out forwards;
 }
 .animate-in-view {
-  animation: fadeInScale 0.4s ease-out forwards;
+  animation: fadeInScale 0.45s ease-out forwards;
 }
 
-/* Effects */
 .glass-input-focus:focus {
   background: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 18px rgba(59, 130, 246, 0.45);
 }
 .glass-editor {
-  background: rgba(15, 23, 42, 0.8);
+  background: rgba(15, 23, 42, 0.82);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 .glow-on-hover:hover {
-  box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+  box-shadow: 0 0 24px rgba(6, 182, 212, 0.4);
 }
 .editor-gradient-border {
   background: linear-gradient(to right, #06b6d4, #3b82f6, #8b5cf6);
   padding: 1px;
 }
 .glass-sidebar {
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(20px);
+  background: rgba(15, 23, 42, 0.62);
+  backdrop-filter: blur(22px);
   border-left: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -1079,16 +1147,14 @@ h3 {
   scrollbar-width: none;
   overflow-y: scroll;
 }
-
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
-/* 6. Scrollbars (Standard CSS) */
+
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #334155 transparent;
+  scrollbar-color: var(--border) transparent;
 }
-
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -1097,19 +1163,18 @@ h3 {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #334155;
+  background-color: var(--border);
   border-radius: 20px;
   border: 1px solid transparent;
   background-clip: content-box;
 }
 .custom-scrollbar:hover::-webkit-scrollbar-thumb {
-  background-color: #06b6d4;
+  background-color: var(--primary);
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #22d3ee;
+  background-color: var(--ring);
 }
 
-/* 7. MDEditor Line Numbers */
 .w-md-editor-text-input {
   counter-reset: line;
 }
@@ -1132,7 +1197,6 @@ h3 {
   padding-left: 10px !important;
 }
 
-/* 8. Keyframes */
 @keyframes marquee-up {
   0% {
     transform: translateY(0%);
@@ -1168,7 +1232,7 @@ h3 {
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(22px);
   }
   to {
     opacity: 1;
@@ -1178,7 +1242,7 @@ h3 {
 @keyframes fadeInScale {
   from {
     opacity: 0;
-    transform: scale(0.98) translateY(10px);
+    transform: scale(0.97) translateY(12px);
   }
   to {
     opacity: 1;
@@ -1224,7 +1288,6 @@ h3 {
     transform: translate(2px, -2px);
   }
 }
-
 @keyframes scan {
   0% {
     transform: translateY(-100%);
@@ -1233,7 +1296,6 @@ h3 {
     transform: translateY(300%);
   }
 }
-
 @keyframes spin-slow {
   from {
     transform: rotate(0deg);
@@ -1245,4 +1307,7 @@ h3 {
 
 .animate-spin-slow {
   animation: spin-slow 8s linear infinite;
+}
+.writing-mode-vertical {
+  writing-mode: vertical-rl;
 }
