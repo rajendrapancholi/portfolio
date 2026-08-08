@@ -164,10 +164,13 @@ export default async function BlogPage({ params }: Props) {
         }}
       />
 
-      <div className="flex gap-6 lg:gap-8">
-        <article className="min-w-0 flex-1">
-          <header className="mb-10">
-            <Breadcrumb className="mt-10 mb-6 uppercase tracking-widest font-medium">
+      <div className="flex relative">
+        <article className="min-w-0 flex-1 md:px-2 overflow-visible">
+          <div
+            className="sticky z-15 py-1 mt-3 mb-4 backdrop-blur-md border-b border-border/50 transition-[top] duration-300 ease-out flex justify-between"
+            style={{ top: 'var(--navbar-height, 70px)' }}
+          >
+            <Breadcrumb className="uppercase tracking-widest font-medium">
               <BreadcrumbList className="text-[10px] md:text-xs">
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
@@ -185,6 +188,7 @@ export default async function BlogPage({ params }: Props) {
                   const breadcrumbPath = `/blogs/b/${source}/${pathSegments
                     .slice(0, i + 1)
                     .join('/')}`;
+
                   return (
                     <React.Fragment key={i}>
                       <BreadcrumbSeparator />
@@ -209,12 +213,15 @@ export default async function BlogPage({ params }: Props) {
                 })}
               </BreadcrumbList>
             </Breadcrumb>
-
             {/* Metadata Badge */}
-            <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold mb-6">
+            <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold mb-6 mr-1">
               <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-md bg-primary/10 border border-primary/20 text-primary">
+                <span className="text-muted-foreground hover:text-foreground transition-colors cursor-default">
+                  {blog.author.name}
+                </span>
+                <span className="w-1 h-1 rounded-full bg-border" />
                 <span className="text-primary/60 uppercase text-[9px]">
-                  Updated:
+                  Updated At:
                 </span>
                 <time dateTime={new Date(blog.updatedAt).toISOString()}>
                   {new Date(blog.updatedAt).toLocaleDateString('en-US', {
@@ -224,18 +231,15 @@ export default async function BlogPage({ params }: Props) {
                   })}
                 </time>
               </div>
-              <span className="w-1 h-1 rounded-full bg-border" />
-              <span className="text-muted-foreground hover:text-foreground transition-colors cursor-default">
-                {blog.author.name}
-              </span>
             </div>
+          </div>
 
-            {/* Title Section */}
+          <header className="relative mb-8 overflow-visible">
             {(!headings ||
               headings.length === 0 ||
               headings[0].level !== 1) && (
               <div className="space-y-4">
-                <h1 className="text-3xl md:text-5xl font-black text-foreground leading-[1.1] tracking-tighter">
+                <h1 className="text-3xl md:text-5xl font-black …">
                   {blog.title}
                 </h1>
                 <div className="h-1.5 w-24 bg-linear-to-r from-primary to-primary/60 rounded-full" />

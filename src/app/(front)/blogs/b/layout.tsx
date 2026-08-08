@@ -4,15 +4,14 @@ import CollapsibleLeftSidebar from '@/components/blog/CollapsibleLeftSidebar';
 export default function BLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative flex items-start">
-      {/* Client shell wraps Server sidebar */}
+      {/* Left collapsible sidebar */}
       <CollapsibleLeftSidebar>
         <LeftSidebar />
       </CollapsibleLeftSidebar>
 
+      {/* Main content */}
       <div className="min-w-0 w-full flex-1">
-        <div className="w-full px-3 py-6 sm:px-5 lg:px-6 md:py-8">
-          {children}
-        </div>
+        <div className="w-full">{children}</div>
       </div>
     </div>
   );

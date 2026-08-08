@@ -180,7 +180,7 @@ const MarkdownRenderer = ({ content }: { content: string }) => {
   }
   return (
     <div
-      className="markdown-render-blue-topaz md:px-2 bg-main-bg"
+      className="markdown-render-blue-topaz bg-main-bg"
       data-color-mode={currentTheme}
     >
       <MarkdownPreview

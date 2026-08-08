@@ -14,9 +14,19 @@ export default function MainBlogLayout({
     <div className="relative min-h-screen bg-main-bg text-main-text">
       <Navbar />
 
-      <main className="relative z-10">{children}</main>
+      <div
+        className="shrink-0 transition-[height] duration-300 ease-out"
+        style={{ height: 'var(--navbar-height, 70px)' }}
+        aria-hidden="true"
+      />
 
-      {/* Elegant separator */}
+      <main
+        className="relative z-10"
+        style={{ minHeight: 'calc(100vh - var(--navbar-height, 70px))' }}
+      >
+        {children}
+      </main>
+
       <div className="mx-auto max-w-7xl px-4">
         <div className="h-px bg-linear-to-r from-transparent via-border to-transparent" />
       </div>

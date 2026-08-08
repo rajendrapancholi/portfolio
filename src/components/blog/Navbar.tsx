@@ -41,11 +41,37 @@ const Navbar: React.FC = () => {
   const { scrollY } = useScroll();
   const pathname = usePathname();
 
+  useEffect(() => {
+    const height = isCollapsed ? '48px' : '70px';
+    document.documentElement.style.setProperty('--navbar-height', height);
+  }, [isCollapsed]);
+
+  // Set initial value on mount
+  useEffect(() => {
+    document.documentElement.style.setProperty('--navbar-height', '70px');
+  }, []);
+
   useMotionValueEvent(scrollY, 'change', (latest) => {
-    const prev = scrollY.getPrevious() ?? 0;
-    if (latest > prev && latest > 150 && pathname.startsWith('/blogs/b/')) {
+    if (!pathname.startsWith('/blogs/b/')) {
+      setIsCollapsed(false);
+      return;
+    }
+    if (latest > 180) {
       setIsCollapsed(true);
-    } else {
+    } else if (latest < 80) {
+      setIsCollapsed(false);
+    }
+  });
+
+  useMotionValueEvent(scrollY, 'change', (latest) => {
+    if (!pathname.startsWith('/blogs/b/')) {
+      setIsCollapsed(false);
+      return;
+    }
+
+    if (latest > 180) {
+      setIsCollapsed(true);
+    } else if (latest < 80) {
       setIsCollapsed(false);
     }
   });
@@ -93,6 +119,11 @@ const Navbar: React.FC = () => {
       }}
       transition={{ duration: 0.3 }}
       className="fixed inset-x-0 top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border"
+      style={
+        {
+          '--navbar-height': isCollapsed ? '48px' : '70px',
+        } as React.CSSProperties
+      }
     >
       <div className="relative mx-auto px-4 h-full">
         <div className="flex h-full items-center justify-between gap-3">
@@ -208,7 +239,6 @@ const Navbar: React.FC = () => {
               }}
               className="fixed inset-0 min-h-screen z-45 bg-black/40 backdrop-blur-sm sm:hidden"
             />
-
             <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
@@ -225,9 +255,7 @@ const Navbar: React.FC = () => {
                 >
                   <ArrowLeftCircleIcon className="text-primary size-8 bg-card rounded-full" />
                 </button>
-
                 <RajeBrandLogo logoType="mini" secondText="blog" />
-
                 <nav className="mt-6 flex flex-col gap-1">
                   <div className="flex justify-between items-center w-full gap-2 mb-3">
                     <SearchBar />
