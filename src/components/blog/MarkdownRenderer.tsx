@@ -16,7 +16,6 @@ import Mermaid from '../ui/Mermaid';
 
 const RAW_URL_BASE = `https://raw.githubusercontent.com/${ENV.NEXT_PUBLIC_REPO_OWNER}/${ENV.NEXT_PUBLIC_REPO_NAME}/main`;
 
-// Helper: recursively extract raw text from a hast/mdast node tree
 function getCodeString(nodeChildren: any[] = []): string {
   return nodeChildren
     .map((node) => {
@@ -62,7 +61,6 @@ const MarkdownComponents = {
       (!href.startsWith('http') && href.endsWith('.md'));
     const isGitHubRaw = href.includes('raw.githubusercontent.com');
 
-    // 2. Handle Markdown/GitHub links
     if (isRelative || isGitHubRaw) {
       let cleanPath = href;
       if (isGitHubRaw) {
@@ -73,7 +71,7 @@ const MarkdownComponents = {
       return (
         <Link
           href={localHref}
-          className="text-cyan-500 hover:underline decoration-cyan-500/30 underline-offset-4"
+          className="text-primary hover:underline decoration-primary/30 underline-offset-4"
         >
           {children}
         </Link>
@@ -84,13 +82,14 @@ const MarkdownComponents = {
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-cyan-500 hover:underline"
+        className="text-primary hover:underline decoration-primary/30 underline-offset-4"
         {...props}
       >
         {children}
       </Link>
     );
   },
+
   img: ({ src, alt, ...props }: any) => {
     const imageSrc = typeof src === 'string' ? src : '';
     const [mounted, setMounted] = useState(false);
@@ -111,23 +110,23 @@ const MarkdownComponents = {
     return (
       <>
         <span
-          className="group block **:block relative my-8 max-w-fit self-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 dark:border-slate-800 dark:bg-slate-900/50 dark:hover:shadow-blue-400/5 cursor-zoom-in"
+          className="group block relative my-8 w-full max-w-3xl mx-auto overflow-hidden rounded-xl border border-border bg-muted shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 cursor-zoom-in"
           onClick={() => openModal(modalId)}
         >
-          <span className="relative overflow-hidden">
+          <span className="relative block overflow-hidden">
             <img
               {...props}
               src={imageSrc}
               alt={alt || ''}
               loading="lazy"
-              className="w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+              className="w-full h-auto object-contain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
             />
-            <span className="absolute inset-0 pointer-events-none bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <span className="absolute inset-0 pointer-events-none bg-linear-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           </span>
 
           {alt && (
-            <span className="absolute bottom-3 left-1/2 -translate-x-1/2 w-[80%] translate-y-2 opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-              <span className="rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-center text-sm font-medium text-white shadow-lg backdrop-blur-md dark:border-slate-700/50 dark:bg-slate-800/40">
+            <span className="absolute bottom-3 left-1/2 -translate-x-1/2 w-[90%] translate-y-2 opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+              <span className="rounded-lg border border-white/10 bg-black/60 px-3 py-1.5 text-center text-sm font-medium text-white shadow-lg backdrop-blur-md block">
                 {alt}
               </span>
             </span>
@@ -147,7 +146,8 @@ const MarkdownComponents = {
                   className="w-full h-[90vh] rounded-lg shadow-2xl object-contain cursor-zoom-out animate-in zoom-in-95 duration-200"
                 />
                 <button
-                  className="absolute top-0.5 right-0.5 text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white text-lg font-bold p-2 cursor-pointer"
+                  aria-label="Close image preview"
+                  className="absolute top-0.5 right-0.5 text-white/70 hover:text-white text-lg font-bold p-2 cursor-pointer transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
                     closeModal(modalId);
@@ -180,7 +180,7 @@ const MarkdownRenderer = ({ content }: { content: string }) => {
   }
   return (
     <div
-      className="markdown-render-blue-topaz md:px-2 bg-canvas"
+      className="markdown-render-blue-topaz md:px-2 bg-main-bg"
       data-color-mode={currentTheme}
     >
       <MarkdownPreview
@@ -192,7 +192,8 @@ const MarkdownRenderer = ({ content }: { content: string }) => {
             return uri;
           }
           if (isGit && !uri.startsWith('http')) {
-            return `${RAW_URL_BASE}/${uri.replace(/^\.\//, '')}`;
+            const cleanUri = uri.replace(/^\.\//, '').replace(/^\//, '');
+            return `${RAW_URL_BASE}/${cleanUri}`;
           }
           return uri;
         }}
