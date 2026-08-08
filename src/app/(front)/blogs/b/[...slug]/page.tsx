@@ -9,11 +9,11 @@ import Link from 'next/link';
 import { FaGithub } from 'react-icons/fa6';
 import { ArrowLeft, ArrowRight, Heart } from 'lucide-react';
 import Feedback from '@/components/blog/Feedback';
-import TocSidebar from '@/components/blog/TOCSidebar';
 import { getHeadings } from '@/lib/utils/getHeadings';
 import { getPostBySlug } from '@/app/actions/githubBlog';
 import MarkdownRenderer from '@/components/blog/MarkdownRenderer';
 import fetchAllBlogs from '@/lib/utils/fetchAllBlogs';
+import { auth } from '@/lib/auth';
 import React from 'react';
 import {
   Breadcrumb,
@@ -23,6 +23,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/Breadcrumb';
+import CollapsibleToc from '@/components/blog/CollapsibleToc';
+import { Pencil, Eye } from 'lucide-react';
 
 const baseUrl = ENV.BASE_URL ?? 'https://rajendrapancholi.vercel.app';
 
@@ -40,10 +42,10 @@ export async function generateMetadata({ params }: Props) {
       category: 'Blog-Not-Found!',
       isDynamic: true,
     });
+
   const [src, ...pathSegments] = slug;
   const source = sanitizeSlug(src);
   const actualSlug = sanitizeSlug(pathSegments.join('/'));
-
   let blog = null;
 
   try {
@@ -90,14 +92,13 @@ export async function generateStaticParams() {
 
 export default async function BlogPage({ params }: Props) {
   const { slug } = await params;
-
   if (!slug || slug.length < 2) notFound();
-
   const [source, ...pathSegments] = slug;
   const actualSlug = sanitizeSlug(pathSegments.join('/'));
   const allBlogs = await fetchAllBlogs();
   let blog = null;
   let success = false;
+
   try {
     if (source === 'git') {
       const response = await getPostBySlug(actualSlug);
@@ -115,7 +116,6 @@ export default async function BlogPage({ params }: Props) {
   }
 
   if (!blog) notFound();
-
   if (!success || !blog || !blog.content) {
     notFound();
   }
@@ -124,8 +124,8 @@ export default async function BlogPage({ params }: Props) {
   const blogF = allBlogs[currentIndex];
   if (!blogF) notFound();
 
-  const nextBlog = currentIndex > 0 ? allBlogs[currentIndex - 1] : null;
-  const prevBlog =
+  const prevBlog = currentIndex > 0 ? allBlogs[currentIndex - 1] : null;
+  const nextBlog =
     currentIndex !== -1 && currentIndex < allBlogs.length - 1
       ? allBlogs[currentIndex + 1]
       : null;
@@ -142,7 +142,17 @@ export default async function BlogPage({ params }: Props) {
     updatedAt: blog.updatedAt,
     priceCurrency: 'rs',
   });
+
   const headings = getHeadings(blog.content);
+
+  const session = await auth();
+  const canEdit =
+    session?.user?.role === 'admin' || session?.user?.role === 'author';
+  const githubUrl = blog.editUrl
+    ? canEdit
+      ? blog.editUrl
+      : blog.editUrl.replace('/edit/', '/blob/')
+    : null;
 
   return (
     <>
@@ -153,41 +163,41 @@ export default async function BlogPage({ params }: Props) {
           __html: safeJSONStringify(jsonLd, { decodeUri: true }),
         }}
       />
-      <div className="grid grid-cols-1 md:grid-cols-5 justify-between gap-2 mx-1.5">
-        <article className="col-span-4 w-full px-2">
+
+      <div className="flex gap-6 lg:gap-8">
+        <article className="min-w-0 flex-1">
           <header className="mb-10">
             <Breadcrumb className="mt-10 mb-6 uppercase tracking-widest font-medium">
               <BreadcrumbList className="text-[10px] md:text-xs">
-                {/* Base Link */}
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
                     <Link
                       href="/blogs"
-                      className="hover:text-cyan-400 transition-colors"
+                      className="text-muted-foreground hover:text-primary transition-colors"
                     >
                       BLOGS
                     </Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
 
-                {/* Dynamic Segments */}
                 {pathSegments.map((segment, i) => {
                   const isLast = i === pathSegments.length - 1;
-                  const breadcrumbPath = `/blogs/b/${source}/${pathSegments.slice(0, i + 1).join('/')}`;
-
+                  const breadcrumbPath = `/blogs/b/${source}/${pathSegments
+                    .slice(0, i + 1)
+                    .join('/')}`;
                   return (
                     <React.Fragment key={i}>
                       <BreadcrumbSeparator />
                       <BreadcrumbItem>
                         {isLast ? (
-                          <BreadcrumbPage className="text-cyan-500 truncate max-w-37.5 md:max-w-none">
+                          <BreadcrumbPage className="text-primary truncate max-w-37.5 md:max-w-none">
                             {segment.replace(/-/g, ' ')}
                           </BreadcrumbPage>
                         ) : (
                           <BreadcrumbLink asChild>
                             <Link
                               href={breadcrumbPath}
-                              className="hover:text-cyan-400/80 transition-colors"
+                              className="text-muted-foreground hover:text-primary/80 transition-colors"
                             >
                               {segment.replace(/-/g, ' ')}
                             </Link>
@@ -202,8 +212,8 @@ export default async function BlogPage({ params }: Props) {
 
             {/* Metadata Badge */}
             <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold mb-6">
-              <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-md bg-cyan-500/10 border border-cyan-500/20 text-cyan-500">
-                <span className="text-cyan-500/60 uppercase text-[9px]">
+              <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-md bg-primary/10 border border-primary/20 text-primary">
+                <span className="text-primary/60 uppercase text-[9px]">
                   Updated:
                 </span>
                 <time dateTime={new Date(blog.updatedAt).toISOString()}>
@@ -214,10 +224,8 @@ export default async function BlogPage({ params }: Props) {
                   })}
                 </time>
               </div>
-
-              <span className="w-1 h-1 rounded-full bg-slate-700" />
-
-              <span className="text-slate-400 hover:text-slate-200 transition-colors cursor-default">
+              <span className="w-1 h-1 rounded-full bg-border" />
+              <span className="text-muted-foreground hover:text-foreground transition-colors cursor-default">
                 {blog.author.name}
               </span>
             </div>
@@ -227,107 +235,112 @@ export default async function BlogPage({ params }: Props) {
               headings.length === 0 ||
               headings[0].level !== 1) && (
               <div className="space-y-4">
-                <h1 className="text-3xl md:text-5xl font-black text-white leading-[1.1] tracking-tighter">
+                <h1 className="text-3xl md:text-5xl font-black text-foreground leading-[1.1] tracking-tighter">
                   {blog.title}
                 </h1>
-                <div className="h-1.5 w-24 bg-linear-to-r from-cyan-500 to-blue-600 rounded-full" />
+                <div className="h-1.5 w-24 bg-linear-to-r from-primary to-primary/60 rounded-full" />
               </div>
             )}
           </header>
+
           <MarkdownRenderer content={blog.content} />
-          <footer className="mt-20 border-t border-slate-800/60 py-16">
+
+          <footer className="mt-20 border-t border-border py-16">
             <div className="flex flex-col gap-12">
-              {/* Interaction Layer: Like Button */}
+              {/* Like Button */}
               <div
                 aria-label="Like this post"
                 className="flex justify-center items-center gap-4"
               >
-                <button className="group flex items-center gap-3 px-6 py-3 rounded-full bg-slate-900 border border-slate-800 hover:border-pink-500/50 transition-all duration-300 shadow-xl shadow-black/20">
-                  <Heart className="w-5 h-5 text-slate-500 group-hover:text-pink-500 group-active:scale-125 transition-all" />
-                  <span className="text-sm font-medium text-slate-400 group-hover:text-slate-200">
+                <button className="group flex items-center gap-3 px-6 py-3 rounded-full bg-muted border border-border hover:border-pink-500/50 transition-all duration-300 shadow-sm">
+                  <Heart className="w-5 h-5 text-muted-foreground group-hover:text-pink-500 group-active:scale-125 transition-all" />
+                  <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground">
                     Like this post
                   </span>
                 </button>
               </div>
 
-              {/* Navigation Layer: Previous/Next */}
+              {/* Previous / Next */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Previous Blog */}
                 {prevBlog ? (
                   <Link
                     href={`/blogs/b/${prevBlog.source}/${prevBlog.slug}`}
-                    className="group p-6 rounded-2xl bg-slate-900/50 border border-slate-800/50 hover:bg-slate-800/40 hover:border-cyan-500/30 transition-all duration-300 flex flex-col gap-2"
+                    className="group p-6 rounded-2xl bg-card border border-border hover:bg-muted/40 hover:border-primary/30 transition-all duration-300 flex flex-col gap-2"
                   >
-                    <div className="flex items-center gap-2 text-slate-500 group-hover:text-cyan-400 transition-colors">
+                    <div className="flex items-center gap-2 text-muted-foreground group-hover:text-primary transition-colors">
                       <ArrowLeft className="w-4 h-4" />
                       <span className="text-xs uppercase tracking-widest font-semibold">
                         Previous
                       </span>
                     </div>
-                    <span className="text-slate-300 font-medium line-clamp-1">
+                    <span className="text-foreground font-medium line-clamp-1">
                       {prevBlog.title}
                     </span>
                   </Link>
                 ) : (
-                  <div className="p-6 rounded-2xl bg-slate-900/20 border border-slate-800/30 opacity-50 flex flex-col gap-2">
-                    <span className="text-xs uppercase tracking-widest font-semibold text-slate-600">
+                  <div className="p-6 rounded-2xl bg-muted/30 border border-border opacity-50 flex flex-col gap-2">
+                    <span className="text-xs uppercase tracking-widest font-semibold text-muted-foreground">
                       No Previous Post
                     </span>
                   </div>
                 )}
 
-                {/* Next Blog */}
                 {nextBlog ? (
                   <Link
                     href={`/blogs/b/${nextBlog.source}/${nextBlog.slug}`}
-                    className="group p-6 rounded-2xl bg-slate-900/50 border border-slate-800/50 hover:bg-slate-800/40 hover:border-cyan-500/30 transition-all duration-300 flex flex-col items-end gap-2 text-right"
+                    className="group p-6 rounded-2xl bg-card border border-border hover:bg-muted/40 hover:border-primary/30 transition-all duration-300 flex flex-col items-end gap-2 text-right"
                   >
-                    <div className="flex items-center gap-2 text-slate-500 group-hover:text-cyan-400 transition-colors">
+                    <div className="flex items-center gap-2 text-muted-foreground group-hover:text-primary transition-colors">
                       <span className="text-xs uppercase tracking-widest font-semibold">
                         Next
                       </span>
                       <ArrowRight className="w-4 h-4" />
                     </div>
-                    <span className="text-slate-300 font-medium line-clamp-1">
+                    <span className="text-foreground font-medium line-clamp-1">
                       {nextBlog.title}
                     </span>
                   </Link>
                 ) : (
-                  <div className="p-6 rounded-2xl bg-slate-900/20 border border-slate-800/30 opacity-50 flex flex-col items-end gap-2 text-right">
-                    <span className="text-xs uppercase tracking-widest font-semibold text-slate-600">
+                  <div className="p-6 rounded-2xl bg-muted/30 border border-border opacity-50 flex flex-col items-end gap-2 text-right">
+                    <span className="text-xs uppercase tracking-widest font-semibold text-muted-foreground">
                       No Next Post
                     </span>
                   </div>
                 )}
               </div>
 
-              {/* Utility Layer: GitHub & Socials */}
-              <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-slate-800/40 gap-6">
-                <p className="text-slate-500 text-sm">
+              {/* Author + Source */}
+              <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-border gap-6">
+                <p className="text-muted-foreground text-sm">
                   &#64; {' ' + blog.author.name}
                 </p>
-                {source === 'git' ||
-                  (blog.editUrl && (
-                    <Link
-                      href={blog.editUrl}
-                      target="_blank"
-                      className="flex items-center gap-2 text-sm text-slate-400 hover:text-white hover:bg-slate-800/50 px-4 py-2 rounded-lg transition-all"
-                    >
-                      <FaGithub className="w-4 h-4" />
-                      <span>Source Code</span>
-                    </Link>
-                  ))}
+                {source === 'git' && githubUrl && (
+                  <Link
+                    href={githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted px-4 py-2 rounded-lg transition-all"
+                  >
+                    {canEdit ? (
+                      <>
+                        <Pencil className="w-4 h-4" />
+                        <span>Edit on GitHub</span>
+                      </>
+                    ) : (
+                      <>
+                        <FaGithub className="w-4 h-4" />
+                        <span>View on GitHub</span>
+                      </>
+                    )}
+                  </Link>
+                )}
               </div>
+
               <Feedback />
             </div>
           </footer>
         </article>
-        {/* Right Sidebar - Sticky TOC */}
-        <aside className="hidden col-span-1 md:block">
-          <div className="sticky top-4 bottom-2  h-[calc(100vh-64px)] overflow-hidden">
-            <TocSidebar headings={headings} />
-          </div>
-        </aside>
+        <CollapsibleToc headings={headings} />
       </div>
     </>
   );
