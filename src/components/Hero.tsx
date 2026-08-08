@@ -115,7 +115,6 @@ const Hero = () => {
               title="Show My Work"
               position="right"
               icon={<FaLocationArrow />}
-              otherClasses="w-"
             />
           </Link>
           <Link href="/blogs">

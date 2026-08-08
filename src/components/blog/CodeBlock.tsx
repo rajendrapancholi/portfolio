@@ -1,6 +1,5 @@
 'use client';
 
-import { FileCode, Terminal, Brackets } from 'lucide-react';
 import { CopyButton } from '../ui/CopyButton';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import {
@@ -9,22 +8,7 @@ import {
 } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-
-const getLanguageIcon = (lang: string) => {
-  switch (lang.toLowerCase()) {
-    case 'js':
-    case 'jsx':
-    case 'ts':
-    case 'tsx':
-      return <Brackets className="w-4 h-4 text-warning" />;
-    case 'bash':
-    case 'sh':
-    case 'shell':
-      return <Terminal className="w-4 h-4 text-success" />;
-    default:
-      return <FileCode className="w-4 h-4 text-primary" />;
-  }
-};
+import { getLanguageIcon } from './LangIcons';
 
 export const CodeBlock = ({
   children,
@@ -43,11 +27,10 @@ export const CodeBlock = ({
 
   return (
     <div className="relative group my-6 overflow-hidden rounded-md border border-border bg-card shadow-sm">
-      {/* Header Row */}
       <div className="flex items-center justify-between px-4 py-2 bg-muted/50 border-b border-border">
-        <div className="flex items-center gap-2">
+        <div className="flex justify-start items-center gap-2">
           {getLanguageIcon(lang)}
-          <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">
+          <span className="text-xs text-muted-foreground uppercase tracking-wider leading-none">
             {lang}
           </span>
         </div>
