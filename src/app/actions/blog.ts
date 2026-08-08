@@ -23,8 +23,7 @@ export async function createBlog(formData: FormData) {
     const thumbnail =
       thumbnailValue && thumbnailValue !== '/default-blog-thumb.webp'
         ? thumbnailValue
-        : null;
-    // const blogDocImgsLnk = formData.getAll("blogDocImgsLnk") as string[];
+        : undefined;
 
     // SEO-friendly slug generation
     const slug = title
@@ -90,7 +89,7 @@ export const getBlogBySlug = cache(
 
       await connectToDB();
       const authorData = await UserModel.findOne({
-        _id: blog.author_id,
+        _id: blog.author_id.toString(),
       }).lean();
 
       const serializedBlog = {
@@ -175,48 +174,6 @@ export async function getBlogList() {
   return { success: true, data: pList };
 }
 
-/*
-
-export async function updateBlog(id: string, formData: FormData) {
-  try {
-    const session = await auth();
-    if (!session?.user.isAdmin)
-      return { success: false, error: "Unauthorized" };
-
-    await connectToDB();
-
-    const updateData = {
-      title: formData.get("title"),
-      content: formData.get("content"),
-      thumbnail: formData.get("thumbnail"),
-      blogDocImgsLnk: formData.getAll("blogDocImgsLnk"),
-      slug: (formData.get("title") as string)
-        .toLowerCase()
-        .replace(/\s+/g, "-"),
-    };
-
-    const updatedBlog = await BlogModel.findByIdAndUpdate(
-      id,
-      { $set: updateData },
-      { new: true, runValidators: true },
-    );
-
-    if (!updatedBlog) return { success: false, error: "Blog not found" };
-
-    revalidatePath(`/blog/${updatedBlog.slug}`);
-    revalidatePath("/blog");
-
-    return {
-      success: true,
-      id: updatedBlog._id.toString(),
-      message: "Update successful",
-    };
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
-}
-  */
-
 export interface BlogDeleteResponse {
   success: boolean;
   message?: string;
@@ -229,7 +186,7 @@ export async function deleteBlog(id: string): Promise<BlogDeleteResponse> {
     const session = await auth();
     if (!session || !session.user || new Date(session.expires) < new Date())
       return { success: false, error: 'Unauthorized: Session expired' };
-    if (!session?.user.isAdmin && session?.user.role === 'admin')
+    if (!session.user.isAdmin || session.user.role !== 'admin')
       return { success: false, error: 'Forbidden: Admin access required' };
 
     await connectToDB(); // connect to main DB
@@ -238,7 +195,6 @@ export async function deleteBlog(id: string): Promise<BlogDeleteResponse> {
     if (!usrExists?.isAdmin || usrExists?.role !== 'admin')
       return { success: false, error: 'Invalid user!' };
 
-    // Find blog to get thumbnail/images for Cloudinary cleanup
     const BlogModel = await getBlogModel();
     const blog = await BlogModel.findById(id).lean();
     if (!blog)
@@ -257,7 +213,7 @@ export async function deleteBlog(id: string): Promise<BlogDeleteResponse> {
       }
     }
 
-    const result = await BlogModel.deleteOne({ id });
+    const result = await BlogModel.deleteOne({ _id: id });
     if (result.deletedCount === 0) {
       return { success: false, error: 'Database Error: Could not delete.' };
     }
