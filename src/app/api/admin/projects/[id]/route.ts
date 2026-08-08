@@ -8,7 +8,7 @@ type Params = {
 
 export const GET = auth(async (req, context: Params) => {
   const { id } = await context.params;
-  if (!req.auth) {
+  if (!req.auth || !req.auth.user?.isAdmin) {
     return Response.json(
       { message: 'unauthorized' },
       {
@@ -31,7 +31,7 @@ export const GET = auth(async (req, context: Params) => {
 
 export const PUT = auth(async (req, context: Params) => {
   const { id } = await context.params;
-  if (!req.auth) {
+  if (!req.auth || !req.auth.user?.isAdmin) {
     return Response.json(
       { message: 'unauthorized' },
       {

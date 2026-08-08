@@ -3,7 +3,7 @@ import { connectToDB } from '@/lib/database';
 import UserModel from '@/lib/models/UserModel';
 
 export const GET = auth(async (req: any) => {
-  if (!req.auth) {
+  if (!req.auth || !req.auth.user?.isAdmin) {
     return Response.json(
       { message: 'unauthorized' },
       {
@@ -12,6 +12,6 @@ export const GET = auth(async (req: any) => {
     );
   }
   await connectToDB();
-  const users = await UserModel.find();
+  const users = await UserModel.find().select('-password');
   return Response.json(users);
 }) as any;

@@ -5,7 +5,9 @@ import UserModel from '@/lib/models/UserModel';
 
 export const GET = auth(async (...request: any) => {
   const [req, { params }] = request;
-  if (!req.auth) {
+  // Powers the admin dashboard, so this must be admin-only like the rest
+  // of /api/admin/* — not just "any signed-in user".
+  if (!req.auth || !req.auth.user?.isAdmin) {
     return Response.json(
       { message: 'unauthorized' },
       {
