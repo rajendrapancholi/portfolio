@@ -3,7 +3,7 @@
   "short_name": "RajeP",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#0f0e17",
   "theme_color": "#000000",
   "icons": ["favicon.ico"]
 }

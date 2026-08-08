@@ -164,10 +164,10 @@ export default async function BlogPage({ params }: Props) {
         }}
       />
 
-      <div className="flex relative">
-        <article className="min-w-0 flex-1 md:px-2 overflow-visible">
+      <div className="flex">
+        <article className="min-w-0 flex-1 md:px-2">
           <div
-            className="sticky z-15 py-0.5 mt-2 mb-3 backdrop-blur-md border-b border-border/50 transition-[top] duration-300 ease-out"
+            className="py-0.5 mt-2 mb-3 backdrop-blur-md border-b border-border/50 transition-[top] duration-300 ease-out"
             style={{ top: 'var(--navbar-height, 70px)' }}
           >
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
@@ -238,7 +238,7 @@ export default async function BlogPage({ params }: Props) {
             </div>
           </div>
 
-          <header className="relative mb-8 overflow-visible">
+          <header className="relative mb-8">
             {(!headings ||
               headings.length === 0 ||
               headings[0].level !== 1) && (
