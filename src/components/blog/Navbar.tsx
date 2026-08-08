@@ -216,11 +216,15 @@ const Navbar: React.FC = () => {
           {/* Desktop actions */}
           <div className="hidden md:flex items-center gap-3">
             <ThemeButton />
-            <Link href="/blogs/subscribe">
-              <button className="bg-primary text-primary-foreground px-5 py-2 rounded-full text-sm font-semibold hover:brightness-110 transition-all active:scale-95 shadow-sm shadow-primary/20">
-                Subscribe
-              </button>
-            </Link>
+            {session?.user ? (
+              <UserMenu user={session.user as User} />
+            ) : (
+              <Link href="/blogs/subscribe">
+                <button className="bg-primary text-primary-foreground px-5 py-2 rounded-full text-sm font-semibold hover:brightness-110 transition-all active:scale-95 shadow-sm shadow-primary/20">
+                  Subscribe
+                </button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

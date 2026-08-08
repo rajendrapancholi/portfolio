@@ -167,69 +167,73 @@ export default async function BlogPage({ params }: Props) {
       <div className="flex relative">
         <article className="min-w-0 flex-1 md:px-2 overflow-visible">
           <div
-            className="sticky z-15 py-1 mt-3 mb-4 backdrop-blur-md border-b border-border/50 transition-[top] duration-300 ease-out flex justify-between"
+            className="sticky z-15 py-1 mt-3 mb-4 backdrop-blur-md border-b border-border/50 transition-[top] duration-300 ease-out"
             style={{ top: 'var(--navbar-height, 70px)' }}
           >
-            <Breadcrumb className="uppercase tracking-widest font-medium">
-              <BreadcrumbList className="text-[10px] md:text-xs">
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link
-                      href="/blogs"
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      BLOGS
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+              <div className="min-w-0 flex-1">
+                <Breadcrumb className="uppercase tracking-widest font-medium">
+                  <BreadcrumbList className="text-[10px] md:text-xs flex-wrap">
+                    <BreadcrumbItem>
+                      <BreadcrumbLink asChild>
+                        <Link
+                          href="/blogs"
+                          className="text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          BLOGS
+                        </Link>
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
 
-                {pathSegments.map((segment, i) => {
-                  const isLast = i === pathSegments.length - 1;
-                  const breadcrumbPath = `/blogs/b/${source}/${pathSegments
-                    .slice(0, i + 1)
-                    .join('/')}`;
+                    {pathSegments.map((segment, i) => {
+                      const isLast = i === pathSegments.length - 1;
+                      const breadcrumbPath = `/blogs/b/${source}/${pathSegments
+                        .slice(0, i + 1)
+                        .join('/')}`;
 
-                  return (
-                    <React.Fragment key={i}>
-                      <BreadcrumbSeparator />
-                      <BreadcrumbItem>
-                        {isLast ? (
-                          <BreadcrumbPage className="text-primary truncate max-w-37.5 md:max-w-none">
-                            {segment.replace(/-/g, ' ')}
-                          </BreadcrumbPage>
-                        ) : (
-                          <BreadcrumbLink asChild>
-                            <Link
-                              href={breadcrumbPath}
-                              className="text-muted-foreground hover:text-primary/80 transition-colors"
-                            >
-                              {segment.replace(/-/g, ' ')}
-                            </Link>
-                          </BreadcrumbLink>
-                        )}
-                      </BreadcrumbItem>
-                    </React.Fragment>
-                  );
-                })}
-              </BreadcrumbList>
-            </Breadcrumb>
-            {/* Metadata Badge */}
-            <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold mb-6 mr-1">
-              <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-md bg-primary/10 border border-primary/20 text-primary">
-                <span className="text-muted-foreground hover:text-foreground transition-colors cursor-default">
-                  {blog.author.name}
-                </span>
-                <span className="w-1 h-1 rounded-full bg-border" />
-                <span className="text-primary/60 uppercase text-[9px]">
-                  Updated At:
-                </span>
-                <time dateTime={new Date(blog.updatedAt).toISOString()}>
-                  {new Date(blog.updatedAt).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })}
-                </time>
+                      return (
+                        <React.Fragment key={i}>
+                          <BreadcrumbSeparator />
+                          <BreadcrumbItem className="min-w-0">
+                            {isLast ? (
+                              <BreadcrumbPage className="text-primary truncate max-w-48 sm:max-w-[16rem] md:max-w-88 lg:max-w-none">
+                                {segment.replace(/-/g, ' ')}
+                              </BreadcrumbPage>
+                            ) : (
+                              <BreadcrumbLink asChild>
+                                <Link
+                                  href={breadcrumbPath}
+                                  className="text-muted-foreground hover:text-primary/80 transition-colors truncate max-w-32 sm:max-w-48 inline-block"
+                                >
+                                  {segment.replace(/-/g, ' ')}
+                                </Link>
+                              </BreadcrumbLink>
+                            )}
+                          </BreadcrumbItem>
+                        </React.Fragment>
+                      );
+                    })}
+                  </BreadcrumbList>
+                </Breadcrumb>
+              </div>
+
+              <div className="flex shrink-0 items-center gap-2 text-[11px] font-semibold mr-1">
+                <div className="flex items-center gap-1.5 py-1 px-2.5 rounded-md bg-primary/10 border border-primary/20 text-primary whitespace-nowrap">
+                  <span className="text-muted-foreground">
+                    {blog.author.name}
+                  </span>
+                  <span className="w-1 h-1 rounded-full bg-border" />
+                  <span className="text-primary/60 uppercase text-[9px]">
+                    Updated :
+                  </span>
+                  <time dateTime={new Date(blog.updatedAt).toISOString()}>
+                    {new Date(blog.updatedAt).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
+                  </time>
+                </div>
               </div>
             </div>
           </div>

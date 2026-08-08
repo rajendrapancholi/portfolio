@@ -16,6 +16,7 @@ import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { logoutAction } from '@/app/actions/authActions';
 import { clearCredentials } from '@/lib/features/auth/authSlice';
 import { useAppDispatch } from '@/lib/features/hooks';
+import { useRouter } from 'next/navigation';
 
 export default function UserMenu({
   user,
@@ -34,6 +35,7 @@ export default function UserMenu({
 }) {
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const menuItems = [
     {
       name: 'Dashboard',
@@ -58,6 +60,7 @@ export default function UserMenu({
     try {
       dispatch(clearCredentials());
       await logoutAction();
+      router.refresh();
       toast.success('Signed out successfully', { id: toastId });
     } catch (error) {
       if (isRedirectError(error)) {
