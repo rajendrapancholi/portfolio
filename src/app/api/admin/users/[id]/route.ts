@@ -6,7 +6,7 @@ type Params = {
   params: Promise<{ id: string }>;
 };
 
-/* ===================== GET ===================== */
+/* GET */
 export const GET = auth(async (req, context: Params) => {
   if (!req.auth || !req.auth.user?.isAdmin) {
     return Response.json({ message: 'unauthorized' }, { status: 401 });
@@ -15,7 +15,8 @@ export const GET = auth(async (req, context: Params) => {
   const { id } = await context.params;
 
   await connectToDB();
-  const user = await UserModel.findById(id);
+  // Never send the password hash to the client.
+  const user = await UserModel.findById(id).select('-password');
 
   if (!user) {
     return Response.json({ message: 'user not found' }, { status: 404 });
@@ -24,14 +25,16 @@ export const GET = auth(async (req, context: Params) => {
   return Response.json(user);
 });
 
-/* ===================== PUT ===================== */
+/* PUT */
 export const PUT = auth(async (req, context: Params) => {
   if (!req.auth || !req.auth.user?.isAdmin) {
     return Response.json({ message: 'unauthorized' }, { status: 401 });
   }
 
   const { id } = await context.params;
-  const { name, email, isAdmin } = await req.json();
+  // `role` was previously accepted by the edit form but silently dropped
+  // here, so the Role dropdown in the admin UI never actually saved.
+  const { name, email, isAdmin, role } = await req.json();
 
   await connectToDB();
   const user = await UserModel.findById(id);
@@ -43,16 +46,21 @@ export const PUT = auth(async (req, context: Params) => {
   user.name = name;
   user.email = email;
   user.isAdmin = Boolean(isAdmin);
+  if (role) {
+    user.role = role;
+  }
 
   await user.save();
 
+  const { password, ...safeUser } = user.toObject();
+
   return Response.json({
     message: 'User updated successfully',
-    user,
+    user: safeUser,
   });
 });
 
-/* ===================== DELETE ===================== */
+/* DELETE */
 export const DELETE = auth(async (req, context: Params) => {
   if (!req.auth || !req.auth.user?.isAdmin) {
     return Response.json({ message: 'unauthorized' }, { status: 401 });
