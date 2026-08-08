@@ -13,9 +13,7 @@ export default async function AdminLayout({
 }) {
   const session = await auth();
   if (!session) redirect('/signin');
-
-  const isAuthorized = session.user.role === 'admin' || session.user.isAdmin;
-
+  const isAuthorized = session.user.role === 'admin' && session.user.isAdmin;
   if (!isAuthorized) return <Unauthorized />;
 
   const menuItems = [
@@ -49,17 +47,17 @@ export default async function AdminLayout({
       list: [
         {
           title: 'Revenue',
-          path: '/dashboard/revenue',
+          path: '/admin/revenue',
           icon: <MdWork size={18} />,
         },
         {
           title: 'Reports',
-          path: '/dashboard/reports',
+          path: '/admin/reports',
           icon: <MdAnalytics size={18} />,
         },
         {
           title: 'Teams',
-          path: '/dashboard/teams',
+          path: '/admin/teams',
           icon: <MdPeople size={18} />,
         },
       ],
@@ -67,9 +65,11 @@ export default async function AdminLayout({
   ];
 
   return (
-    <div className="flex h-screen overflow-hidden w-full bg-gray-200 dark:bg-slate-900">
+    <div className="flex h-screen overflow-hidden w-full bg-main-bg">
       <AdminSidebar menuItems={menuItems} />
-      <main className="flex-1 overflow-y-auto px-6">{children}</main>
+      <main className="flex-1 overflow-y-auto px-6 bg-main-bg text-foreground">
+        {children}
+      </main>
     </div>
   );
 }
