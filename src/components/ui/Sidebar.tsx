@@ -91,7 +91,7 @@ export const DesktopSidebar = ({
   return (
     <motion.div
       className={cn(
-        'h-full px-4 py-4 hidden md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800 shrink-0',
+        'h-full px-4 py-4 hidden md:flex md:flex-col bg-muted shrink-0',
         className,
       )}
       animate={{
@@ -119,7 +119,7 @@ export const SidebarLink = ({
     <Link
       href={link.href}
       className={cn(
-        'flex items-center justify-start gap-2 group/sidebar py-2 text-gray-700 dark:text-gray-300',
+        'flex items-center justify-start gap-2 group/sidebar py-2 text-muted-foreground',
         className,
       )}
       {...props}
@@ -153,7 +153,7 @@ export const SidebarButton = ({
   return (
     <div
       className={cn(
-        'gap-2 group/sidebar py-2 text-gray-700 dark:text-gray-300',
+        'gap-2 group/sidebar py-2 text-muted-foreground',
         className,
       )}
       {...props}
@@ -188,12 +188,12 @@ export const MobileSidebar = ({ className, children }: any) => {
       {/* Top mobile bar */}
       <div className="absolute px-2 flex items-center justify-between top-4 left-2 z-40">
         <div className="flex items-center gap-2">
-          <div className="h-6 w-7 hidden rounded bg-indigo-600" />
+          <div className="h-6 w-7 hidden rounded bg-primary" />
         </div>
 
         <button
           onClick={() => setOpen(true)}
-          className="text-gray-800 dark:text-gray-200 shadow-2xl btn btn-ghost btn-xs"
+          className="text-foreground shadow-2xl btn btn-ghost btn-xs"
         >
           <IconMenu2 />
         </button>
@@ -219,13 +219,13 @@ export const MobileSidebar = ({ className, children }: any) => {
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 260 }}
               className={cn(
-                'fixed inset-y-0 max-md:h-screen left-0 w-64 bg-white dark:bg-gray-950 z-60 flex flex-col shadow-2xl',
+                'fixed inset-y-0 max-md:h-screen left-0 w-64 bg-card z-60 flex flex-col shadow-2xl',
                 className,
               )}
             >
               <div className="fixed right-0 top-0 flex justify-end p-4">
                 <button onClick={() => setOpen(false)}>
-                  <IconX className="text-gray-800 dark:text-gray-200" />
+                  <IconX className="text-foreground" />
                 </button>
               </div>
 

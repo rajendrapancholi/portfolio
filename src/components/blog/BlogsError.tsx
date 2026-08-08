@@ -34,7 +34,7 @@ export default function BlogsError({
         />
       </div>
 
-      <div className="max-w-md w-full space-y-6 p-8 rounded-3xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 backdrop-blur-2xl shadow-2xl">
+      <div className="max-w-md w-full space-y-6 p-8 rounded-3xl border border-slate-200 dark:border-border/60 bg-white/80 dark:bg-muted/50 backdrop-blur-2xl shadow-2xl">
         <div className="space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 text-[10px] font-mono uppercase tracking-widest text-red-600 dark:text-red-400">
             <WifiOff size={12} />
@@ -44,8 +44,8 @@ export default function BlogsError({
             Feed{' '}
             <span className="text-red-600 dark:text-red-500">Interrupted</span>
           </h1>
-          <div className="cursor-help flex items-start gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 text-left">
-            <AlertCircle size={16} className="text-slate-400 mt-0.5 shrink-0" />
+          <div className="cursor-help flex items-start gap-3 p-3 rounded-xl bg-slate-100 dark:bg-muted/50 text-left">
+            <AlertCircle size={16} className="text-muted-foreground mt-0.5 shrink-0" />
             <p className="text-slate-600 dark:text-white/60 text-xs leading-relaxed font-mono">
               {error.message ||
                 'An unexpected error occurred while fetching blogs.'}
@@ -56,7 +56,7 @@ export default function BlogsError({
         <div className="flex flex-col gap-3 pt-2">
           <button
             onClick={() => reset()}
-            className="flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-black font-bold hover:opacity-90 transition-all active:scale-95 shadow-lg"
+            className="flex items-center justify-center gap-2 w-full py-3.5 px-6 rounded-xl bg-base-200 dark:bg-white text-white dark:text-black font-bold hover:opacity-90 transition-all active:scale-95 shadow-lg"
           >
             <RefreshCcw size={18} />
             Retry Connection
@@ -65,13 +65,13 @@ export default function BlogsError({
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => router.back()}
-              className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-slate-200 dark:border-white/10 text-slate-700 dark:text-white font-medium hover:bg-slate-100 dark:hover:bg-white/5 transition-all"
+              className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-slate-200 dark:border-border/60 text-slate-700 dark:text-white font-medium hover:bg-slate-100 dark:hover:bg-muted/50 transition-all"
             >
               Go Back
             </button>
             <Link
               href="/"
-              className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-slate-200 dark:border-white/10 text-slate-700 dark:text-white font-medium hover:bg-slate-100 dark:hover:bg-white/5 transition-all"
+              className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-slate-200 dark:border-border/60 text-slate-700 dark:text-white font-medium hover:bg-slate-100 dark:hover:bg-muted/50 transition-all"
             >
               <Home size={16} />
               Home

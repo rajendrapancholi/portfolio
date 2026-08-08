@@ -15,7 +15,6 @@ import rehypeSanitize from 'rehype-sanitize';
 import rehypePrismPlus from 'rehype-prism-plus';
 import { formatString } from '@/lib/utils/formatter';
 
-// Dynamic import for MD Editor (SSR safe)
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false });
 
 export type BlogType = {
@@ -32,9 +31,8 @@ const CreateBlogForm = () => {
     thumbnail: '',
   });
   const [isPending, setIsPending] = useState(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  // This updates the <title> tag in the browser tab as you type
   useEffect(() => {
     const currentTitle = blogData.title?.trim() ?? '';
     if (currentTitle.length > 0) {
@@ -50,7 +48,7 @@ const CreateBlogForm = () => {
   };
 
   async function handleSubmit(e: React.FormEvent) {
-    let toastId = toast.loading('Posting blog...');
+    const toastId = toast.loading('Posting blog...');
     e.preventDefault();
 
     if (!blogData.title || blogData.title.length === 0)
@@ -77,12 +75,13 @@ const CreateBlogForm = () => {
         thumbnail: '',
         blogDocImgsLnk: [],
       });
-    } catch (err) {
+    } catch {
       toast.error('Failed to publish post.', { id: toastId });
     } finally {
       setIsPending(false);
     }
   }
+
   const imageUploadCommand = {
     name: 'image-upload',
     keyCommand: 'image-upload',
@@ -92,7 +91,7 @@ const CreateBlogForm = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '2px 3px 2px 3px', // Removes default padding that might offset the icon
+        padding: '2px 3px',
       },
     },
     icon: <ImageIcon size={13} />,
@@ -104,15 +103,12 @@ const CreateBlogForm = () => {
         const file = input.files?.[0];
         if (file) {
           toast.loading('Uploading image...', { id: 'img-up' });
-          // const url = await uploadFile(file);
           const url = file.name;
           setBlogData((prev) => ({
             ...prev,
             blogDocImgsLnk: [...(prev.blogDocImgsLnk || []), url],
           }));
           toast.success('Image ready!', { id: 'img-up' });
-
-          // Insert markdown image syntax at cursor position
           api.replaceSelection(`![image](${url})`);
         }
       };
@@ -123,7 +119,7 @@ const CreateBlogForm = () => {
   return (
     <div className="relative w-full mx-auto min-h-screen animate-in-view">
       {isOpen && (
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 z-50">
           <Thumbnail
             currentUrl={blogData.thumbnail || ''}
             blogTitle={blogData.title || ''}
@@ -136,41 +132,40 @@ const CreateBlogForm = () => {
         </div>
       )}
 
-      <div className="glass-editor rounded-4xl shadow-2xl overflow-hidden border border-white/10">
-        {/* Decorative Top Bar */}
-        <div className="h-1 w-full bg-linear-to-r from-cyan-500 via-blue-500 to-purple-600" />
+      <div className="bg-card rounded-2xl md:rounded-3xl shadow-xl overflow-hidden border border-border">
+        <div className="h-1 w-full bg-linear-to-r from-primary via-primary to-purple-500" />
 
-        <div className="p-1 md:p-3 space-y-8 rounded-4xl">
-          {/* Header Section */}
+        <div className="p-4 md:p-6 space-y-8">
+          {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="bg-cyan-500/10 p-3 rounded-2xl border border-cyan-500/20">
-                <Sparkles className="text-cyan-400" size={24} />
+              <div className="bg-primary/10 p-3 rounded-2xl border border-primary/20">
+                <Sparkles className="text-primary" size={24} />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white tracking-tight">
+                <h1 className="text-2xl font-bold text-foreground tracking-tight">
                   Drafting Room
                 </h1>
-                <p className="text-gray-400 text-xs uppercase tracking-widest">
+                <p className="text-muted-foreground text-xs uppercase tracking-widest">
                   Post Editor v{new Date().getFullYear()}
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-xs font-mono text-gray-500 bg-white/5 px-3 py-1 rounded-full">
-              <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+            <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground bg-muted/60 px-3 py-1.5 rounded-full border border-border">
+              <span className="h-2 w-2 rounded-full bg-success animate-pulse" />
               Editor Online
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Title Input Field */}
+            {/* Title */}
             <div className="relative group">
-              <label className="absolute -top-2.5 left-4 bg-[#1e293b] px-2 text-xs font-medium text-cyan-400 z-10 border border-white/10 rounded">
+              <label className="absolute -top-2.5 left-4 bg-card px-2 text-xs font-medium text-primary z-10 border border-border rounded">
                 Post Title
               </label>
-              <div className="flex justify-between items-center">
-                <div className="flex flex-1 items-center bg-white/5 border border-white/10 rounded-xl focus-within:border-cyan-500/50 focus-within:ring-4 focus-within:ring-cyan-500/10 transition-all duration-300">
-                  <div className="pl-4 text-gray-500">
+              <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
+                <div className="flex flex-1 items-center bg-muted/50 border border-border rounded-xl focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/10 transition-all duration-300">
+                  <div className="pl-4 text-muted-foreground">
                     <Type size={20} />
                   </div>
                   <input
@@ -179,28 +174,29 @@ const CreateBlogForm = () => {
                     onChange={handleChange}
                     placeholder="Enter a captivating headline..."
                     required
-                    className="w-full bg-transparent p-4 outline-none text-white font-medium placeholder:text-gray-600"
+                    className="w-full bg-transparent p-4 outline-none text-foreground font-medium placeholder:text-muted-foreground"
                   />
                 </div>
-                {/* Submit Action */}
-                <div className="flex items-center justify-end  pl-4 gap-2">
+
+                <div className="flex items-center gap-2 shrink-0">
                   <button
                     type="button"
                     onClick={() =>
                       setBlogData((prev) => ({ ...prev, content: '' }))
                     }
-                    className="glow-on-hover relative flex items-center gap-3 bg-gray-600 hover:bg-gray-500 text-white font-bold px-5 py-4 rounded-2xl transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100 shadow-xl shadow-cyan-900/20"
+                    className="flex items-center gap-2 bg-muted hover:bg-muted/80 text-foreground font-semibold px-5 py-3.5 rounded-xl border border-border transition-all active:scale-95"
                   >
                     Clear Draft
                   </button>
 
                   <button
+                    type="submit"
                     disabled={isPending}
-                    className="glow-on-hover relative flex items-center gap-3 bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-10 py-4 rounded-2xl transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100 shadow-xl shadow-cyan-900/20"
+                    className="flex items-center gap-2 bg-primary hover:brightness-110 text-primary-foreground font-bold px-6 sm:px-8 py-3.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 shadow-md shadow-primary/20"
                   >
                     {isPending ? (
                       <span className="flex items-center gap-2">
-                        <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span className="h-4 w-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                         Syncing...
                       </span>
                     ) : (
@@ -214,49 +210,53 @@ const CreateBlogForm = () => {
               </div>
             </div>
 
-            {/* Markdown Editor */}
-            <div className="space-y-3" data-color-mode="dark">
-              <div className="flex items-center justify-between px-1">
-                <label className="text-sm font-semibold text-gray-300 flex items-center gap-2">
-                  <PenTool size={16} className="text-cyan-400" /> Story Content
+            {/* Editor */}
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-3 px-1">
+                <label className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
+                  <PenTool size={16} className="text-primary" /> Story Content
                 </label>
-                <Button
-                  title={blogData.thumbnail ? 'Change Image' : 'Add Thumbnail'}
-                  position="left"
-                  handleClick={(e) => {
-                    e.preventDefault();
-                    setIsOpen(true);
-                  }}
-                  otherClasses="!px-4"
-                  icon={
-                    <div className="relative overflow-hidden rounded-lg border border-white/10 w-9 h-9 flex items-center justify-center bg-slate-800/50 shadow-inner transition-all duration-300 group-hover:border-cyan-500/50 group-hover:ring-2 group-hover:ring-cyan-500/20">
-                      {blogData.thumbnail ? (
-                        <Image
-                          alt="blog-thumbnail"
-                          src={blogData.thumbnail || 'default-blog-thumb.webp'}
-                          sizes="36px"
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-110"
-                        />
-                      ) : (
-                        <ImageIcon
-                          size={20}
-                          className="text-gray-400 transition-all duration-500 group-hover:text-cyan-400 group-hover:scale-110"
-                        />
-                      )}
 
-                      {/* Subtle glass reflection overlay */}
-                      <div className="absolute inset-0 bg-linear-to-tr from-white/5 to-transparent pointer-events-none" />
-                    </div>
-                  }
-                />
-
-                <span className="text-[10px] text-gray-500 bg-white/5 px-2 py-0.5 rounded border border-white/5 uppercase">
-                  Markdown Enabled
-                </span>
+                <div className="flex items-center gap-3">
+                  <Button
+                    title={
+                      blogData.thumbnail ? 'Change Image' : 'Add Thumbnail'
+                    }
+                    position="left"
+                    handleClick={(e) => {
+                      e.preventDefault();
+                      setIsOpen(true);
+                    }}
+                    otherClasses="!px-4"
+                    icon={
+                      <div className="relative overflow-hidden rounded-lg border border-border w-9 h-9 flex items-center justify-center bg-muted/50 shadow-inner transition-all duration-300 group-hover:border-primary/50 group-hover:ring-2 group-hover:ring-primary/20">
+                        {blogData.thumbnail ? (
+                          <Image
+                            alt="blog-thumbnail"
+                            src={
+                              blogData.thumbnail || '/default-blog-thumb.webp'
+                            }
+                            sizes="36px"
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-110"
+                          />
+                        ) : (
+                          <ImageIcon
+                            size={20}
+                            className="text-muted-foreground transition-all duration-500 group-hover:text-primary group-hover:scale-110"
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-linear-to-tr from-white/5 to-transparent pointer-events-none" />
+                      </div>
+                    }
+                  />
+                  <span className="text-[10px] text-muted-foreground bg-muted/60 px-2 py-0.5 rounded border border-border uppercase">
+                    Markdown Enabled
+                  </span>
+                </div>
               </div>
 
-              <div className="rounded-2xl overflow-hidden border border-white/10 focus-within:border-cyan-500/50 transition-colors">
+              <div className="rounded-2xl overflow-hidden border border-border focus-within:border-primary/50 transition-colors">
                 <div className="editor-shell">
                   <MDEditor
                     value={blogData.content}
@@ -278,10 +278,7 @@ const CreateBlogForm = () => {
                         [rehypeSanitize],
                         [
                           rehypePrismPlus,
-                          {
-                            ignoreMissing: true,
-                            showLineNumbers: true,
-                          },
+                          { ignoreMissing: true, showLineNumbers: true },
                         ],
                       ],
                     }}
@@ -294,12 +291,13 @@ const CreateBlogForm = () => {
         </div>
       </div>
 
-      {/* Tip Box */}
-      <div className="mt-6 text-center text-gray-500 text-xs">
-        Pro Tip: Use <code className="text-cyan-500">###</code> for subheadings
-        and <code className="text-cyan-500">{`> `}</code> for quotes.
+      <div className="mt-6 text-center text-muted-foreground text-xs">
+        Pro Tip: Use <code className="text-primary font-mono">###</code> for
+        subheadings and <code className="text-primary font-mono">{`> `}</code>{' '}
+        for quotes.
       </div>
     </div>
   );
 };
+
 export default CreateBlogForm;

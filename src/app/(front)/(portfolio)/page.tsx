@@ -52,12 +52,14 @@ export default async function Home() {
     url: baseUrl,
     logo: `${baseUrl}/logo.png`,
   });
+
   return (
     <>
+      {/* Screen-reader only intro */}
       <section className="sr-only">
-        Hi, I'm Rajendra Pancholi, a Full Stack Developer focused on building
-        high-performance, scalable web applications with Next.js, React, and
-        TypeScript.
+        Hi, I&apos;m Rajendra Pancholi, a Full Stack Developer focused on
+        building high-performance, scalable web applications with Next.js,
+        React, and TypeScript.
       </section>
 
       <Script
@@ -67,12 +69,20 @@ export default async function Home() {
           __html: safeJSONStringify(jsonLd, { decodeUri: true }),
         }}
       />
-      <main className="container flex flex-col mx-auto items-center justify-center">
-        <Hero />
-        <Grid />
-        <RecentProjects />
-        <Experience />
-        <Approach />
+
+      <main className="relative w-full">
+        {/* Subtle background accent */}
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute left-1/2 top-0 h-125 w-200 -translate-x-1/2 rounded-full bg-primary/5 blur-3xl" />
+        </div>
+
+        <div className="mx-auto flex w-full flex-col items-center">
+          <Hero />
+          <Grid />
+          <RecentProjects />
+          <Experience />
+          <Approach />
+        </div>
       </main>
     </>
   );

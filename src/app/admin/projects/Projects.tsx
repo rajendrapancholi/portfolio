@@ -1,4 +1,5 @@
 'use client';
+
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
@@ -15,7 +16,6 @@ import {
 } from 'react-icons/hi2';
 import { Project } from '@/lib/models/ProjectModel';
 import Image from 'next/image';
-import Button from '@/components/ui/Button';
 import { FaLocationArrow, FaPen } from 'react-icons/fa6';
 import { handleCloudinaryAdminDelete } from '@/app/actions/adminCloudinary';
 
@@ -23,7 +23,6 @@ const Projects = () => {
   const { data: projects, error } = useSWR(`/api/admin/projects`);
   const router = useRouter();
 
-  // --- Pagination State ---
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
@@ -37,10 +36,10 @@ const Projects = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        let succ = await handleCloudinaryAdminDelete(arg.img);
+        const succ = await handleCloudinaryAdminDelete(arg.img);
         toast.success('Project deleted successfully.', { id: toastId });
-        if (succ) toast.success('img deleted!');
-        else toast.error(`img deletion failed! or imgurlis: ${arg.img}`);
+        if (succ) toast.success('Image deleted!');
+        else toast.error(`Image deletion failed!`);
       } else {
         toast.error(data.message, { id: toastId });
       }
@@ -61,10 +60,16 @@ const Projects = () => {
     },
   );
 
-  if (error) return 'An error has occurred.';
+  if (error) {
+    return (
+      <div className="flex items-center justify-center p-16 text-destructive font-medium">
+        An error has occurred.
+      </div>
+    );
+  }
+
   if (!projects) return <Loading />;
 
-  // --- Pagination Logic ---
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentProjects = projects.slice(indexOfFirstItem, indexOfLastItem);
@@ -77,76 +82,82 @@ const Projects = () => {
     month: 'long',
     day: 'numeric',
   });
+
   return (
-    <div className="animate-in fade-in duration-500">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-base-content/5 pb-2">
+    <div className="space-y-6 animate-in fade-in duration-500">
+      {/* Header */}
+      <div className="flex flex-col gap-4 border-b border-border pb-5 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-base-content dark:text-white">
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
             Welcome, Admin
           </h1>
-          <p className="text-sm font-medium opacity-60 mt-1 uppercase tracking-widest text-primary">
+          <p className="mt-1 text-xs font-medium uppercase tracking-widest text-primary">
             {today}
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          {isCreating && (
-            <span className="loading loading-spinner text-primary" />
+
+        <button
+          onClick={() => createProject()}
+          disabled={isCreating}
+          className="btn btn-primary gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold disabled:opacity-60"
+        >
+          {isCreating ? (
+            <span className="loading-spinner size-4" />
+          ) : (
+            <FaPen size={14} />
           )}
-          <Button
-            title="New Project"
-            icon={<FaPen />}
-            handleClick={() => createProject()}
-            position="left"
-            otherClasses="shadow-lg hover:shadow-blue-500/20 transition-all active:scale-95"
-          />
-        </div>
+          New Project
+        </button>
       </div>
 
-      {/* Main Table Container */}
-      <div className="md:h-[90vh] h-full overflow-auto flex flex-col justify-between  border border-base-content/10 bg-white dark:bg-base-300 dark:bg-opacity-55 rounded-2xl shadow-xl dark:shadow-blue-900/20 transition-all duration-300">
-        <div>
-          <table className="table overflow-auto h-fit w-full border-separate border-spacing-0">
+      {/* Table Card */}
+      <div className="card overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="table w-full">
             <thead>
-              <tr className="bg-base-200/50 dark:bg-base-100/20 text-base-content/70 **:uppercase">
-                <th className="rounded-tl-2xl">#</th>
-                <th>id</th>
+              <tr className="border-b border-border bg-muted/40">
+                <th className="w-12">#</th>
+                <th>ID</th>
                 <th>Image</th>
-                <th>title</th>
-                <th>description</th>
-                <th>live view</th>
-                <th>tech stack</th>
-                <th className="rounded-tr-2xl text-center">ACTION</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Live</th>
+                <th>Stack</th>
+                <th className="text-center">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-base-content/5">
+
+            <tbody>
               {currentProjects.map((project: Project, index: number) => (
                 <tr
                   key={project._id}
-                  className="group hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors cursor-default"
+                  className="border-b border-border/50 transition-colors hover:bg-muted/40"
                 >
-                  <td className="font-mono text-xs opacity-50">
+                  <td className="font-mono text-xs text-muted-foreground">
                     {indexOfFirstItem + index + 1}
                   </td>
-                  <td className="font-mono text-xs">
+
+                  <td className="font-mono text-xs text-muted-foreground">
                     {formatId(project._id!)}
                   </td>
+
+                  {/* Image + Hover Preview */}
                   <td>
-                    <div className="avatar group/img relative">
-                      <div className="mask mask-squircle w-10 h-10 ring-2 ring-base-content/5 group-hover/img:ring-primary group-hover/img:scale-105 transition-all duration-300 cursor-zoom-in">
+                    <div className="group/img relative">
+                      <div className="avatar size-10 overflow-hidden rounded-xl ring-1 ring-border transition-all group-hover/img:ring-primary group-hover/img:scale-105">
                         <Image
                           src={project.img}
-                          alt="thumb"
+                          alt={project.title}
                           width={40}
                           height={40}
                           className="object-cover"
                         />
                       </div>
 
-                      {/* --- Image Preview Hover --- */}
-                      <div className="invisible opacity-0 group-hover/img:visible group-hover/img:opacity-100 absolute z-50 left-12 top-0 transition-all duration-300 transform scale-95 group-hover/img:scale-100">
-                        <div className="p-1 bg-white dark:bg-neutral overflow-hidden rounded-xl shadow-2xl border border-base-content/10">
-                          <div className="relative w-48 h-32 rounded-lg">
+                      {/* Hover Preview */}
+                      <div className="invisible absolute left-12 top-0 z-50 scale-95 opacity-0 transition-all duration-200 group-hover/img:visible group-hover/img:scale-100 group-hover/img:opacity-100">
+                        <div className="card overflow-hidden shadow-xl">
+                          <div className="relative h-32 w-48">
                             <Image
                               src={project.img}
                               alt="Preview"
@@ -154,85 +165,88 @@ const Projects = () => {
                               className="object-cover"
                               sizes="192px"
                             />
-                            {/* Subtle overlay for light mode contrast */}
-                            <div className="absolute inset-0 bg-black/5 dark:bg-transparent pointer-events-none" />
                           </div>
-                          <div className="px-2 py-1.5 group/prv">
-                            <div className="flex items-center">
-                              <p className="text-[10px] font-bold uppercase tracking-wider opacity-50 dark:text-white">
-                                Project Preview
+                          <div className="flex items-center justify-between gap-2 px-3 py-2">
+                            <div className="min-w-0">
+                              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                Preview
                               </p>
-                              <Link
-                                href={project.link}
-                                target="_blank"
-                                className="text-cyan-400 transition-all duration-300 ease-out group-hover:translate-x-1 group-hover/prv:translate-x-2 group-hover/prv:scale-110 custom-tooltip tooltip-top"
-                                data-tip="View Live"
-                              >
-                                <FaLocationArrow />
-                              </Link>
+                              <p className="truncate text-xs font-semibold">
+                                {project.title}
+                              </p>
                             </div>
-                            <p className="text-xs font-semibold truncate w-40 dark:text-blue-400">
-                              {project.title}
-                            </p>
+                            <Link
+                              href={project.link}
+                              target="_blank"
+                              className="text-primary transition-transform hover:scale-110"
+                            >
+                              <FaLocationArrow size={12} />
+                            </Link>
                           </div>
                         </div>
                       </div>
                     </div>
                   </td>
-                  <td className="font-bold text-base-content">
-                    {project.title}
+
+                  <td className="max-w-35 font-medium">
+                    <span className="line-clamp-1">{project.title}</span>
                   </td>
-                  <td className="max-w-50 truncate text-sm opacity-80">
-                    {project.des}
+
+                  <td className="max-w-45">
+                    <span className="line-clamp-1 text-sm text-muted-foreground">
+                      {project.des}
+                    </span>
                   </td>
+
                   <td>
                     <Link
                       href={project.link}
                       target="_blank"
-                      className="btn btn-ghost btn-xs text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30"
+                      className="btn btn-ghost btn-xs text-primary"
                     >
-                      Visit Site
+                      Visit
                     </Link>
                   </td>
+
                   <td>
-                    <div className="flex -space-x-2">
+                    <div className="flex -space-x-1.5">
                       {project.iconLists.map((icon: any, i: number) => (
                         <div
                           key={i}
-                          className="avatar border-2 border-white dark:border-base-300 rounded-full bg-blend-color-burn"
+                          className="size-7 overflow-hidden rounded-full border-2 border-card bg-muted"
                         >
-                          <div className="w-6 h-6 p-0.5">
-                            <Image
-                              width={20}
-                              height={20}
-                              src={icon}
-                              alt="icon"
-                            />
-                          </div>
+                          <Image
+                            width={28}
+                            height={28}
+                            src={icon}
+                            alt="tech"
+                            className="object-contain p-0.5"
+                          />
                         </div>
                       ))}
                     </div>
                   </td>
+
                   <td>
-                    <div className="flex justify-center gap-2">
+                    <div className="flex items-center justify-center gap-1">
                       <Link
                         href={`/admin/projects/${project._id}`}
-                        className="btn btn-square btn-ghost btn-sm text-cyan-500 hover:bg-cyan-50 dark:hover:bg-cyan-900/20 tooltip tooltip-top tooltip-info"
+                        className="btn btn-icon btn-sm text-primary tooltip tooltip-top"
                         data-tip="Edit"
                       >
-                        <HiOutlinePencilSquare size={18} />
+                        <HiOutlinePencilSquare size={17} />
                       </Link>
                       <button
-                        onClick={() => {
+                        onClick={() =>
                           deleteProject({
                             projectId: project._id,
                             img: project.img,
-                          });
-                        }}
-                        className="btn btn-square btn-ghost btn-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 tooltip tooltip-top tooltip-error"
+                          })
+                        }
+                        className="btn btn-icon btn-sm text-destructive tooltip tooltip-top tooltip-error"
                         data-tip="Delete"
                       >
-                        <HiMiniTrash size={18} />
+                        <HiMiniTrash size={17} />
                       </button>
                     </div>
                   </td>
@@ -242,22 +256,22 @@ const Projects = () => {
           </table>
         </div>
 
-        {/* Pagination Footer */}
-        <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-5 bg-base-200/30 dark:bg-base-100/10 border-t border-base-content/5">
-          <div className="flex items-center gap-2 text-sm text-base-content/60">
+        {/* Pagination */}
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-border bg-muted/30 px-5 py-4 sm:flex-row">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Showing</span>
-            <span className="badge badge-outline badge-sm font-bold">
-              {indexOfFirstItem + 1} -{' '}
+            <span className="badge badge-outline badge-sm font-semibold">
+              {indexOfFirstItem + 1} –{' '}
               {Math.min(indexOfLastItem, projects.length)}
             </span>
-            <span>of {projects.length} entries</span>
+            <span>of {projects.length}</span>
           </div>
 
-          <div className="join bg-base-100 dark:bg-base-200 border border-base-content/10 shadow-sm mt-4 sm:mt-0">
+          <div className="join">
             <button
               disabled={currentPage === 1}
-              onClick={() => setCurrentPage((prev) => prev - 1)}
-              className="join-item btn btn-sm hover:btn-primary border-none disabled:bg-transparent"
+              onClick={() => setCurrentPage((p) => p - 1)}
+              className="btn btn-sm join-item btn-ghost disabled:opacity-40"
             >
               <HiChevronLeft size={18} />
             </button>
@@ -266,10 +280,8 @@ const Projects = () => {
               <button
                 key={i + 1}
                 onClick={() => setCurrentPage(i + 1)}
-                className={`join-item btn btn-sm border-none min-w-10 ${
-                  currentPage === i + 1
-                    ? 'btn-primary shadow-md shadow-blue-500/40'
-                    : 'bg-transparent hover:bg-base-content/10'
+                className={`btn btn-sm join-item min-w-9 ${
+                  currentPage === i + 1 ? 'btn-primary' : 'btn-ghost'
                 }`}
               >
                 {i + 1}
@@ -278,8 +290,8 @@ const Projects = () => {
 
             <button
               disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((prev) => prev + 1)}
-              className="join-item btn btn-sm hover:btn-primary border-none disabled:bg-transparent"
+              onClick={() => setCurrentPage((p) => p + 1)}
+              className="btn btn-sm join-item btn-ghost disabled:opacity-40"
             >
               <HiChevronRight size={18} />
             </button>

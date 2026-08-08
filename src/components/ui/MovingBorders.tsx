@@ -58,7 +58,7 @@ export function MovingGrid({
 
       <div
         className={cn(
-          'relative bg-slate-900/[0.] border border-slate-800 backdrop-blur-xl text-white flex items-center justify-center w-full h-full text-sm antialiased',
+          'relative bg-card/90 border border-border backdrop-blur-xl text-foreground flex items-center justify-center w-full h-full text-sm antialiased',
           className,
         )}
         style={{

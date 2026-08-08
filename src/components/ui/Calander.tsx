@@ -166,7 +166,7 @@ export function Calendar({
                     item.isOutside && 'text-muted-foreground/50',
                     today &&
                       !active &&
-                      'text-indigo-500 font-bold bg-indigo-500/10 hover:bg-indigo-500/20',
+                      'text-primary font-bold bg-primary/10 hover:bg-primary/20',
                   )}
                 >
                   {item.day}

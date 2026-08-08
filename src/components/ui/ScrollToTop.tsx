@@ -54,7 +54,7 @@ export default function ScrollToTop() {
                         exit={{ opacity: 0, scale: 0.5, y: 20 }}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        className="fixed bottom-8 right-8 z-50 flex items-center justify-center size-14 rounded-full bg-white/20 dark:bg-slate-900/40 backdrop-blur-lg border border-white/30 dark:border-white/10 text-slate-900 dark:text-white shadow-[0_8px_32px_0_rgba(31,38,135,0.37)] overflow-visible transition-colors duration-300 touch-none"
+                        className="fixed bottom-8 right-8 z-50 flex items-center justify-center size-14 rounded-full bg-card/40 backdrop-blur-lg border border-border/60 text-foreground shadow-[0_8px_32px_0_rgba(31,38,135,0.37)] overflow-visible transition-colors duration-300 touch-none"
                     >
                         <svg className="absolute inset-0 size-full -rotate-90 pointer-events-none" viewBox="0 0 100 100">
                             <circle cx="50" cy="50" r="45" fill="transparent" stroke="currentColor" strokeOpacity="0.1" strokeWidth="6" />

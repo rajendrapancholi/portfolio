@@ -1,9 +1,9 @@
 import { createPageMetadata } from '@/lib/seo/metadata';
-import CreateBlogForm from '../../../../components/blog/CreateBlogForm';
 import { generateDynamicJsonLd } from '@/lib/seo/jsonld';
 import { ENV } from '@/config/env';
 import Script from 'next/script';
 import safeJSONStringify from '@/lib/utils/safeSanitize';
+import CreateBlogForm from '@/components/blog/CreateBlogForm';
 
 export const metadata = createPageMetadata({
   title: 'Create New Post',

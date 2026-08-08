@@ -1,6 +1,8 @@
 'use client';
+
 import Link from 'next/link';
 import { JSX } from 'react';
+
 const AdminLink = ({
   item,
   active,
@@ -13,23 +15,30 @@ const AdminLink = ({
   };
   active: string;
 }) => {
+  const isActive = item.slug === active;
+
   return (
     <Link
       href={item.path}
-      className={`${item.slug === active ? 'active' : ''
-        } flex justify-start gap-2 items-center`}
+      className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200
+        ${
+          isActive
+            ? 'bg-primary/10 text-primary'
+            : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'
+        }`}
     >
       <span
-        className={`border-none outline-none ${item.slug === active ? 'text-cyan-500' : ''
-          } `}
+        className={`flex size-8 items-center justify-center rounded-lg transition-colors
+          ${
+            isActive
+              ? 'bg-primary/15 text-primary'
+              : 'bg-muted/50 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary'
+          }`}
       >
         {item.icon}
       </span>
-      <span
-        className={`${item.slug === active ? 'text-cyan-500' : ''} text-lg`}
-      >
-        {item.title}
-      </span>
+
+      <span className={isActive ? 'font-semibold' : ''}>{item.title}</span>
     </Link>
   );
 };

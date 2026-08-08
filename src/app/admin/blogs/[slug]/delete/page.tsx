@@ -1,20 +1,24 @@
 'use client';
-import { deleteBlog, getBlogBySlug } from '@/app/actions/blog';
-import { Loader2 } from 'lucide-react';
-import { notFound, useRouter } from 'next/navigation';
+
+import { deleteBlog } from '@/app/actions/blog';
+import { AlertTriangle, Loader2, Trash2 } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import toast from 'react-hot-toast';
 
-type Params = Promise<{ slug: string }>;
+interface Blog {
+  _id: string;
+  title: string;
+}
 
-export default async function DeleteBlogPage({ params }: { params: Params }) {
-  const { slug } = await params;
-
-  const { success, data: blog, error } = await getBlogBySlug(slug);
-  if (!success || error) throw error || 'Failed fetch blog!';
-
-  if (!blog) notFound();
-
+export default function DeleteBlogClient({
+  blog,
+  slug,
+}: {
+  blog: Blog;
+  slug: string;
+}) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -24,70 +28,84 @@ export default async function DeleteBlogPage({ params }: { params: Params }) {
     startTransition(async () => {
       try {
         const { success, message, error } = await deleteBlog(blog._id);
+
         if (!success) {
           toast.error(error || 'Failed to delete', { id: toastId });
           return;
         }
+
         toast.success(message || 'Blog successfully deleted!', { id: toastId });
-        router.back();
+        router.push('/admin/blogs');
         router.refresh();
-      } catch (err) {
+      } catch {
         toast.error('A network error occurred', { id: toastId });
       }
     });
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-20 p-8 border border-red-100 rounded-xl bg-white shadow-sm">
-      <div className="flex items-center gap-4 mb-6">
-        <div className="p-3 bg-red-100 text-red-600 rounded-full">
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-            />
-          </svg>
-        </div>
-        <h1 className="text-2xl font-bold text-gray-900">Delete Blog Post?</h1>
-      </div>
-
-      <p className="text-gray-600 mb-6">
-        Are you sure you want to delete{' '}
-        <span className="font-semibold">"{blog.title}"</span>? This action
-        cannot be undone and will permanently remove the post from our servers.
-      </p>
-
-      <div className="flex justify-end gap-3">
-        <a
-          href={`/admin/blogs/${slug}`}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
-        >
-          Cancel
-        </a>
-
-        <button
-          onClick={handleDelete}
-          disabled={isPending}
-          className="flex-[1.5] relative overflow-hidden group rounded-2xl bg-red-600 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-red-600/20 transition-all hover:bg-red-700 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
-        >
-          <div className="flex items-center justify-center gap-2">
-            {isPending ? (
-              <>
-                <Loader2 className="size-4 animate-spin" />
-                <span>Removing...</span>
-              </>
-            ) : (
-              <span>Confirm Permanent Delete</span>
-            )}
+    <div className="mx-auto mt-16 max-w-xl px-4 sm:px-0">
+      <div className="card overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center gap-4 border-b border-border px-6 py-5 sm:px-8">
+          <div className="flex size-12 items-center justify-center rounded-2xl bg-destructive/10">
+            <Trash2 className="size-6 text-destructive" />
           </div>
-        </button>
+          <div>
+            <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
+              Delete Blog Post?
+            </h1>
+            <p className="mt-0.5 text-sm text-muted-foreground">
+              This action cannot be undone
+            </p>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className="space-y-5 px-6 py-6 sm:px-8">
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            Are you sure you want to delete{' '}
+            <span className="font-semibold text-foreground">
+              &ldquo;{blog.title}&rdquo;
+            </span>
+            ? This will permanently remove the post and all associated data from
+            the server.
+          </p>
+
+          {/* Warning */}
+          <div className="flex items-start gap-3 rounded-2xl border border-warning/30 bg-warning/10 p-4">
+            <AlertTriangle className="mt-0.5 size-5 shrink-0 text-warning" />
+            <p className="text-sm text-warning-foreground/90 dark:text-warning">
+              Shared links and social media previews for this post will stop
+              working after deletion.
+            </p>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex flex-col-reverse gap-3 border-t border-border bg-muted/30 px-6 py-5 sm:flex-row sm:justify-end sm:px-8">
+          <Link
+            href={`/admin/blogs/${slug}`}
+            className="btn btn-outline rounded-xl px-5 py-2.5 text-sm font-semibold"
+          >
+            Cancel
+          </Link>
+
+          <button
+            onClick={handleDelete}
+            disabled={isPending}
+            className="btn btn-danger rounded-xl px-5 py-2.5 text-sm font-semibold disabled:opacity-70"
+          >
+            {isPending ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="size-4 animate-spin" />
+                Removing...
+              </span>
+            ) : (
+              'Confirm Permanent Delete'
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );

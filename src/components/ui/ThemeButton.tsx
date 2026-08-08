@@ -21,12 +21,12 @@ const ThemeButton = ({ position = "left" }: { position?: "top" | "right" | "bott
     return (
         <button
             onClick={() => setTheme(isDark ? "light" : "dark")}
-            className={`btn btn-ghost btn-circle btn-xs md:btn-sm hover:bg-slate-200 dark:hover:bg-slate-800 transition-all duration-300 relative flex flex-col items-center capitalize custom-tooltip ${positionT}`}
+            className={`btn btn-ghost btn-circle btn-xs md:btn-sm hover:bg-muted transition-all duration-300 relative flex flex-col items-center capitalize custom-tooltip ${positionT}`}
             data-tip={isDark ? "switch to light mode" : "switch to dark mode"}
             aria-label="Toggle Theme"
         >
             {isDark ? (
-                <Sun className="size-5 text-yellow-500 animate-in zoom-in duration-300" />
+                <Sun className="size-5 text-warning animate-in zoom-in duration-300" />
             ) : (
                 <Moon className="size-5 text-[#007acc] animate-in zoom-in duration-300" />
             )}

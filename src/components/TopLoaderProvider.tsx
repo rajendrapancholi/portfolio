@@ -2,7 +2,7 @@ import NextTopLoader from 'nextjs-toploader';
 const TopLoaderProvider = () => {
     return (
         <NextTopLoader
-            color="#06b6d4"      // Cyan color (Tailwind cyan-500)
+            color="var(--color-brand)"      // brand accent (theme-aware)
             initialPosition={0.08}
             crawlSpeed={200}
             height={2}           // Thickness of the bar
@@ -10,7 +10,7 @@ const TopLoaderProvider = () => {
             showSpinner={false}  // Disable the loading circle for a cleaner look
             easing="ease"
             speed={200}
-            shadow="0 0 10px #06b6d4, 0 0 5px #06b6d4" // Glowing effect
+            shadow="0 0 10px var(--color-brand), 0 0 5px var(--color-brand)" // Glowing effect
         />
     );
 };

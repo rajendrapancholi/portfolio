@@ -61,7 +61,7 @@ const Navbar: React.FC = () => {
     current:
       item.href === '/' ? pathname === '/' : pathname.startsWith(item.href),
   }));
-  // Logout Handler
+
   const handleLogout = async () => {
     const toastId = toast.loading('Signing out...');
     try {
@@ -76,11 +76,13 @@ const Navbar: React.FC = () => {
       toast.error('Failed to sign out', { id: toastId });
     }
   };
+
   useEffect(() => {
     if (isMobileMenuOpen && !blogs) {
       (async () => await fetchBlogList())();
     }
-  }, [isMobileMenuOpen, blogs]);
+  }, [isMobileMenuOpen, blogs, fetchBlogList]);
+
   return (
     <motion.nav
       initial={false}
@@ -90,20 +92,20 @@ const Navbar: React.FC = () => {
         collapsed: { height: 48 },
       }}
       transition={{ duration: 0.3 }}
-      className="fixed inset-x-0 top-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-200 dark:border-white/10"
+      className="fixed inset-x-0 top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border"
     >
       <div className="relative mx-auto px-4 h-full">
         <div className="flex h-full items-center justify-between gap-3">
           {/* Mobile menu button */}
           <button
-            className="fixed w-fit left-3 z-40 top-0 bottom-0 sm:hidden text-gray-600 dark:text-gray-300 duration-300 before:duration-300 before:delay-200 after:duration-400 after:delay-200 before:text-slate-900 dark:before:text-white  before:bg-gray-300 after:bg-gray-300 dark:before:bg-gray-600 dark:after:bg-gray-600 transition-colors before:translate-x-12 after:translate-x-2.5 tooltip-bottom tooltip"
-            data-tip="Open sidebar"
+            className="sm:hidden text-muted-foreground hover:text-foreground transition-colors p-1"
+            aria-label="Open sidebar"
             onClick={(e) => {
               e.stopPropagation();
               setIsMobileMenuOpen(true);
             }}
           >
-            <TextAlignJustify />
+            <TextAlignJustify className="size-5" />
           </button>
 
           {/* Logo */}
@@ -113,24 +115,24 @@ const Navbar: React.FC = () => {
 
           {/* Center navigation */}
           <div className="max-sm:-translate-x-1 flex flex-1 justify-center">
-            <div className="flex items-center space-x-1 rounded-full border border-gray-200 dark:border-white/10 bg-gray-100 dark:bg-white/5 p-1">
+            <div className="flex items-center space-x-1 rounded-full border border-border bg-muted/60 p-1">
               {updatedNavigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="relative px-3 py-1 rounded-full text-sm"
+                  className="relative px-3 py-1.5 rounded-full text-sm"
                 >
                   {item.current && (
                     <motion.div
                       layoutId="activeTab"
-                      className="absolute inset-0 rounded-full bg-cyan-800"
+                      className="absolute inset-0 rounded-full bg-primary"
                     />
                   )}
                   <span
-                    className={`relative z-10 ${
+                    className={`relative z-10 flex items-center gap-1.5 ${
                       item.current
-                        ? 'text-white'
-                        : 'text-gray-600 dark:text-gray-400'
+                        ? 'text-primary-foreground'
+                        : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
                     <span className="hidden sm:block">{item.name}</span>
@@ -139,7 +141,8 @@ const Navbar: React.FC = () => {
                 </Link>
               ))}
             </div>
-            {/* seachbar */}
+
+            {/* Search (desktop) */}
             <motion.div
               layout
               variants={{
@@ -147,36 +150,31 @@ const Navbar: React.FC = () => {
                 collapsed: { width: 44 },
               }}
               transition={{ duration: 0.35, ease: 'easeInOut' }}
-              className="hidden lg:flex items-center overflow-hidden lg:ml-1"
+              className="hidden lg:flex items-center overflow-hidden lg:ml-2"
             >
               <Link
                 href="/blogs/search"
                 scroll={false}
-                className="relative flex items-center w-full h-10 bg-gray-100 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-full px-3 lg:px-2 hover:border-cyan-800 dark:hover:border-gray-600 transition-colors"
+                className="relative flex items-center w-full h-10 bg-muted/60 border border-border rounded-full px-3 hover:border-primary/50 transition-colors"
               >
-                {/* Icon */}
-                <Search size={24} className="text-gray-400 shrink-0" />
-
-                {/* Text */}
+                <Search size={18} className="text-muted-foreground shrink-0" />
                 <motion.span
                   variants={{
                     expanded: { opacity: 1, x: 0 },
                     collapsed: { opacity: 0, scale: 0.5, display: 'none' },
                   }}
                   transition={{ duration: 0.2 }}
-                  className="ml-3 text-sm text-gray-500 whitespace-nowrap"
+                  className="ml-2 text-sm text-muted-foreground whitespace-nowrap"
                 >
                   Search...
                 </motion.span>
-
-                {/* KBD */}
                 <motion.kbd
                   variants={{
                     expanded: { opacity: 1, scale: 1 },
                     collapsed: { opacity: 0, scale: 0.5, display: 'none' },
                   }}
                   transition={{ duration: 0.15 }}
-                  className="ml-auto hidden md:inline-flex items-center gap-1 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-1.5 text-[10px] font-medium text-gray-400"
+                  className="ml-auto hidden md:inline-flex items-center gap-1 rounded-full border border-border bg-background px-1.5 text-[10px] font-medium text-muted-foreground"
                 >
                   Ctrl+K
                 </motion.kbd>
@@ -188,18 +186,18 @@ const Navbar: React.FC = () => {
           <div className="hidden md:flex items-center gap-3">
             <ThemeButton />
             <Link href="/blogs/subscribe">
-              <button className="bg-cyan-800 text-white px-5 py-2 rounded-full text-sm font-bold">
+              <button className="bg-primary text-primary-foreground px-5 py-2 rounded-full text-sm font-semibold hover:brightness-110 transition-all active:scale-95 shadow-sm shadow-primary/20">
                 Subscribe
               </button>
             </Link>
           </div>
         </div>
       </div>
+
       {/* Mobile drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
-            {/* Overlay */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -208,31 +206,30 @@ const Navbar: React.FC = () => {
                 e.stopPropagation();
                 setIsMobileMenuOpen(false);
               }}
-              className="fixed inset-0 min-h-screen z-45 bg-black/30 backdrop-blur-sm sm:hidden"
+              className="fixed inset-0 min-h-screen z-45 bg-black/40 backdrop-blur-sm sm:hidden"
             />
 
-            {/* Drawer panel */}
             <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', stiffness: 260, damping: 30 }}
-              className="fixed top-0 rounded-r-2xl h-screen left-0 z-50 w-72 bg-white dark:bg-gray-900 px-4 py-6 shadow-interactive-cyan sm:hidden flex flex-col"
+              className="fixed top-0 rounded-r-2xl h-screen left-0 z-50 w-72 bg-card px-4 py-6 border-r border-border shadow-xl sm:hidden flex flex-col"
             >
-              {/* Header Section */}
+              {/* Header */}
               <div className="relative">
-                <div
-                  className="absolute top-0 -right-7 cursor-pointer custom-tooltip"
-                  data-tip="Close"
+                <button
+                  className="absolute top-0 -right-7 cursor-pointer"
+                  aria-label="Close menu"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <ArrowLeftCircleIcon className="dark:text-cyan-600 w-8 h-8 bg-white dark:bg-gray-900 rounded-full" />
-                </div>
+                  <ArrowLeftCircleIcon className="text-primary size-8 bg-card rounded-full" />
+                </button>
 
                 <RajeBrandLogo logoType="mini" secondText="blog" />
 
                 <nav className="mt-6 flex flex-col gap-1">
-                  <div className="flex justify-between items-center w-full gap-2 mb-2">
+                  <div className="flex justify-between items-center w-full gap-2 mb-3">
                     <SearchBar />
                     <ThemeButton position="bottom" />
                   </div>
@@ -241,8 +238,11 @@ const Navbar: React.FC = () => {
                       key={item.name}
                       href={item.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={`px-4 py-1 rounded-xl text-lg custom-tooltip tooltip-right font-semibold ${item.current ? 'bg-cyan-800 text-white' : 'text-gray-600 dark:text-gray-400'}`}
-                      data-tip={item.name}
+                      className={`px-4 py-2 rounded-xl text-base font-semibold transition-colors ${
+                        item.current
+                          ? 'bg-primary text-primary-foreground'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                      }`}
                     >
                       {item.name}
                     </Link>
@@ -250,13 +250,12 @@ const Navbar: React.FC = () => {
                 </nav>
               </div>
 
-              {/* Middle Section */}
-              <div className="flex-1 rounded-xl pt-2 shadow-[inset_0px_2px_8px_rgba(0,255,255,0.25)] overflow-x-hidden overflow-y-auto custom-scrollbar my-2">
-                <p className="text-xs font-bold uppercase text-gray-400  mb-2">
+              {/* Recent posts */}
+              <div className="flex-1 rounded-xl pt-3 overflow-x-hidden overflow-y-auto custom-scrollbar my-3">
+                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2 px-1">
                   Recent Posts
                 </p>
-                <div className="flex flex-col gap-2">
-                  {/* Map your blogs here */}
+                <div className="flex flex-col gap-1.5">
                   {!loading ? (
                     blogs &&
                     blogs.map((blog) => (
@@ -273,28 +272,21 @@ const Navbar: React.FC = () => {
                 </div>
               </div>
 
-              {/* Bottom Section */}
-              <div className="h-0.5 w-px bg-white/20 mx-2" />
-              <div className="pt-4 border-t border-gray-100 dark:border-gray-800">
-                {/* {<Link href="/blogs/subscribe" className="w-full">
-                                    <button className="w-full bg-cyan-800 text-white py-3 rounded-xl text-sm font-bold hover:bg-cyan-700 transition-colors">
-                                        Subscribe
-                                    </button>
-                                </Link>
-                                } */}
+              {/* Bottom */}
+              <div className="pt-4 border-t border-border">
                 {session?.user ? (
                   <div className="flex items-center gap-4">
                     <UserMenu user={session.user as User} popupPos="top-left" />
                     <button
                       onClick={handleLogout}
-                      className="text-xs text-neutral-400 hover:text-red-400 transition-colors"
+                      className="text-xs text-muted-foreground hover:text-destructive transition-colors"
                     >
                       Exit
                     </button>
                   </div>
                 ) : (
-                  <Link href="/signin" className="relative group">
-                    <button className="text-sm font-semibold text-white bg-linear-to-br from-blue-600 to-indigo-700 px-6 py-2 rounded-xl shadow-lg shadow-blue-900/20 hover:shadow-blue-500/40 transition-all active:scale-95">
+                  <Link href="/signin" className="block">
+                    <button className="w-full text-sm font-semibold text-primary-foreground bg-primary px-6 py-2.5 rounded-xl shadow-sm shadow-primary/20 hover:brightness-110 transition-all active:scale-95">
                       Subscribe
                     </button>
                   </Link>

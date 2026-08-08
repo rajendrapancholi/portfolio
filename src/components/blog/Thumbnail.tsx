@@ -93,11 +93,11 @@ const Thumbnail = ({
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-4xl bg-[#0f172a] border border-white/10 rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+      <div className="relative w-full max-w-4xl bg-[#0f172a] border border-border/60 rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
         <div className="absolute top-6 right-6 z-10">
           <button
             onClick={onClose}
-            className="p-2 hover:bg-white/10 rounded-full transition-colors text-gray-400 hover:text-white"
+            className="p-2 hover:bg-muted/60 rounded-full transition-colors text-gray-400 hover:text-white"
           >
             <X size={24} />
           </button>
@@ -113,7 +113,7 @@ const Thumbnail = ({
               <h2 className="text-xl font-bold text-white">Cover Image</h2>
             </div>
 
-            <label className="group relative flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-white/10 hover:border-cyan-500/50 bg-white/2 hover:bg-cyan-500/2 rounded-3xl transition-all cursor-pointer overflow-hidden">
+            <label className="group relative flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border/60 hover:border-cyan-500/50 bg-white/2 hover:bg-cyan-500/2 rounded-3xl transition-all cursor-pointer overflow-hidden">
               {isUploading ? (
                 <div className="flex flex-col items-center gap-3">
                   <Loader2 className="animate-spin text-cyan-400" size={40} />
@@ -165,7 +165,7 @@ const Thumbnail = ({
             )}
             <button
               onClick={onClose}
-              className="w-full mt-8 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl transition-all border border-white/10"
+              className="w-full mt-8 py-4 bg-muted/50 hover:bg-muted/60 text-white font-bold rounded-2xl transition-all border border-border/60"
             >
               Save and Close
             </button>
@@ -177,8 +177,8 @@ const Thumbnail = ({
               Live Card Preview
             </span>
 
-            <div className="group/preview relative w-full bg-[#1e293b] rounded-3xl overflow-hidden border border-white/10 shadow-2xl transition-all duration-500 hover:-translate-y-2">
-              <div className="aspect-video w-full bg-white/5 overflow-hidden relative">
+            <div className="group/preview relative w-full bg-[#1e293b] rounded-3xl overflow-hidden border border-border/60 shadow-2xl transition-all duration-500 hover:-translate-y-2">
+              <div className="aspect-video w-full bg-muted/50 overflow-hidden relative">
                 {currentUrl ? (
                   <>
                     <img
@@ -194,7 +194,7 @@ const Thumbnail = ({
                         onDelete();
                       }}
                       disabled={isDeleting}
-                      className="absolute top-4 right-4 z-120 p-2.5  bg-black/40 backdrop-blur-xl border border-white/10  text-white/70 hover:text-red-400 hover:bg-red-500/20 rounded-full shadow-2xl opacity-0 group-hover/preview:opacity-100  translate-y-2 group-hover/preview:translate-y-0 transition-all duration-300 ease-out"
+                      className="absolute top-4 right-4 z-120 p-2.5  bg-black/40 backdrop-blur-xl border border-border/60  text-white/70 hover:text-red-400 hover:bg-red-500/20 rounded-full shadow-2xl opacity-0 group-hover/preview:opacity-100  translate-y-2 group-hover/preview:translate-y-0 transition-all duration-300 ease-out"
                       title="Quick Remove"
                     >
                       {isDeleting ? (
@@ -222,8 +222,8 @@ const Thumbnail = ({
                   {blogTitle || 'Your Awesome Blog Title...'}
                 </h3>
                 <div className="flex items-center gap-2 pt-2">
-                  <div className="h-6 w-6 rounded-full bg-white/10" />
-                  <div className="h-3 w-20 bg-white/10 rounded-full" />
+                  <div className="h-6 w-6 rounded-full bg-muted/60" />
+                  <div className="h-3 w-20 bg-muted/60 rounded-full" />
                 </div>
               </div>
             </div>

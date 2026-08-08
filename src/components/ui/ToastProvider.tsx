@@ -83,7 +83,7 @@ const ToastProvider: React.FC<Props> = ({ position = 'top-right', children }) =>
                                         e.stopPropagation();
                                         toast.dismiss(t.id);
                                     }}
-                                    className="ml-2 font-bold text-gray-500 hover:text-gray-700 cursor-pointer"
+                                    className="ml-2 font-bold text-muted-foreground hover:text-foreground cursor-pointer"
                                 >
                                     <X />
                                 </button>

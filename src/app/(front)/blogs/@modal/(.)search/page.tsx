@@ -1,4 +1,5 @@
 'use client';
+
 import ModalWrapper from '@/components/ui/ModalWrapper';
 import { Search, FileText, ArrowRight, Loader2 } from 'lucide-react';
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -15,10 +16,10 @@ export default function SearchModal() {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Filter results
   const filteredResults = blogs.filter((blog) =>
     blog.title.toLowerCase().includes(query.toLowerCase()),
   );
+
   const onDismiss = useCallback(() => {
     router.back();
   }, [router]);
@@ -33,13 +34,13 @@ export default function SearchModal() {
       router.push(`/blogs/b/${source}/${slug}`);
     }, 50);
   };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.preventDefault();
         onDismiss();
       }
-
       if (e.key === 'ArrowDown') {
         e.preventDefault();
         setActiveIndex((prev) =>
@@ -50,25 +51,23 @@ export default function SearchModal() {
         e.preventDefault();
         setActiveIndex((prev) => (prev > 0 ? prev - 1 : 0));
       }
-
-      if (e.key === 'Enter') {
-        if (filteredResults[activeIndex]) {
-          const selectedBlog = filteredResults[activeIndex];
-          handleSelection(selectedBlog.source, selectedBlog.slug);
-        }
+      if (e.key === 'Enter' && filteredResults[activeIndex]) {
+        const selected = filteredResults[activeIndex];
+        handleSelection(selected.source, selected.slug);
       }
     };
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [filteredResults, activeIndex, router, onDismiss]);
+  }, [filteredResults, activeIndex, onDismiss]);
 
   useEffect(() => {
     let isMounted = true;
+
     const fetchBlogs = async () => {
       try {
         setIsLoading(true);
         const response = await fetchAllBlogs();
-
         if (isMounted && response.length > 0) {
           setBlogs(response);
         }
@@ -80,7 +79,6 @@ export default function SearchModal() {
     };
 
     fetchBlogs();
-
     return () => {
       isMounted = false;
     };
@@ -88,75 +86,115 @@ export default function SearchModal() {
 
   return (
     <ModalWrapper>
-      <div className="flex flex-col h-125">
-        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center gap-3">
+      <div className="flex h-[32rem] flex-col">
+        {/* Search Header */}
+        <div className="flex items-center gap-3 border-b border-border px-5 py-4">
           {isLoading ? (
-            <Loader2 className="size-5 text-[#007acc] animate-spin" />
+            <Loader2 className="size-5 animate-spin text-primary" />
           ) : (
-            <Search className="size-5 text-slate-400" />
+            <Search className="size-5 text-muted-foreground" />
           )}
           <input
             ref={searchInputRef}
             autoFocus
             placeholder="Search tutorials, code, workflows..."
-            className="flex-1 bg-transparent border-none outline-none text-lg"
+            className="flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
+          <kbd className="kbd kbd-sm hidden sm:inline-flex">ESC</kbd>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-2 custom-scrollbar">
+        {/* Results */}
+        <div className="custom-scrollbar flex-1 overflow-y-auto p-2">
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center h-full text-slate-500 gap-2">
-              <Loader2 className="animate-spin" />
+            <div className="flex h-full flex-col items-center justify-center gap-3 text-muted-foreground">
+              <Loader2 className="size-6 animate-spin text-primary" />
               <p className="text-sm">Loading index...</p>
             </div>
           ) : filteredResults.length > 0 ? (
-            filteredResults.map((blog) => (
-              <Link
-                key={blog._id}
-                href={`/blogs/b/${blog.source}/${blog.slug}`}
-                onClick={(e) => {
-                  e.preventDefault(); // Stop default navigation
-                  handleSelection(blog.source, blog.slug);
-                }}
-                className={`flex items-center justify-between p-3 rounded-xl transition-colors group ${
-                  filteredResults[activeIndex]?._id === blog._id
-                    ? 'bg-[#007acc]/10 ring-1 ring-[#007acc]/30'
-                    : 'hover:bg-[#007acc]/10'
-                }`}
-                onMouseEnter={() => setActiveIndex(blogs.indexOf(blog))}
-              >
-                <div className="flex items-center gap-3">
-                  <FileText className="size-4 text-slate-400" />
-                  <div>
-                    <div className="font-medium group-hover:text-[#007acc]">
-                      {blog.title}
+            <div className="space-y-1">
+              {filteredResults.map((blog, index) => {
+                const isActive = index === activeIndex;
+                return (
+                  <Link
+                    key={blog._id}
+                    href={`/blogs/b/${blog.source}/${blog.slug}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSelection(blog.source, blog.slug);
+                    }}
+                    onMouseEnter={() => setActiveIndex(index)}
+                    className={`group flex items-center justify-between rounded-xl px-3.5 py-3 transition-all ${
+                      isActive
+                        ? 'bg-primary/10 ring-1 ring-primary/25'
+                        : 'hover:bg-muted/60'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3.5">
+                      <div
+                        className={`flex size-9 items-center justify-center rounded-lg transition-colors ${
+                          isActive
+                            ? 'bg-primary/15 text-primary'
+                            : 'bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary'
+                        }`}
+                      >
+                        <FileText className="size-4" />
+                      </div>
+                      <div>
+                        <div
+                          className={`font-medium ${
+                            isActive
+                              ? 'text-primary'
+                              : 'group-hover:text-primary'
+                          }`}
+                        >
+                          {blog.title}
+                        </div>
+                      </div>
                     </div>
-                    {/* Optional: Add tags or date if available in your schema */}
-                    {/* <div className="text-xs text-slate-500">{blog.slug || 'Tutorial'}</div> */}
-                  </div>
-                </div>
-                <ArrowRight className="size-4 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all text-[#007acc]" />
-              </Link>
-            ))
+
+                    <ArrowRight
+                      className={`size-4 transition-all ${
+                        isActive
+                          ? 'translate-x-0 opacity-100 text-primary'
+                          : '-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-primary'
+                      }`}
+                    />
+                  </Link>
+                );
+              })}
+            </div>
           ) : (
-            <div className="p-8 text-center text-slate-500">
-              {query
-                ? `No results found for "${query}"`
-                : 'Start typing to search...'}
+            <div className="flex h-full flex-col items-center justify-center gap-2 p-8 text-center text-muted-foreground">
+              <Search className="size-8 opacity-40" />
+              <p className="text-sm">
+                {query
+                  ? `No results for "${query}"`
+                  : 'Start typing to search...'}
+              </p>
             </div>
           )}
         </div>
 
-        <div className="p-3 bg-slate-50 dark:bg-slate-950/50 border-t border-slate-200 dark:border-slate-800 text-[10px] text-slate-500 flex gap-4">
-          <span>
-            <kbd className="kbd kbd-xs">ENTER</kbd> select
+        {/* Footer hints */}
+        <div className="flex items-center gap-5 border-t border-border bg-muted/40 px-4 py-2.5 text-[11px] text-muted-foreground">
+          <span className="flex items-center gap-1.5">
+            <kbd className="kbd kbd-xs">↑↓</kbd>
+            navigate
           </span>
-          <span>
-            <kbd className="kbd kbd-xs">ESC</kbd> close
+          <span className="flex items-center gap-1.5">
+            <kbd className="kbd kbd-xs">ENTER</kbd>
+            select
           </span>
-          <span className="ml-auto">{filteredResults.length} blogs found</span>
+          <span className="flex items-center gap-1.5">
+            <kbd className="kbd kbd-xs">ESC</kbd>
+            close
+          </span>
+          <span className="ml-auto tabular-nums">
+            {filteredResults.length} result
+            {filteredResults.length !== 1 ? 's' : ''}
+          </span>
         </div>
       </div>
     </ModalWrapper>

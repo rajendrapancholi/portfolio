@@ -99,19 +99,6 @@ export const phases = [
   },
 ];
 
-export const socialMedia = [
-  {
-    id: 1,
-    img: '/git.svg',
-    link: 'https://github.com/rajendrapancholi',
-  },
-  {
-    id: 2,
-    img: '/link.svg',
-    link: 'https://www.linkedin.com/in/rajendra-pancholi',
-  },
-];
-
 export const iconList = [
   { img: '/next.svg', title: 'NextJS' },
   { img: '/re.svg', title: 'ReactJS/ReactNative' },

@@ -9,10 +9,12 @@ export default function Unauthorized() {
   const router = useRouter();
 
   return (
-    <div className="relative flex h-screen flex-col items-center justify-center text-center px-4 transition-colors duration-500 bg-transparent overflow-hidden">
-      <div className="absolute -z-10 h-80 w-80 rounded-full bg-amber-500/5 dark:bg-amber-500/10 blur-[120px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 text-center">
+      {/* Soft ambient glow */}
+      <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 size-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-warning/10 blur-[120px]" />
 
-      <div className="mb-12 opacity-80 cursor-default">
+      {/* Brand */}
+      <div className="mb-12 opacity-80">
         <RajeBrandLogo
           path="/"
           firstText="Raje"
@@ -21,25 +23,27 @@ export default function Unauthorized() {
         />
       </div>
 
-      <div className="max-w-md w-full space-y-6 p-8 rounded-3xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/5 backdrop-blur-2xl shadow-2xl">
-        <div className="space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/20 text-[10px] font-mono uppercase tracking-widest text-amber-600 dark:text-amber-400">
+      {/* Card */}
+      <div className="card-glass w-full max-w-md space-y-6 rounded-3xl p-8 shadow-2xl">
+        <div className="space-y-4">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-warning/30 bg-warning/10 px-3 py-1 text-[10px] font-mono uppercase tracking-widest text-warning">
             <Lock size={12} />
             Access Denied
           </div>
 
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Restricted{' '}
-            <span className="text-amber-600 dark:text-amber-500">Sector</span>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Restricted <span className="text-warning">Sector</span>
           </h1>
 
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-100 dark:bg-white/5 text-left border border-slate-200/50 dark:border-white/5">
-            <ShieldAlert size={18} className="text-amber-500 mt-0.5 shrink-0" />
+          {/* Alert box */}
+          <div className="flex items-start gap-3 rounded-2xl border border-border/60 bg-muted/50 p-4 text-left">
+            <ShieldAlert size={18} className="mt-0.5 shrink-0 text-warning" />
             <div>
-              <p className="text-slate-900 dark:text-white text-sm font-semibold mb-1">
+              <p className="mb-1 text-sm font-semibold">
                 Admin Privileges Required
               </p>
-              <p className="text-slate-600 dark:text-white/60 text-xs leading-relaxed">
+              <p className="text-xs leading-relaxed text-muted-foreground">
                 Your current synchronization level does not have clearance for
                 this terminal. Please contact the administrator.
               </p>
@@ -47,27 +51,31 @@ export default function Unauthorized() {
           </div>
         </div>
 
-        <div className="flex gap-3 pt-2">
+        {/* Actions */}
+        <div className="flex flex-col gap-3 pt-2 sm:flex-row">
           <button
             onClick={() => router.back()}
-            className="flex items-center justify-center gap-2 py-3 px-6 rounded-xl border border-slate-200 dark:border-white/10 text-slate-700 dark:text-white font-medium hover:bg-slate-100 dark:hover:bg-white/5 transition-all group"
+            className="btn btn-outline flex-1 gap-2 rounded-xl py-3 group"
           >
             <MoveLeft
               size={16}
-              className="group-hover:-translate-x-1 transition-transform"
+              className="transition-transform group-hover:-translate-x-1"
             />
             Previous Station
           </button>
+
           <Link
             href="/"
-            className="flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-black font-bold hover:opacity-90 transition-all active:scale-95 shadow-lg"
+            className="btn btn-primary flex-1 gap-2 rounded-xl py-3 font-semibold"
           >
             <Home size={18} />
             Return to Dashboard
           </Link>
         </div>
       </div>
-      <p className="mt-8 text-[10px] font-mono uppercase tracking-[0.2em] text-slate-400 dark:text-slate-600">
+
+      {/* Footer note */}
+      <p className="mt-8 text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
         Unauthorized attempt logged • {new Date().getFullYear()}
       </p>
     </div>

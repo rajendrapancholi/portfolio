@@ -20,11 +20,12 @@ export const config = {
       async authorize(credentials) {
         await connectToDB();
         if (credentials == null) return null;
-
-        const user = await UserModel.findOne({ email: credentials.email });
+        const email = credentials.email as string;
+        const password = credentials.password as string;
+        const user = await UserModel.findOne({ email });
         if (user) {
           const isMatch = await bcrypt.compare(
-            credentials.password as string,
+            password,
             user.password as string,
           );
           if (isMatch) {

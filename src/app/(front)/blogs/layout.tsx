@@ -11,10 +11,16 @@ export default function MainBlogLayout({
   modal: React.ReactNode;
 }) {
   return (
-    <div className="relative">
+    <div className="relative min-h-screen bg-main-bg text-main-text">
       <Navbar />
-      {children}
-      <div className="mx-auto border-b-4 max-w-7xl border-gray-500/20 dark:border-gray-300/20" />
+
+      <main className="relative z-10">{children}</main>
+
+      {/* Elegant separator */}
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="h-px bg-linear-to-r from-transparent via-border to-transparent" />
+      </div>
+
       {modal}
       <BlogSearchListener />
       <Footer />
