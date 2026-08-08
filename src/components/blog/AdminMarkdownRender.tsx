@@ -49,7 +49,7 @@ const MarkdownRenderer = ({ content }: { content: string }) => {
   }
   return (
     <div
-      className="markdown-render-blue-topaz w-full px-2 bg-canvas"
+      className="markdown-render w-full px-2 bg-canvas"
       data-color-mode={currentTheme}
     >
       <MDEditor.Markdown // used in admin

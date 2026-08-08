@@ -2,6 +2,13 @@
 
 import { FileCode, Terminal, Brackets } from 'lucide-react';
 import { CopyButton } from '../ui/CopyButton';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import {
+  vscDarkPlus,
+  oneLight,
+} from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 
 const getLanguageIcon = (lang: string) => {
   switch (lang.toLowerCase()) {
@@ -27,10 +34,16 @@ export const CodeBlock = ({
   className?: string;
 }) => {
   const match = /language-(\w+)/.exec(className || '');
-  const lang = match ? match[1] : 'code';
+  const lang = match ? match[1] : 'text';
+
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted ? resolvedTheme === 'dark' : true;
 
   return (
-    <div className="relative group my-6 overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+    <div className="relative group my-6 overflow-hidden rounded-md border border-border bg-card shadow-sm">
+      {/* Header Row */}
       <div className="flex items-center justify-between px-4 py-2 bg-muted/50 border-b border-border">
         <div className="flex items-center gap-2">
           {getLanguageIcon(lang)}
@@ -38,13 +51,29 @@ export const CodeBlock = ({
             {lang}
           </span>
         </div>
-        <CopyButton text={children} />
       </div>
-      <div className="overflow-x-auto p-4 text-sm font-mono text-foreground">
-        <pre className="scrollbar-hide">
-          <code>{children}</code>
-        </pre>
-      </div>
+
+      <CopyButton text={children} />
+
+      <SyntaxHighlighter
+        language={lang}
+        style={isDark ? vscDarkPlus : oneLight}
+        showLineNumbers={false}
+        wrapLongLines={false}
+        customStyle={{
+          margin: 0,
+          padding: '1rem',
+          background: 'transparent',
+          fontSize: '0.875rem',
+          fontFamily: 'var(--font-mono, ui-monospace, monospace)',
+        }}
+        codeTagProps={{
+          style: { fontFamily: 'inherit' },
+        }}
+        className="scrollbar-hide"
+      >
+        {children}
+      </SyntaxHighlighter>
     </div>
   );
 };

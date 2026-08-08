@@ -8,7 +8,7 @@
   /* Core */
   --main-bg: #f6f5fb;
   --main-text: #0f0e17;
-
+  --code-bg: #f4f3f9;
   --card: #ffffff;
   --card-foreground: #0f0e17;
   --popover: #ffffff;
@@ -52,6 +52,10 @@
   --base-300: #e4e2f0;
   --base-content: #0f0e17;
 
+  --tooltip-bg: #e4e2f0;
+  --tooltip-fg: #1c1a26;
+  --tooltip-border: rgba(255, 255, 255, 0.08);
+
   --foreground-rgb: 15, 14, 23;
   --background-start-rgb: 246, 245, 251;
   --shimmer-color: rgba(124, 58, 237, 0.08);
@@ -63,7 +67,7 @@
 .dark {
   --main-bg: #07060d;
   --main-text: #f5f3ff;
-
+  --code-bg: #0b0a12;
   --card: #12101c;
   --card-foreground: #f5f3ff;
   --popover: #151329;
@@ -85,7 +89,7 @@
   --input: #2a2745;
   --ring: #a78bfa;
 
-  --brand: #22d3ee;
+  --brand: #4e6bdf;
   --brand-foreground: #04242b;
 
   --destructive: #fb7185;
@@ -103,6 +107,10 @@
   --base-200: #1a182c;
   --base-300: #2a2745;
   --base-content: #f5f3ff;
+
+  --tooltip-bg: #24213d;
+  --tooltip-fg: #f5f3ff;
+  --tooltip-border: #2a2745;
 
   --foreground-rgb: 245, 243, 255;
   --background-start-rgb: 18, 16, 28;
@@ -358,7 +366,7 @@ h3 {
   scroll-margin-top: 100px;
 }
 
-/* ========== Buttons ========== */
+/* Buttons */
 @utility btn {
   display: inline-flex;
   align-items: center;
@@ -489,7 +497,7 @@ h3 {
   border-radius: 0.85rem;
 }
 
-/* ========== Badges ========== */
+/* Badges */
 @utility badge {
   display: inline-flex;
   align-items: center;
@@ -539,7 +547,7 @@ h3 {
   font-size: 0.65rem;
 }
 
-/* ========== Cards ========== */
+/* Cards */
 @utility card {
   position: relative;
   border-radius: 1.15rem;
@@ -606,7 +614,7 @@ h3 {
   letter-spacing: -0.02em;
 }
 
-/* ========== Loading / Join / Tooltip ========== */
+/* Loading / Join / Tooltip */
 @utility loading {
   display: inline-block;
 }
@@ -639,18 +647,19 @@ h3 {
     margin-left: -1px;
   }
 }
-
 @utility tooltip {
   position: relative;
-  --tt-bg: var(--color-neutral);
-  --tt-fg: var(--color-neutral-foreground);
+  --tt-bg: var(--tooltip-bg);
+  --tt-fg: var(--tooltip-fg);
+  --tt-arrow-size: 6px;
+
+  /* The tooltip box */
   &::before {
     content: attr(data-tip);
     position: absolute;
     z-index: 50;
-    bottom: calc(100% + 8px);
+    bottom: calc(100% + 10px);
     left: 50%;
-    transform: translateX(-50%) translateY(4px);
     background-color: var(--tt-bg);
     color: var(--tt-fg);
     font-size: 0.7rem;
@@ -658,34 +667,57 @@ h3 {
     padding: 0.35rem 0.65rem;
     border-radius: 0.45rem;
     white-space: nowrap;
+    border: 1px solid var(--tooltip-border);
+    box-shadow:
+      0 4px 12px -2px rgb(0 0 0 / 0.25),
+      0 2px 4px -1px rgb(0 0 0 / 0.1);
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
+    transform-origin: bottom center;
+    transform: translateX(-50%) translateY(4px) scale(0.94);
     transition:
-      opacity 0.18s ease-out,
-      transform 0.18s ease-out;
+      opacity 0.16s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.16s cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0.16s;
+    transition-delay: 0.15s;
   }
+
   &::after {
     content: '';
     position: absolute;
     z-index: 50;
-    width: 0.5rem;
-    height: 0.5rem;
     left: 50%;
-    bottom: calc(100% + 4px);
-    background-color: var(--tt-bg);
-    transform: translateX(-50%) rotate(45deg);
+    bottom: calc(100% + 10px - var(--tt-arrow-size));
+    width: 0;
+    height: 0;
+    border-left: var(--tt-arrow-size) solid transparent;
+    border-right: var(--tt-arrow-size) solid transparent;
+    border-top: var(--tt-arrow-size) solid var(--tt-bg);
+    border-bottom: none;
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.18s ease-out;
+    transform-origin: bottom center;
+    transform: translateX(-50%) translateY(4px) scale(0.94);
+    transition:
+      opacity 0.16s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.16s cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0.16s;
+    transition-delay: 0.15s;
   }
+
   &:hover::before,
   &:focus-visible::before {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    visibility: visible;
+    transform: translateX(-50%) translateY(0) scale(1);
   }
   &:hover::after,
   &:focus-visible::after {
     opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0) scale(1);
   }
 }
 
@@ -693,62 +725,93 @@ h3 {
   &::before,
   &::after {
     opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) scale(1);
   }
 }
 
+/* BOTTOM  */
 @utility tooltip-bottom {
   &::before {
     bottom: auto;
-    top: calc(100% + 8px);
-    transform: translateX(-50%) translateY(-4px);
+    top: calc(100% + 10px);
+    transform-origin: top center;
+    transform: translateX(-50%) translateY(-4px) scale(0.94);
   }
   &::after {
     bottom: auto;
-    top: calc(100% + 4px);
+    top: calc(100% + 10px - var(--tt-arrow-size));
+    border-top: none;
+    border-bottom: var(--tt-arrow-size) solid var(--tt-bg);
+    transform: translateX(-50%) translateY(-4px) scale(0.94);
   }
   &:hover::before,
   &:focus-visible::before {
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  &:hover::after,
+  &:focus-visible::after {
+    transform: translateX(-50%) translateY(0) scale(1);
   }
 }
 
+/* LEFT  */
 @utility tooltip-left {
   &::before {
     bottom: auto;
     left: auto;
-    right: calc(100% + 8px);
+    right: calc(100% + 10px);
     top: 50%;
-    transform: translateY(-50%) translateX(4px);
+    transform-origin: right center;
+    transform: translateY(-50%) translateX(4px) scale(0.94);
   }
   &::after {
     bottom: auto;
     left: auto;
-    right: calc(100% + 4px);
+    right: calc(100% + 10px - var(--tt-arrow-size));
     top: 50%;
-    transform: translateY(-50%) rotate(45deg);
+    border-left: var(--tt-arrow-size) solid var(--tt-bg);
+    border-right: none;
+    border-top: var(--tt-arrow-size) solid transparent;
+    border-bottom: var(--tt-arrow-size) solid transparent;
+    transform: translateY(-50%) translateX(4px) scale(0.94);
   }
   &:hover::before,
   &:focus-visible::before {
-    transform: translateY(-50%) translateX(0);
+    transform: translateY(-50%) translateX(0) scale(1);
+  }
+  &:hover::after,
+  &:focus-visible::after {
+    transform: translateY(-50%) translateX(0) scale(1);
   }
 }
 
+/* RIGHT  */
 @utility tooltip-right {
   &::before {
     bottom: auto;
     top: 50%;
-    left: calc(100% + 8px);
-    transform: translateY(-50%) translateX(-4px);
+    left: calc(100% + 10px);
+    transform-origin: left center;
+    transform: translateY(-50%) translateX(-4px) scale(0.94);
   }
   &::after {
     bottom: auto;
     top: 50%;
-    left: calc(100% + 4px);
-    transform: translateY(-50%) rotate(45deg);
+    left: calc(100% + 10px - var(--tt-arrow-size));
+    border-right: var(--tt-arrow-size) solid var(--tt-bg);
+    border-left: none;
+    border-top: var(--tt-arrow-size) solid transparent;
+    border-bottom: var(--tt-arrow-size) solid transparent;
+    transform: translateY(-50%) translateX(-4px) scale(0.94);
   }
   &:hover::before,
   &:focus-visible::before {
-    transform: translateY(-50%) translateX(0);
+    transform: translateY(-50%) translateX(0) scale(1);
+  }
+  &:hover::after,
+  &:focus-visible::after {
+    transform: translateY(-50%) translateX(0) scale(1);
   }
 }
 
@@ -756,24 +819,21 @@ h3 {
   --tt-bg: var(--color-info);
   --tt-fg: var(--color-info-foreground);
 }
-
 @utility tooltip-error {
   --tt-bg: var(--color-error);
   --tt-fg: var(--color-error-foreground);
 }
-
 @utility tooltip-success {
   --tt-bg: var(--color-success);
   --tt-fg: var(--color-success-foreground);
 }
-
 @keyframes tw-spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-/* ========== Inputs / Labels / Alerts ========== */
+/* Inputs / Labels / Alerts */
 @utility input {
   appearance: none;
   width: 100%;
@@ -810,7 +870,7 @@ h3 {
   font-size: 0.875rem;
 }
 
-/* ========== Nav ========== */
+/* Nav */
 @utility nav-item {
   @apply flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium
          text-muted-foreground transition-all duration-200
@@ -822,14 +882,6 @@ h3 {
 }
 
 @layer components {
-  .tooltip::before,
-  .tooltip::after,
-  .custom-tooltip::before,
-  .custom-tooltip::after {
-    z-index: 10000 !important;
-    pointer-events: none;
-  }
-
   .heading {
     @apply text-4xl md:text-5xl font-bold text-center tracking-tight;
   }
@@ -868,10 +920,6 @@ h3 {
 
   .group * {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .custom-tooltip {
-    @apply duration-300 before:duration-300 before:delay-200 after:duration-400 after:delay-200 before:text-slate-900 dark:before:text-white before:bg-gray-300 after:bg-gray-300 dark:before:bg-gray-600 dark:after:bg-gray-600 transition-colors tooltip tooltip-bottom;
   }
 
   .table {
@@ -949,80 +997,125 @@ h3 {
     @apply text-pink-600 dark:text-pink-400 bg-slate-100 dark:bg-slate-800 px-1 rounded font-normal border-none!;
   }
 
-  .markdown-render-blue-topaz {
+  /* ============================================================
+   App-themed Markdown
+   ============================================================ */
+  .markdown-render {
     background-color: transparent !important;
     @apply prose max-w-none
-    prose-table:border prose-table:border-slate-200 dark:prose-table:border-slate-700
-    text-[15px] leading-relaxed text-slate-700 dark:text-slate-300
-    prose-headings:font-bold prose-headings:tracking-tight;
+    text-[15px] leading-[1.75] text-foreground/85
+    prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-foreground;
 
-    @apply prose-h1:text-[#007acc] dark:prose-h1:text-[#4fa6ff]
-    prose-h1:border-b prose-h1:pb-2 prose-h1:border-slate-200 dark:prose-h1:border-slate-800;
+    /* Headings: restrained, weight does the work — not a rainbow */
+    @apply prose-h1:text-2xl prose-h1:mt-0 prose-h1:mb-4 prose-h1:pb-3
+    prose-h1:border-b prose-h1:border-border prose-h1:text-foreground;
+    @apply prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3
+    prose-h2:text-foreground prose-h2:pb-1.5
+    prose-h2:border-b prose-h2:border-border/60;
+    @apply prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2 prose-h3:text-foreground/95;
+    @apply prose-h4:text-base prose-h4:mt-5 prose-h4:mb-1.5 prose-h4:text-foreground/90;
+    @apply prose-h5:text-sm prose-h5:mt-4 prose-h5:mb-1 prose-h5:text-muted-foreground prose-h5:font-semibold;
+    @apply prose-h6:text-xs prose-h6:mt-4 prose-h6:mb-1 prose-h6:text-muted-foreground
+    prose-h6:font-semibold prose-h6:uppercase prose-h6:tracking-wide;
 
-    @apply prose-h2:text-[#008dbb] dark:prose-h2:text-[#5fc9f3]
-    prose-h3:text-[#009da1] dark:prose-h3:text-[#66e0e4]
-    prose-h4:text-[#2d8a57] dark:prose-h4:text-[#78d6a0]
-    prose-a:text-[#007acc] dark:prose-a:text-[#4fa6ff] prose-a:no-underline hover:prose-a:underline
-    prose-strong:text-slate-900 dark:prose-strong:text-white prose-strong:font-bold
-    prose-ul:list-disc prose-ol:list-decimal
-    prose-li:my-1;
+    /* One accent color, used sparingly and consistently: links only */
+    @apply prose-a:text-primary prose-a:font-medium prose-a:no-underline
+    prose-a:underline-offset-4 prose-a:decoration-primary/40
+    hover:prose-a:underline hover:prose-a:decoration-primary;
 
-    @apply prose-blockquote:border-l-4 prose-blockquote:border-[#007acc]
-    prose-blockquote:bg-slate-50 dark:prose-blockquote:bg-slate-900/50
-    prose-blockquote:py-1 prose-blockquote:pr-4 prose-blockquote:not-italic;
+    @apply prose-strong:text-foreground prose-strong:font-semibold
+    prose-em:text-foreground/90
+    prose-ul:my-3 prose-ol:my-3
+    prose-li:my-1 prose-li:marker:text-muted-foreground
+    prose-ul:list-disc prose-ol:list-decimal;
 
-    @apply prose-code:before:content-none prose-code:after:content-none;
+    /* Blockquote reads like a callout card, not a colored slab */
+    @apply prose-blockquote:border-l-2 prose-blockquote:border-primary/50
+    prose-blockquote:bg-muted/40 prose-blockquote:rounded-r-lg
+    prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:my-4
+    prose-blockquote:not-italic prose-blockquote:text-foreground/75
+    prose-blockquote:font-normal;
+
+    @apply prose-hr:border-border prose-hr:my-8
+
+    prose-img:rounded-xl prose-img:border prose-img:border-border prose-img:shadow-soft
+
+    prose-table:my-5 prose-table:text-sm
+    prose-th:text-muted-foreground prose-th:font-semibold prose-th:text-xs
+    prose-th:uppercase prose-th:tracking-wide prose-th:text-left
+    prose-td:border-t prose-td:border-border prose-th:border-b prose-th:border-border
+
+    prose-code:before:content-none prose-code:after:content-none;
   }
-  .markdown-render-blue-topaz :not(pre) > code {
-    @apply px-1.5 py-0.5 rounded-md font-mono text-sm
-           text-[#e96900] bg-[#fff5f0]
-           dark:text-[#ffb454] dark:bg-[#2d2212]
-           dark:border-orange-900/30 border-none!;
+
+  /* Inline code — ONE rule, warm amber chip on soft tint, matches reference style */
+  .markdown-render :not(pre) > code {
+    @apply px-[0.4em] py-[0.15em] rounded-[6px] font-mono text-[0.85em]
+    text-warning bg-warning/10
+    border border-warning/15
+    whitespace-normal break-words
+    font-medium;
   }
 
-  .markdown-render-blue-topaz pre {
-    @apply bg-[#f8f9fb] dark:bg-[#161b22]
-           border border-slate-200 dark:border-slate-800
-           rounded-lg shadow-sm p-4;
+  /* Code blocks — distinct dark surface, separated from the page */
+  .markdown-render pre {
+    background-color: var(--code-bg);
+    @apply border border-border/80
+    rounded-xl shadow-elevated p-4 my-4
+    overflow-x-auto;
   }
-  .markdown-render-blue-topaz pre code {
-    @apply text-slate-800 dark:text-slate-300 bg-transparent! p-0! border-none!;
-  }
-
-  .markdown-render-blue-topaz input[type='checkbox'] {
-    @apply rounded border-slate-300 text-[#007acc] focus:ring-[#007acc] mr-2 mb-1;
+  .markdown-render pre code {
+    @apply text-foreground/90 bg-transparent! p-0! border-none! text-[0.85em] leading-relaxed;
   }
 
-  .markdown-render-blue-topaz .wmde-markdown {
+  /* Give inline code inside list items breathing room */
+  .markdown-render li {
+    @apply leading-[1.85];
+  }
+  .markdown-render li code {
+    @apply mx-0.5;
+  }
+
+  /* Long inline commands wrap instead of clipping off the container edge */
+  .markdown-render p,
+  .markdown-render li {
+    @apply break-words;
+  }
+
+  .markdown-render input[type='checkbox'] {
+    @apply rounded border-border text-primary focus:ring-ring mr-2 mb-1 accent-primary;
+  }
+
+  .markdown-render .wmde-markdown {
     overflow-x: hidden !important;
     word-break: break-word !important;
     overflow-wrap: anywhere !important;
   }
-
-  .markdown-render-blue-topaz .wmde-markdown pre {
+  .markdown-render .wmde-markdown pre {
     white-space: pre !important;
     overflow-x: auto !important;
     max-width: 100% !important;
   }
 
-  .markdown-render-blue-topaz .anchor-icon {
-    @apply opacity-0 transition-opacity duration-200 mr-2 text-cyan-500 font-normal;
+  /* Anchor links on hover — quiet until you need them */
+  .markdown-render .anchor-icon {
+    @apply opacity-0 transition-opacity duration-200 mr-2 text-muted-foreground font-normal;
     font-family: monospace;
   }
-
-  .markdown-render-blue-topaz h1:hover .anchor-icon,
-  .markdown-render-blue-topaz h2:hover .anchor-icon,
-  .markdown-render-blue-topaz h3:hover .anchor-icon,
-  .markdown-render-blue-topaz h4:hover .anchor-icon,
-  .markdown-render-blue-topaz h5:hover .anchor-icon,
-  .markdown-render-blue-topaz h6:hover .anchor-icon {
+  .markdown-render h1:hover .anchor-icon,
+  .markdown-render h2:hover .anchor-icon,
+  .markdown-render h3:hover .anchor-icon,
+  .markdown-render h4:hover .anchor-icon,
+  .markdown-render h5:hover .anchor-icon,
+  .markdown-render h6:hover .anchor-icon {
     @apply opacity-100;
   }
-
-  .markdown-render-blue-topaz h1,
-  .markdown-render-blue-topaz h2,
-  .markdown-render-blue-topaz h3,
-  .markdown-render-blue-topaz h4 {
+  .markdown-render h1,
+  .markdown-render h2,
+  .markdown-render h3,
+  .markdown-render h4,
+  .markdown-render h5,
+  .markdown-render h6 {
     @apply relative;
   }
 }
@@ -1310,4 +1403,15 @@ h3 {
 }
 .writing-mode-vertical {
   writing-mode: vertical-rl;
+}
+
+.copied,
+action {
+  display: none;
+}
+.octicon-check {
+  display: none;
+}
+.octicon-copy {
+  display: none;
 }

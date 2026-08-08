@@ -19,7 +19,7 @@ export default function CollapsibleLeftSidebar({
       <aside
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        className={` z-20 hidden h-[calc(100vh-3.5rem)] shrink-0 border-r rounded-tr-md rouunted-br-md border-border/50 bg-main-bg transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] md:flex md:flex-col ${isOpen ? 'w-60 lg:w-64' : 'w-12'} ${pinned ? 'sticky top-14' : 'fixed top-14 left-0'}`}
+        className={`z-20 hidden h-[calc(100vh-3.5rem)] shrink-0 border-r rounded-tr-md rouunted-br-md border-border/50 bg-main-bg transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] md:flex md:flex-col ${isOpen ? 'w-60 lg:w-64' : 'w-12'} ${pinned ? 'sticky top-14' : 'fixed top-14 left-0'}`}
       >
         {/* Header */}
         <div
@@ -36,10 +36,8 @@ export default function CollapsibleLeftSidebar({
 
           <button
             onClick={toggle}
-            className="flex size-8 items-center justify-center rounded-lg
-                     text-muted-foreground transition-colors
-                     hover:bg-muted hover:text-foreground"
-            title={pinned ? 'Collapse sidebar' : 'Pin sidebar open'}
+            className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground tooltip tooltip-bottom"
+            data-tip={pinned ? 'Collapse sidebar' : 'Pin sidebar open'}
           >
             {pinned ? (
               <PanelLeftClose size={16} />

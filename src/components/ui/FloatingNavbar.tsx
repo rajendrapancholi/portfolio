@@ -96,7 +96,7 @@ export const FloatingNavbar = ({
 
             <div className="flex-center space-x-2">
               <span
-                className="text-md text-primary max-sm:py-2 px-0.5 sm:text-xl custom-tooltip"
+                className="text-md text-primary max-sm:py-2 px-0.5 sm:text-xl tooltip"
                 data-tip={navItem.name}
               >
                 {navItem.icon}

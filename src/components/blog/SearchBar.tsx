@@ -20,7 +20,7 @@ export default function SearchBar() {
 
   return (
     <Link
-      className="relative group custom-tooltip"
+      className="relative group tooltip"
       data-tip="Search posts"
       href="/blogs/search"
       scroll={false}

@@ -39,10 +39,8 @@ export default function CollapsibleToc({ headings }: { headings: Heading[] }) {
 
           <button
             onClick={toggle}
-            className="flex size-7 shrink-0 items-center justify-center rounded-md
-                     text-muted-foreground transition-colors
-                     hover:bg-muted hover:text-foreground"
-            title={pinned ? 'Collapse' : 'Pin open'}
+            className="flex size-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground tooltip tooltip-left"
+            data-tip={pinned ? 'Collapse sidebar' : 'Pin sidebar open'}
           >
             {pinned ? (
               <PanelRightClose size={15} />
