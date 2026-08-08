@@ -1,6 +1,6 @@
 <h1 align="center">
   <a href="https://rajendrapancholi.vercel.app/">
-    <img src="outputs/logo.png" alt="portfolio" width="120px">
+    <img src="public/favicon.svg" alt="portfolio" width="120px">
   </a>
   <br>
   <p>Developer Portfolio – Fullstack | Blog | Admin CMS</p>
