@@ -1,41 +1,25 @@
 // /app/api/cloudinary/project-sign/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { requireAdminSession } from '@/lib/utils/requireAdmin';
 import { ENV } from '@/config/env';
 import { v2 as cloudinary } from 'cloudinary';
 
 export async function POST(request: NextRequest) {
   try {
-    // STEP 1: Resolve session properly
-    const session = await auth();
-
-    if (!session) {
-      console.error('[PROJECT_SIGN] Authentication failed: No active session');
-      return NextResponse.json(
-        { error: 'Unauthorized: Authentication required' },
-        { status: 401 },
-      );
+    const { error } = await requireAdminSession();
+    if (error) {
+      console.error(`[PROJECT_SIGN] ${error}`);
+      const status = error.startsWith('Unauthorized') ? 401 : 403;
+      return NextResponse.json({ error }, { status });
     }
 
-    // STEP 2: Check authorization
-    if (session.user.role !== 'admin') {
-      console.error(
-        `[PROJECT_SIGN] Authorization failed: User role is '${session.user.role}'`,
-      );
-      return NextResponse.json(
-        { error: 'Forbidden: Admin access required' },
-        { status: 403 },
-      );
-    }
-
-    // STEP 3: Configure Cloudinary at RUNTIME (not module level)
+    // Configure Cloudinary at RUNTIME (not module level)
     cloudinary.config({
       cloud_name: ENV.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
       api_key: ENV.NEXT_PUBLIC_CLOUDINARY_API_KEY,
       api_secret: ENV.CLOUDINARY_SECRET,
     });
 
-    // STEP 4: Verify configuration
     const config = cloudinary.config();
     if (!config.cloud_name || !config.api_key || !config.api_secret) {
       console.error('[PROJECT_SIGN] Cloudinary configuration incomplete', {
@@ -49,7 +33,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // STEP 5: Generate signature
     const timestamp = Math.round(new Date().getTime() / 1000);
 
     const signature = cloudinary.utils.api_sign_request(
