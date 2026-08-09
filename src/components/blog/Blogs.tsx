@@ -61,7 +61,7 @@ export default function Blogs({
             <Link
               key={blog._id || blog.slug}
               href={href}
-              className="group flex flex-col bg-card rounded-2xl md:rounded-3xl border border-border overflow-hidden hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1 transition-all duration-400 flex-1"
+              className="group flex flex-col bg-card rounded-2xl md:rounded-3xl border border-border overflow-hidden hover:border-primary/40 hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-1 transition-all duration-400 flex-1"
             >
               {/* Thumbnail */}
               <div className="relative h-52 sm:h-60 w-full overflow-hidden bg-muted">
