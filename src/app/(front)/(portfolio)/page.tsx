@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     absolute: 'Rajendra Pancholi | Full Stack Developer',
   },
   description:
-    'Portfolio — building scalable web applications with Next.js, React, TypeScript',
+    'Portfolio - building scalable web applications with Next.js, React, TypeScript',
   alternates: {
     canonical: '/',
   },
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     ...baseMetadata.openGraph,
     title: 'Rajendra Pancholi | Full Stack Developer',
     description:
-      'Portfolio — building scalable web applications with Next.js, React, TypeScript',
+      'Portfolio - building scalable web applications with Next.js, React, TypeScript',
     url: baseUrl,
     images: [
       {
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     ...baseMetadata.twitter,
     title: 'Rajendra Pancholi | Full Stack Developer',
     description:
-      'Portfolio — building scalable web applications with Next.js, React, TypeScript',
+      'Portfolio - building scalable web applications with Next.js, React, TypeScript',
     images: ['/og-home.png'],
   },
 };
@@ -76,8 +76,8 @@ export default async function Home() {
           <div className="absolute left-1/2 top-0 h-125 w-200 -translate-x-1/2 rounded-full bg-primary/5 blur-3xl" />
         </div>
 
-        <div className="mx-auto flex w-full flex-col items-center">
-          <Hero />
+        <Hero />
+        <div className="mx-auto flex max-w-7xl flex-col items-center">
           <Grid />
           <RecentProjects />
           <Experience />

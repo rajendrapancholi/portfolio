@@ -46,7 +46,6 @@ const Navbar: React.FC = () => {
     document.documentElement.style.setProperty('--navbar-height', height);
   }, [isCollapsed]);
 
-  // Set initial value on mount
   useEffect(() => {
     document.documentElement.style.setProperty('--navbar-height', '70px');
   }, []);
@@ -63,23 +62,18 @@ const Navbar: React.FC = () => {
     }
   });
 
-  useMotionValueEvent(scrollY, 'change', (latest) => {
-    if (!pathname.startsWith('/blogs/b/')) {
-      setIsCollapsed(false);
-      return;
-    }
-
-    if (latest > 180) {
-      setIsCollapsed(true);
-    } else if (latest < 80) {
-      setIsCollapsed(false);
-    }
-  });
-
   const navigation = [
-    { name: 'Home', href: '/', icon: <Home size={14} /> },
-    { name: 'Tutorials', href: '/blogs', icon: <BookOpenTextIcon size={14} /> },
-    { name: 'Projects', href: '/#projects', icon: <FcTemplate size={14} /> },
+    { name: 'Home', href: '/', icon: <Home size={15} strokeWidth={2} /> },
+    {
+      name: 'Tutorials',
+      href: '/blogs',
+      icon: <BookOpenTextIcon size={15} strokeWidth={2} />,
+    },
+    {
+      name: 'Projects',
+      href: '/#projects',
+      icon: <FcTemplate size={15} />,
+    },
   ];
 
   const updatedNavigation = navigation.map((item) => ({
@@ -117,46 +111,55 @@ const Navbar: React.FC = () => {
         expanded: { height: 70 },
         collapsed: { height: 48 },
       }}
-      transition={{ duration: 0.3 }}
-      className="fixed inset-x-0 top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border"
+      transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+      className="fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-card/75 backdrop-blur-xl backdrop-saturate-150"
       style={
         {
           '--navbar-height': isCollapsed ? '48px' : '70px',
         } as React.CSSProperties
       }
     >
-      <div className="relative mx-auto px-4 h-full">
+      {/* subtle top highlight */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/25 to-transparent" />
+
+      <div className="relative h-full">
         <div className="flex h-full items-center justify-between gap-3">
           {/* Mobile menu button */}
           <button
-            className="sm:hidden text-muted-foreground hover:text-foreground transition-colors p-1"
-            aria-label="Open sidebar"
+            className="flex size-9 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:hidden"
+            aria-label="Open menu"
             onClick={(e) => {
               e.stopPropagation();
               setIsMobileMenuOpen(true);
             }}
           >
-            <TextAlignJustify className="size-5" />
+            <TextAlignJustify className="size-5" strokeWidth={2} />
           </button>
 
           {/* Logo */}
-          <div className="hidden md:block">
+          <div className="hidden shrink-0 md:block">
             <RajeBrandLogo logoType="mini" secondText="blog" />
           </div>
 
-          {/* Center navigation */}
-          <div className="max-sm:-translate-x-1 flex flex-1 justify-center">
-            <div className="flex items-center space-x-1 rounded-full border border-border bg-muted/60 p-1">
+          {/* Center: Nav + Search */}
+          <div className="flex flex-1 items-center justify-center gap-2 max-sm:-translate-x-0.5">
+            {/* Pill navigation */}
+            <div className="flex items-center gap-0.5 rounded-full border border-border/70 bg-muted/50 p-1 shadow-sm shadow-black/5 dark:shadow-black/20">
               {updatedNavigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="relative px-3 py-1.5 rounded-full text-sm"
+                  className="relative rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors"
                 >
                   {item.current && (
                     <motion.div
                       layoutId="activeTab"
-                      className="absolute inset-0 rounded-full bg-primary"
+                      className="absolute inset-0 rounded-full bg-primary shadow-sm shadow-primary/25"
+                      transition={{
+                        type: 'spring',
+                        stiffness: 380,
+                        damping: 32,
+                      }}
                     />
                   )}
                   <span
@@ -166,61 +169,65 @@ const Navbar: React.FC = () => {
                         : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
-                    <span className="hidden sm:block">{item.name}</span>
+                    <span className="hidden sm:inline">{item.name}</span>
                     <span className="sm:hidden">{item.icon}</span>
                   </span>
                 </Link>
               ))}
             </div>
 
-            {/* Search (desktop) */}
+            {/* Desktop search */}
             <motion.div
               layout
               variants={{
-                expanded: { width: 220 },
-                collapsed: { width: 44 },
+                expanded: { width: 210 },
+                collapsed: { width: 40 },
               }}
-              transition={{ duration: 0.35, ease: 'easeInOut' }}
-              className="hidden lg:flex items-center overflow-hidden lg:ml-2"
+              transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+              className="hidden overflow-hidden lg:flex lg:items-center"
             >
               <Link
                 href="/blogs/search"
                 scroll={false}
-                className="relative flex items-center w-full h-10 bg-muted/60 border border-border rounded-full px-3 hover:border-primary/50 transition-colors"
+                className="group relative flex h-9 w-full items-center gap-2.5 rounded-full border border-border/70 bg-muted/50 px-3 transition-all hover:border-primary/40 hover:bg-muted/80"
               >
-                <Search size={18} className="text-muted-foreground shrink-0" />
+                <Search
+                  size={16}
+                  strokeWidth={2}
+                  className="shrink-0 text-muted-foreground transition-colors group-hover:text-primary"
+                />
                 <motion.span
                   variants={{
                     expanded: { opacity: 1, x: 0 },
-                    collapsed: { opacity: 0, scale: 0.5, display: 'none' },
+                    collapsed: { opacity: 0, scale: 0.9, display: 'none' },
                   }}
                   transition={{ duration: 0.2 }}
-                  className="ml-2 text-sm text-muted-foreground whitespace-nowrap"
+                  className="truncate text-sm text-muted-foreground"
                 >
-                  Search...
+                  Search tutorials...
                 </motion.span>
                 <motion.kbd
                   variants={{
                     expanded: { opacity: 1, scale: 1 },
-                    collapsed: { opacity: 0, scale: 0.5, display: 'none' },
+                    collapsed: { opacity: 0, scale: 0.85, display: 'none' },
                   }}
                   transition={{ duration: 0.15 }}
-                  className="ml-auto hidden md:inline-flex items-center gap-1 rounded-full border border-border bg-background px-1.5 text-[10px] font-medium text-muted-foreground"
+                  className="ml-auto hidden items-center rounded-md border border-border/80 bg-background/80 px-1.5 py-0.5 font-mono text-[10px] font-medium text-muted-foreground md:inline-flex"
                 >
-                  Ctrl+K
+                  ⌘K
                 </motion.kbd>
               </Link>
             </motion.div>
           </div>
 
           {/* Desktop actions */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden items-center gap-2.5 md:flex">
             <ThemeButton />
             {session?.user ? (
               <UserMenu user={session.user as User} />
             ) : (
               <Link href="/blogs/subscribe">
-                <button className="bg-primary text-primary-foreground px-5 py-2 rounded-full text-sm font-semibold hover:brightness-110 transition-all active:scale-95 shadow-sm shadow-primary/20">
+                <button className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/20 transition-all hover:brightness-110 active:scale-[0.97]">
                   Subscribe
                 </button>
               </Link>
@@ -233,64 +240,74 @@ const Navbar: React.FC = () => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
+            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
               onClick={(e) => {
                 e.stopPropagation();
                 setIsMobileMenuOpen(false);
               }}
-              className="fixed inset-0 min-h-screen z-45 bg-black/40 backdrop-blur-sm sm:hidden"
+              className="fixed inset-0 z-40 min-h-screen bg-black/50 backdrop-blur-sm sm:hidden"
             />
+
+            {/* Panel */}
             <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
-              transition={{ type: 'spring', stiffness: 260, damping: 30 }}
-              className="fixed top-0 rounded-r-2xl h-screen left-0 z-50 w-72 bg-card px-4 py-6 border-r border-border shadow-xl sm:hidden flex flex-col"
+              transition={{ type: 'spring', stiffness: 320, damping: 34 }}
+              className="fixed left-0 top-0 z-50 flex h-screen w-[min(18rem,85vw)] flex-col border-r border-border bg-card px-4 py-5 shadow-2xl sm:hidden"
             >
               {/* Header */}
-              <div className="relative">
+              <div className="relative mb-5">
                 <button
-                  className="absolute top-0 -right-7 cursor-pointer"
+                  className="absolute -right-6 top-0 flex size-8 items-center justify-center rounded-full bg-card text-primary shadow-md ring-1 ring-border"
                   aria-label="Close menu"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <ArrowLeftCircleIcon className="text-primary size-8 bg-card rounded-full" />
+                  <ArrowLeftCircleIcon className="size-7" strokeWidth={1.75} />
                 </button>
                 <RajeBrandLogo logoType="mini" secondText="blog" />
-                <nav className="mt-6 flex flex-col gap-1">
-                  <div className="flex justify-between items-center w-full gap-2 mb-3">
-                    <SearchBar />
-                    <ThemeButton position="bottom" />
-                  </div>
-                  {updatedNavigation.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={`px-4 py-2 rounded-xl text-base font-semibold transition-colors ${
-                        item.current
-                          ? 'bg-primary text-primary-foreground'
-                          : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                      }`}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </nav>
               </div>
 
+              {/* Search + Theme */}
+              <div className="mb-4 flex items-center gap-2">
+                <div className="min-w-0 flex-1">
+                  <SearchBar />
+                </div>
+                <ThemeButton position="bottom" />
+              </div>
+
+              {/* Nav links */}
+              <nav className="flex flex-col gap-1">
+                {updatedNavigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[15px] font-medium transition-colors ${
+                      item.current
+                        ? 'bg-primary text-primary-foreground shadow-sm shadow-primary/20'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    }`}
+                  >
+                    <span className="opacity-90">{item.icon}</span>
+                    {item.name}
+                  </Link>
+                ))}
+              </nav>
+
               {/* Recent posts */}
-              <div className="flex-1 rounded-xl pt-3 overflow-x-hidden overflow-y-auto custom-scrollbar my-3">
-                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2 px-1">
+              <div className="my-4 flex-1 overflow-y-auto overflow-x-hidden rounded-xl custom-scrollbar">
+                <p className="mb-2.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                   Recent Posts
                 </p>
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                   {!loading ? (
-                    blogs &&
-                    blogs.map((blog) => (
+                    blogs?.map((blog) => (
                       <AnimatedLink
                         key={blog._id}
                         slug={blog.slug}
@@ -304,21 +321,21 @@ const Navbar: React.FC = () => {
                 </div>
               </div>
 
-              {/* Bottom */}
-              <div className="pt-4 border-t border-border">
+              {/* Bottom actions */}
+              <div className="border-t border-border pt-4">
                 {session?.user ? (
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-between gap-3">
                     <UserMenu user={session.user as User} popupPos="top-left" />
                     <button
                       onClick={handleLogout}
-                      className="text-xs text-muted-foreground hover:text-destructive transition-colors"
+                      className="text-xs font-medium text-muted-foreground transition-colors hover:text-destructive"
                     >
-                      Exit
+                      Sign out
                     </button>
                   </div>
                 ) : (
                   <Link href="/signin" className="block">
-                    <button className="w-full text-sm font-semibold text-primary-foreground bg-primary px-6 py-2.5 rounded-xl shadow-sm shadow-primary/20 hover:brightness-110 transition-all active:scale-95">
+                    <button className="w-full rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/20 transition-all hover:brightness-110 active:scale-[0.98]">
                       Subscribe
                     </button>
                   </Link>

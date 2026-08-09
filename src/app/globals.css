@@ -997,16 +997,12 @@ h3 {
     @apply text-pink-600 dark:text-pink-400 bg-slate-100 dark:bg-slate-800 px-1 rounded font-normal border-none!;
   }
 
-  /* ============================================================
-   App-themed Markdown
-   ============================================================ */
   .markdown-render {
     background-color: transparent !important;
     @apply prose max-w-none
     text-[15px] leading-[1.75] text-foreground/85
     prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-foreground;
 
-    /* Headings: restrained, weight does the work — not a rainbow */
     @apply prose-h1:text-2xl prose-h1:mt-0 prose-h1:mb-4 prose-h1:pb-3
     prose-h1:border-b prose-h1:border-border prose-h1:text-foreground;
     @apply prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3
@@ -1018,7 +1014,6 @@ h3 {
     @apply prose-h6:text-xs prose-h6:mt-4 prose-h6:mb-1 prose-h6:text-muted-foreground
     prose-h6:font-semibold prose-h6:uppercase prose-h6:tracking-wide;
 
-    /* One accent color, used sparingly and consistently: links only */
     @apply prose-a:text-primary prose-a:font-medium prose-a:no-underline
     prose-a:underline-offset-4 prose-a:decoration-primary/40
     hover:prose-a:underline hover:prose-a:decoration-primary;
@@ -1029,7 +1024,6 @@ h3 {
     prose-li:my-1 prose-li:marker:text-muted-foreground
     prose-ul:list-disc prose-ol:list-decimal;
 
-    /* Blockquote reads like a callout card, not a colored slab */
     @apply prose-blockquote:border-l-2 prose-blockquote:border-primary/50
     prose-blockquote:bg-muted/40 prose-blockquote:rounded-r-lg
     prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:my-4
@@ -1048,16 +1042,14 @@ h3 {
     prose-code:before:content-none prose-code:after:content-none;
   }
 
-  /* Inline code — ONE rule, warm amber chip on soft tint, matches reference style */
   .markdown-render :not(pre) > code {
-    @apply px-[0.4em] py-[0.15em] rounded-[6px] font-mono text-[0.85em]
-    text-warning bg-warning/10
+    @apply px-[0.4em] py-[0.15em] rounded-md font-mono text-[0.85em]
+    text-warning
     border border-warning/15
-    whitespace-normal break-words
+    whitespace-normal wrap-break-word
     font-medium;
   }
 
-  /* Code blocks — distinct dark surface, separated from the page */
   .markdown-render pre {
     background-color: var(--code-bg);
     @apply border border-border/80
@@ -1097,7 +1089,28 @@ h3 {
     max-width: 100% !important;
   }
 
-  /* Anchor links on hover — quiet until you need them */
+  .wmde-markdown,
+  .wmde-markdown-var,
+  .w-md-editor {
+    --color-fg-default: var(--main-text) !important;
+    --color-fg-muted: var(--muted-foreground) !important;
+    --color-fg-subtle: var(--muted-foreground) !important;
+    --color-canvas-default: transparent !important;
+    --color-canvas-subtle: var(--code-bg) !important;
+    --color-border-default: var(--border) !important;
+    --color-border-muted: var(--border) !important;
+    --color-accent-fg: var(--primary) !important;
+    --color-accent-emphasis: var(--primary) !important;
+    --color-neutral-muted: color-mix(
+      in oklab,
+      var(--muted) 60%,
+      transparent
+    ) !important;
+    --color-danger-fg: var(--error) !important;
+    --color-success-fg: var(--success) !important;
+    --color-attention-fg: var(--warning) !important;
+  }
+
   .markdown-render .anchor-icon {
     @apply opacity-0 transition-opacity duration-200 mr-2 text-muted-foreground font-normal;
     font-family: monospace;

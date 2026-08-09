@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   motion,
   useAnimationFrame,
@@ -7,7 +7,6 @@ import {
   useMotionValue,
   useTransform,
 } from 'motion/react';
-import { useRef } from 'react';
 import { cn } from '@/lib/utils/cn';
 
 export function MovingGrid({
@@ -19,6 +18,7 @@ export function MovingGrid({
   borderClassName,
   duration,
   className,
+  style,
   ...otherProps
 }: {
   borderRadius?: string;
@@ -29,27 +29,27 @@ export function MovingGrid({
   borderClassName?: string;
   duration?: number;
   className?: string;
+  style?: React.CSSProperties;
   [key: string]: any;
 }) {
   return (
     <Component
       className={cn(
-        'bg-transparent relative text-xl p-[1px] overflow-hidden md:col-span-2 md:row-span-1',
+        'bg-transparent relative text-xl p-px overflow-hidden group/moving-border',
+        'block w-full h-full',
         containerClassName,
       )}
-      style={{
-        borderRadius: borderRadius,
-      }}
+      style={{ borderRadius, ...style }}
       {...otherProps}
     >
       <div
-        className="absolute inset-0 rounde-[1.75rem]"
+        className="absolute inset-0"
         style={{ borderRadius: `calc(${borderRadius} * 0.96)` }}
       >
         <MovingBorder duration={duration} rx="30%" ry="30%">
           <div
             className={cn(
-              'h-20 w-20 opacity-[0.8] bg-[radial-gradient(#CBACF9_40%,transparent_60%)]',
+              'h-24 w-24 opacity-90 bg-[radial-gradient(var(--color-primary)_0%,transparent_70%)] blur-[2px]',
               borderClassName,
             )}
           />
@@ -58,7 +58,7 @@ export function MovingGrid({
 
       <div
         className={cn(
-          'relative bg-card/90 border border-border backdrop-blur-xl text-foreground flex items-center justify-center w-full h-full text-sm antialiased',
+          'relative bg-card/90 border border-border backdrop-blur-xl text-foreground flex items-center justify-center w-full h-full text-sm antialiased transition-colors duration-300 group-hover/moving-border:border-primary/30',
           className,
         )}
         style={{
@@ -73,7 +73,7 @@ export function MovingGrid({
 
 export const MovingBorder = ({
   children,
-  duration = 2000,
+  duration = 3000,
   rx,
   ry,
   ...otherProps
@@ -84,7 +84,7 @@ export const MovingBorder = ({
   ry?: string;
   [key: string]: any;
 }) => {
-  const pathRef = useRef<any>(null);
+  const pathRef = useRef<SVGRectElement>(null);
   const progress = useMotionValue<number>(0);
 
   useAnimationFrame((time) => {

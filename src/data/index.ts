@@ -74,10 +74,21 @@ export const gridItems = [
 export const workExperience = [
   {
     id: 1,
-    title: 'MIS excecutive',
-    desc: 'Experienced MIS Executive skilled in Tally Prime data entry, cell tower electrical product management, and permission coordination. Proficient in data analysis, inventory control, and optimizing information systems for operational efficiency.',
-    className: 'md:col-span-2',
+    title: 'Full-Stack Next.js Developer',
+    desc: 'Designed, developed, and deployed production-grade web applications with a strong computer science foundation - architecting scalable full-stack solutions end-to-end using Next.js, React, and TypeScript.',
     thumbnail: '/exp1.svg',
+  },
+  {
+    id: 2,
+    title: 'MIS Executive',
+    desc: 'Yogeshwar Diesels, Indore - Maintained financial and operational records in Tally Prime, coordinated and cross-verified electrical infrastructure products for cell tower installations, and managed regulatory permissions and scheduling for field supervisors.',
+    thumbnail: '/exp2.svg',
+  },
+  {
+    id: 3,
+    title: 'Freelance & Open Source (MERN)',
+    desc: 'Built and shipped production-ready architectures independently - a custom CMS-driven portfolio with NextAuth, a Stableford-based charity scorecard tracker, a full digital library system, and a JWT + Redis-secured React Native appointment scheduler.',
+    thumbnail: '/exp3.svg',
   },
 ];
 

@@ -19,7 +19,7 @@ export const baseMetadata: Metadata = {
   },
 
   description:
-    'Rajendra Pancholi — Full Stack Developer specializing in Next.js, React, TypeScript, scalable web applications and open-source projects.',
+    'Rajendra Pancholi - Full Stack Developer specializing in Next.js, React, TypeScript, scalable web applications and open-source projects.',
 
   alternates: {
     canonical: SITE_URL,
@@ -28,7 +28,7 @@ export const baseMetadata: Metadata = {
   openGraph: {
     title: `${SITE_NAME} | Portfolio`,
     description:
-      'Explore projects, skills, experience and writings of Rajendra Pancholi — Full Stack Developer (React • Next.js • TypeScript)',
+      'Explore projects, skills, experience and writings of Rajendra Pancholi - Full Stack Developer (React • Next.js • TypeScript)',
     url: SITE_URL,
     siteName: `${SITE_NAME} Portfolio`,
     locale: 'en_US',
@@ -47,7 +47,7 @@ export const baseMetadata: Metadata = {
     card: 'summary_large_image',
     title: `${SITE_NAME} | Portfolio`,
     description:
-      'Projects, experience, blogs and skills — Full Stack Developer (Next.js • React • TypeScript)',
+      'Projects, experience, blogs and skills - Full Stack Developer (Next.js • React • TypeScript)',
     creator: '@rajendrapancholi',
     site: '@rajendrapancholi',
     images: [DEFAULT_OG_IMAGE],

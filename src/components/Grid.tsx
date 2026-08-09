@@ -1,22 +1,34 @@
+'use client';
 import { gridItems } from '@/data';
-import { BentoGrid, BentoGridItem } from '@/components/ui/BentoGrid';
+import { BentoGrid, BentoGridItem } from './ui/BentoGrid';
+import { motion } from 'motion/react';
+import { revealItemVariants } from './ui/Reveal';
 
 const Grid = () => {
   return (
-    <section id="about" className="mx-2 md:mx-4">
-      <BentoGrid className="w-full py-20">
+    <section id="about" className="px-2 md:px-4 w-full">
+      <BentoGrid className="w-full">
         {gridItems.map((item, i) => (
-          <BentoGridItem
-            id={item.id}
+          <motion.div
             key={i}
-            title={item.title}
-            description={item.description}
-            className={item.className}
-            img={item.img}
-            imgClassName={item.imgClassName}
-            titleClassName={item.titleClassName}
-            spareImg={item.spareImg}
-          />
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={revealItemVariants}
+            transition={{ delay: (i % 3) * 0.08 }}
+            className={`h-full ${item.className ?? ''}`}
+          >
+            <BentoGridItem
+              id={item.id}
+              title={item.title}
+              description={item.description}
+              img={item.img}
+              imgClassName={item.imgClassName}
+              titleClassName={item.titleClassName}
+              spareImg={item.spareImg}
+              className="h-full"
+            />
+          </motion.div>
         ))}
       </BentoGrid>
     </section>

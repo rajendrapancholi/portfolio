@@ -18,10 +18,12 @@ export const metadata = createPageMetadata({
 });
 
 export default async function BlogPage() {
-  const { success: sdb, data: BlogFmMain, error: sde } = await getBlogList();
-  const { success, data: BlogFmGit, error } = await getPostList();
+  const [
+    { success: sdb, data: BlogFmMain, error: sde },
+    { success, data: BlogFmGit, error },
+  ] = await Promise.all([getBlogList(), getPostList()]);
 
-  if ((!success && !sdb) || !Array.isArray(BlogFmGit)) {
+  if (!success || !sdb) {
     throw new Error(error || sde || 'Failed to fetch blogs');
   }
 
@@ -29,7 +31,7 @@ export default async function BlogPage() {
     type: 'blog',
     title: 'Rajendra Pancholi Coding Mentor',
     url: baseUrl,
-    description: `Helping students master the ${new Date().getFullYear} Full-Stack Roadmap. Expert in Next.js, React, and AI Integration. I turn CS students into hired engineers through hands-on portfolio building and open-source contribution.`,
+    description: `Helping students master the ${new Date().getFullYear()} Full-Stack Roadmap. Expert in Next.js, React, and AI Integration. I turn CS students into hired engineers through hands-on portfolio building and open-source contribution.`,
     author: 'Rajendra Pancholi',
     logo: `${baseUrl}/logo.png`,
     image: '/default-blog-thumb-webp',

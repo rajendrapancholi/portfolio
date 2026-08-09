@@ -235,7 +235,7 @@ export default MarkdownRenderer;
 //     .join('');
 // }
 
-// // Copy button — shown on hover, matches the anchor-icon reveal pattern in globals.css
+// // Copy button - shown on hover, matches the anchor-icon reveal pattern in globals.css
 // function CopyButton({ text }: { text: string }) {
 //   const [copied, setCopied] = useState(false);
 
@@ -245,7 +245,7 @@ export default MarkdownRenderer;
 //       setCopied(true);
 //       setTimeout(() => setCopied(false), 1800);
 //     } catch {
-//       // clipboard API unavailable — fail silently, button just won't confirm
+//       // clipboard API unavailable - fail silently, button just won't confirm
 //     }
 //   };
 
@@ -293,7 +293,7 @@ export default MarkdownRenderer;
 //   },
 
 //   // New: wraps fenced code blocks with a relative container + copy button.
-//   // Inline code (single backticks) isn't touched — it renders as plain <pre><code> passthrough.
+//   // Inline code (single backticks) isn't touched - it renders as plain <pre><code> passthrough.
 //   pre: ({ children, node, ...props }: any) => {
 //     const codeNode = node?.children?.[0];
 //     const raw = codeNode?.children

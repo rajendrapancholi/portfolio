@@ -5,7 +5,7 @@ import { handleCloudinaryBlogDelete } from '@/app/actions/cloudinary';
 import { connectToDB } from '@/lib/database';
 import { Blog, getBlogModel } from '@/lib/models/BlogModel';
 import UserModel from '@/lib/models/UserModel';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { cache } from 'react';
 
 export async function createBlog(formData: FormData) {
@@ -48,6 +48,7 @@ export async function createBlog(formData: FormData) {
     revalidatePath('/blogs');
     revalidatePath(`/blogs/${slug}`);
     revalidatePath('/admin/blogs');
+    updateTag('blogs');
 
     return {
       success: true,
@@ -137,16 +138,14 @@ export const getAllBlogs = cache(async (): Promise<BlogsResponse> => {
     ).lean();
 
     const serializedBlogs = blogs.map((blog: any) => {
-      // Find the author object that matches this blog's author_id
       const authorData = authors.find(
         (auth: any) => auth._id.toString() === blog.author_id.toString(),
       );
       return {
         ...blog,
         _id: blog._id.toString(),
-        createdAt: blog.createdAt.toLocaleDateString('en-IN'),
-        updatedAt: blog.updatedAt.toLocaleDateString('en-IN'),
-        // Attach the author name and image found in the lookup
+        createdAt: blog.createdAt.toISOString(),
+        updatedAt: blog.updatedAt.toISOString(),
         author: {
           id: blog.author_id.toString(),
           name: authorData?.name || 'Unknown Author',
@@ -221,6 +220,7 @@ export async function deleteBlog(id: string): Promise<BlogDeleteResponse> {
     // Purge cache
     revalidatePath('/blogs');
     revalidatePath('/admin/blogs');
+    updateTag('blogs');
     return { success: true, message: `"${id}" blog permanently deleted!` };
   } catch (error: any) {
     return { success: false, error: 'Deletion failed' };

@@ -61,7 +61,7 @@ const Button = ({
           </span>
         )}
 
-        {/* Subtle top highlight — foreground-based so it reads correctly in both themes */}
+        {/* Subtle top highlight - foreground-based so it reads correctly in both themes */}
         <span className="absolute inset-0 rounded-full bg-linear-to-b from-foreground/8 to-transparent pointer-events-none" />
       </span>
     </motion.button>

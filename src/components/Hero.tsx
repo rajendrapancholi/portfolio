@@ -1,6 +1,7 @@
 'use client';
+import { useRef } from 'react';
 import { FaLocationArrow } from 'react-icons/fa6';
-import { motion } from 'motion/react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import Button from './ui/Button';
 import { Spotlight } from './ui/Spotlights';
 import { TextGenerateEffect } from './ui/TextGenerateEffect';
@@ -24,13 +25,29 @@ const fadeUp = {
 };
 
 const Hero = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start start', 'end start'],
+  });
+
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 90]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
+  const blobY = useTransform(scrollYProgress, [0, 1], [0, -70]);
+
   return (
-    <div className="relative min-h-[90vh] w-full flex flex-col items-center justify-center gap-2 px-4 sm:px-6 py-16 text-foreground overflow-hidden">
-      {/* Soft ambient glows */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
+    <div
+      ref={ref}
+      className="relative min-h-[90vh] w-full flex flex-col items-center justify-center gap-2 px-2 sm:px-3 py-8 text-foreground overflow-hidden"
+    >
+      {/* Soft ambient glows - now with parallax drift on scroll */}
+      <motion.div
+        style={{ y: blobY }}
+        className="pointer-events-none absolute inset-0 -z-10"
+      >
         <div className="absolute left-1/2 top-[28%] h-95 w-160 -translate-x-1/2 rounded-full bg-primary/10 blur-[110px]" />
         <div className="absolute right-[18%] bottom-[18%] h-60 w-[320px] rounded-full bg-brand/8 blur-[90px]" />
-      </div>
+      </motion.div>
 
       <Spotlight
         className="-top-40 -left-10 md:-left-32 md:-top-20 h-screen w-screen"
@@ -40,6 +57,7 @@ const Hero = () => {
       <Spotlight className="left-80 top-28 h-[80vh] w-[50vw]" fill="blue" />
 
       <motion.div
+        style={{ y: contentY, opacity: contentOpacity }}
         initial="hidden"
         animate="show"
         transition={{ staggerChildren: 0.09, delayChildren: 0.05 }}
@@ -48,7 +66,7 @@ const Hero = () => {
         <motion.p
           variants={fadeUp}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="uppercase tracking-[0.2em] text-[11px] sm:text-xs font-medium text-muted-foreground mb-3"
+          className="uppercase tracking-[0.2em] text-[11px] text-center sm:text-xs font-medium text-muted-foreground mb-3"
         >
           Building high-performance web experiences
         </motion.p>
@@ -58,7 +76,7 @@ const Hero = () => {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           <TextGenerateEffect
-            className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-[3.15rem] text-center font-bold max-w-4xl leading-[1.15] tracking-tight"
+            className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-[3.15rem] text-center font-bold max-w-7xl leading-[1.15] tracking-tight"
             words="I design and develop fast, scalable, and user-focused web applications."
           />
         </motion.div>
@@ -77,7 +95,7 @@ const Hero = () => {
         <motion.p
           variants={fadeUp}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-3 text-base md:text-lg text-center text-muted-foreground max-w-2xl leading-relaxed"
+          className="mt-3 text-base md:text-lg text-center text-muted-foreground max-w-3xl leading-relaxed"
         >
           Hi, I&apos;m Rajendra - a Full Stack Developer based in{' '}
           <span className="font-semibold text-foreground">Indore, India</span>,
@@ -88,7 +106,6 @@ const Hero = () => {
           .
         </motion.p>
 
-        {/* Tech chips */}
         <motion.div
           variants={fadeUp}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -104,7 +121,6 @@ const Hero = () => {
           ))}
         </motion.div>
 
-        {/* CTAs */}
         <motion.div
           variants={fadeUp}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -127,7 +143,6 @@ const Hero = () => {
         </motion.div>
       </motion.div>
 
-      {/* Scroll cue */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

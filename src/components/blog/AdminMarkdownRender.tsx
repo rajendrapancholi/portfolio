@@ -7,9 +7,6 @@ import { ComponentProps, memo, useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import Loading from '@/components/Loading';
 
-import '@uiw/react-markdown-preview/markdown.css';
-import '@uiw/react-md-editor/markdown-editor.css';
-
 type CodeProps = ComponentProps<'code'> & {
   inline?: boolean;
   node?: unknown;

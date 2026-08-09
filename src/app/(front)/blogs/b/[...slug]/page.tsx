@@ -24,7 +24,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/Breadcrumb';
 import CollapsibleToc from '@/components/blog/CollapsibleToc';
-import { Pencil, Eye } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 
 const baseUrl = ENV.BASE_URL ?? 'https://rajendrapancholi.vercel.app';
 
@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: Props) {
     if (source === 'git') {
       const response = await getPostBySlug(actualSlug);
       blog = response?.data;
-    } else if (source === 'main') {
+    } else {
       const mongoSlug = pathSegments[pathSegments.length - 1];
       const response = await getBlogBySlug(sanitizeSlug(mongoSlug));
       blog = response?.data;
@@ -86,7 +86,7 @@ export async function generateMetadata({ params }: Props) {
 export async function generateStaticParams() {
   const blogs = await fetchAllBlogs();
   return blogs.map((blog) => ({
-    slug: [blog.source, blog.slug],
+    slug: [blog.source, ...blog.slug.split('/')],
   }));
 }
 
@@ -95,22 +95,20 @@ export default async function BlogPage({ params }: Props) {
   if (!slug || slug.length < 2) notFound();
   const [source, ...pathSegments] = slug;
   const actualSlug = sanitizeSlug(pathSegments.join('/'));
-  const allBlogs = await fetchAllBlogs();
   let blog = null;
   let success = false;
+  let allBlogs: Awaited<ReturnType<typeof fetchAllBlogs>> = [];
 
   try {
-    if (source === 'git') {
-      const response = await getPostBySlug(actualSlug);
-      success = response.success;
-      blog = response?.data;
-    } else {
-      const response = await getBlogBySlug(
-        pathSegments[pathSegments.length - 1],
-      );
-      success = response.success;
-      blog = response?.data;
-    }
+    const [allBlogsResult, blogResult] = await Promise.all([
+      fetchAllBlogs(),
+      source === 'git'
+        ? getPostBySlug(actualSlug)
+        : getBlogBySlug(pathSegments[pathSegments.length - 1]),
+    ]);
+    allBlogs = allBlogsResult;
+    success = blogResult.success;
+    blog = blogResult?.data;
   } catch (error) {
     console.error('Fetch failed!', error);
   }

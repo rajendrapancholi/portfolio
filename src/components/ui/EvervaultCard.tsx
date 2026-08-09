@@ -8,11 +8,15 @@ export const EvervaultCard = ({
   title,
   desc,
   className,
+  isRevealed,
+  onToggle,
 }: {
   phase?: string;
   title?: string;
   desc?: string;
   className?: string;
+  isRevealed: boolean;
+  onToggle: () => void;
 }) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -21,6 +25,13 @@ export const EvervaultCard = ({
     const { left, top } = currentTarget.getBoundingClientRect();
     mouseX.set(clientX - left);
     mouseY.set(clientY - top);
+  }
+
+  function handleTap(e: React.MouseEvent<HTMLDivElement>) {
+    const { width, height } = e.currentTarget.getBoundingClientRect();
+    mouseX.set(width / 2);
+    mouseY.set(height / 2);
+    onToggle();
   }
 
   return (
@@ -32,16 +43,37 @@ export const EvervaultCard = ({
     >
       <div
         onMouseMove={onMouseMove}
-        className="group/card rounded-3xl w-full relative overflow-hidden bg-card border border-border/80 flex items-center justify-center h-full transition-all duration-500 hover:border-primary/40 hover:shadow-elevated"
+        onClick={handleTap}
+        role="button"
+        tabIndex={0}
+        aria-pressed={isRevealed}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onToggle();
+          }
+        }}
+        className={cn(
+          'group/card rounded-3xl w-full relative overflow-hidden bg-card border border-border/80 flex items-center justify-center h-full transition-all duration-500 cursor-pointer select-none',
+          'hover:border-primary/40 hover:shadow-elevated focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2',
+          isRevealed && 'border-primary/40 shadow-elevated',
+        )}
       >
         <CardPattern
           mouseX={mouseX}
           mouseY={mouseY}
           title={title}
           desc={desc}
+          isRevealed={isRevealed}
         />
 
-        <div className="relative z-10 flex items-center justify-center group-hover/card:opacity-0 transition-opacity duration-500">
+        <div
+          className={cn(
+            'relative z-10 flex items-center justify-center transition-opacity duration-500',
+            'group-hover/card:opacity-0',
+            isRevealed && 'opacity-0',
+          )}
+        >
           <div className="relative h-40 w-40 md:h-44 md:w-44 rounded-full flex items-center justify-center font-bold">
             <div
               className="absolute w-full h-full blur-2xl rounded-full opacity-60"
@@ -56,12 +88,21 @@ export const EvervaultCard = ({
             </span>
           </div>
         </div>
+
+        <span
+          className={cn(
+            'absolute bottom-3 right-3 z-20 text-[10px] font-medium uppercase tracking-wide text-muted-foreground/70 transition-opacity duration-300 sm:hidden',
+            isRevealed ? 'opacity-0' : 'opacity-100',
+          )}
+        >
+          Tap to view
+        </span>
       </div>
     </div>
   );
 };
 
-export function CardPattern({ mouseX, mouseY, desc, title }: any) {
+export function CardPattern({ mouseX, mouseY, desc, title, isRevealed }: any) {
   const maskImage = useMotionTemplate`radial-gradient(280px circle at ${mouseX}px ${mouseY}px, white, transparent)`;
   const style = { maskImage, WebkitMaskImage: maskImage };
 
@@ -70,12 +111,20 @@ export function CardPattern({ mouseX, mouseY, desc, title }: any) {
       <div className="absolute inset-0 rounded-3xl mask-[linear-gradient(white,transparent)]" />
 
       <motion.div
-        className="absolute inset-0 bg-linear-to-br from-success via-brand to-primary opacity-0 group-hover/card:opacity-25 transition duration-500"
+        className={cn(
+          'absolute inset-0 bg-linear-to-br from-success via-brand to-primary opacity-0 transition duration-500',
+          'group-hover/card:opacity-25',
+          isRevealed && 'opacity-25',
+        )}
         style={style}
       />
 
       <motion.div
-        className="absolute inset-0 opacity-0 group-hover/card:opacity-100 backdrop-blur-[2px] transition duration-500"
+        className={cn(
+          'absolute inset-0 opacity-0 backdrop-blur-[2px] transition duration-500',
+          'group-hover/card:opacity-100',
+          isRevealed && 'opacity-100',
+        )}
         style={style}
       >
         <div className="absolute inset-0 bg-background/90 p-7 flex flex-col justify-center items-center text-center">

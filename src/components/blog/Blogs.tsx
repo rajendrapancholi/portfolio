@@ -1,9 +1,13 @@
 'use client';
 
+import { useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { motion } from 'motion/react';
 import { Blog } from '@/lib/models/BlogModel';
+import { Reveal } from '../ui/Reveal';
+
+const MotionLink = motion.create(Link);
 
 export default function Blogs({
   blogFmM,
@@ -24,83 +28,109 @@ export default function Blogs({
   });
 
   const allBlogs = useMemo(() => {
-    const mBlogs = (blogFmM || []).map((blog) => ({ ...blog, source: 'main' }));
-    const gBlogs = (blogFmG || []).map((blog) => ({ ...blog, source: 'git' }));
+    const mBlogs = (blogFmM || []).map((blog) => ({
+      ...blog,
+      source: 'main' as const,
+    }));
+    const gBlogs = (blogFmG || []).map((blog) => ({
+      ...blog,
+      source: 'git' as const,
+    }));
 
-    return [...mBlogs, ...gBlogs].sort((a, b) => {
-      return (
+    return [...mBlogs, ...gBlogs].sort(
+      (a, b) =>
         getValidDate(b.updatedAt).getTime() -
-        getValidDate(a.updatedAt).getTime()
-      );
-    });
+        getValidDate(a.updatedAt).getTime(),
+    );
   }, [blogFmM, blogFmG]);
 
+  if (allBlogs.length === 0) {
+    return (
+      <section className="mx-auto max-w-7xl px-4 py-20 text-center text-muted-foreground">
+        No posts found.
+      </section>
+    );
+  }
+
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-20">
-      {/* Header */}
-      <div className="relative flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6">
+    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20">
+      <Reveal
+        direction="up"
+        className="relative mb-12 flex flex-col justify-between gap-6 md:mb-16 md:flex-row md:items-end"
+      >
         <div className="z-10">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-foreground mb-4">
+          <h1 className="mb-4 text-4xl font-black tracking-tighter text-foreground md:text-5xl lg:text-6xl">
             LATEST <span className="text-primary">INSIGHTS</span>
           </h1>
-          <p className="text-muted-foreground text-base md:text-lg max-w-2xl leading-relaxed">
+          <p className="max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
             MERN stack deep-dives, real-time architecture, and modern web
             development strategies.
           </p>
         </div>
-        <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/15 blur-[100px] rounded-full pointer-events-none" />
-      </div>
+        <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full bg-primary/15 blur-[100px]" />
+      </Reveal>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-        {allBlogs.map((blog) => {
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+        {allBlogs.map((blog, index) => {
           const href = `/blogs/b/${blog.source}/${blog.slug}`;
           const validDate = getValidDate(blog.createdAt);
 
           return (
-            <Link
+            <MotionLink
               key={blog._id || blog.slug}
               href={href}
-              className="group flex flex-col bg-card rounded-2xl md:rounded-3xl border border-border overflow-hidden hover:border-primary/40 hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-1 transition-all duration-400 flex-1"
+              initial={{ opacity: 0, y: 36, scale: 0.96, filter: 'blur(6px)' }}
+              whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+              viewport={{
+                once: true,
+                amount: 0.25,
+                margin: '0px 0px -60px 0px',
+              }}
+              transition={{
+                duration: 0.6,
+                ease: [0.16, 1, 0.3, 1],
+                delay: (index % 3) * 0.1,
+              }}
+              whileHover={{ y: -6, scale: 1.015 }}
+              whileTap={{ scale: 0.98 }}
+              className="group flex flex-1 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-colors duration-300 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/20 md:rounded-3xl"
             >
-              {/* Thumbnail */}
-              <div className="relative h-52 sm:h-60 w-full overflow-hidden bg-muted">
+              <div className="relative h-52 w-full overflow-hidden bg-muted sm:h-60">
                 <Image
                   src={blog.thumbnail || '/default-blog-thumb.webp'}
                   alt={blog.title}
                   fill
-                  priority={false}
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-card via-transparent to-transparent opacity-90" />
+                <div className="absolute inset-0 bg-linear-to-t from-card via-card/10 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-70" />
+                <div className="absolute inset-0 opacity-0 ring-1 ring-inset ring-primary/30 transition-opacity duration-300 group-hover:opacity-100" />
               </div>
 
-              {/* Content */}
-              <div className="p-5 sm:p-6 flex flex-col grow">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-                  <time dateTime={blog.createdAt?.toString?.() ?? ''}>
+              <div className="flex grow flex-col p-5 sm:p-6">
+                <div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
+                  <time dateTime={validDate.toISOString()}>
                     {dateFormatter.format(validDate)}
                   </time>
-                  <span className="w-1 h-1 bg-border rounded-full shrink-0" />
+                  <span className="h-1 w-1 shrink-0 rounded-full bg-border" />
                   <span className="truncate">
                     {blog.source === 'git' ? blog.author?.name : 'Author'}
                   </span>
                 </div>
 
-                <h2 className="text-lg sm:text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                <h2 className="mb-3 line-clamp-2 text-lg font-bold leading-snug text-foreground transition-colors group-hover:text-primary sm:text-xl">
                   {blog.title}
                 </h2>
 
-                <p className="text-muted-foreground text-sm line-clamp-3 mb-5 leading-relaxed grow">
+                <p className="mb-5 grow line-clamp-3 text-sm leading-relaxed text-muted-foreground">
                   {blog.description}
                 </p>
 
-                <div className="flex items-center justify-between pt-4 border-t border-border">
-                  <span className="text-primary text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                <div className="flex items-center justify-between border-t border-border pt-4">
+                  <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-primary transition-all group-hover:gap-2">
                     Read Full Case
                     <svg
-                      className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
+                      className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -115,7 +145,7 @@ export default function Blogs({
                   </span>
                 </div>
               </div>
-            </Link>
+            </MotionLink>
           );
         })}
       </div>

@@ -71,7 +71,10 @@ export const getGithubMarkdownFiles = cache(async (): Promise<BlogResponse> => {
     const posts = await Promise.all(
       mdFiles.map(async (file: any) => {
         const rawUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${file.path}`;
-        const contentRes = await fetch(rawUrl);
+
+        const contentRes = await fetch(rawUrl, {
+          next: { revalidate: 3600, tags: ['blogs'] },
+        });
         const rawContent = await contentRes.text();
 
         const { data, content: bodyContent } = parseMetadata(rawContent);

@@ -41,7 +41,7 @@ const Footer = () => {
 
       <div className="flex flex-col items-center relative z-10 px-4">
         <h2 className="text-3xl md:text-5xl text-center font-extrabold lg:max-w-[55vw] leading-[1.15] tracking-tight text-foreground">
-          Full-stack engineering isn&apos;t just about code—it&apos;s the{' '}
+          Full-stack engineering isn&apos;t just about code-it&apos;s the{' '}
           <span className="bg-clip-text text-transparent bg-linear-to-r from-primary via-brand to-success">
             ENGINE
           </span>{' '}
@@ -80,7 +80,7 @@ const Footer = () => {
           <p className="md:text-base text-sm font-semibold text-foreground">
             &copy; {currentYear} Rajendra Pancholi
           </p>
-          <p className="text-xs text-muted-foreground uppercase tracking-[0.2em] mt-1.5">
+          <p className="text-xs text-muted-foreground text-center uppercase tracking-[0.2em] mt-1.5">
             Engineering Fast Experiences
           </p>
         </div>
