@@ -52,7 +52,7 @@ export default function CollapsibleLeftSidebar({
           {/* Expanded content */}
           <div
             className={`
-            h-full overflow-y-auto custom-scrollbar px-2 py-3
+            h-full overflow-y-auto x-2 py-3
             transition-opacity duration-200
             ${isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}
           `}

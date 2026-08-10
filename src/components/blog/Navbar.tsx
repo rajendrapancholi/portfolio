@@ -15,14 +15,11 @@ import {
   Search,
   TextAlignJustify,
 } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { FcTemplate } from 'react-icons/fc';
 import RajeBrandLogo from '../ui/RajeBrandLogo';
 import ThemeButton from '../ui/ThemeButton';
 import SearchBar from './SearchBar';
-import AnimatedLink from './AnimatedLink';
-import { useBlogs } from '@/lib/features/blog/hook';
-import Loading from '../Loading';
 import UserMenu from '../ui/UserMenu';
 import { User } from '@/types';
 import toast from 'react-hot-toast';
@@ -30,12 +27,18 @@ import { clearCredentials } from '@/lib/features/auth/authSlice';
 import { logoutAction } from '@/app/actions/authActions';
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { useSession } from 'next-auth/react';
+import SidebarTree from './SidebarTree';
+import type { BlogTreeNode } from '@/lib/utils/buildBlogTree';
 import { useAppDispatch } from '@/lib/features/hooks';
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  tree: BlogTreeNode[];
+}
+
+const Navbar: React.FC<NavbarProps> = ({ tree }) => {
   const { data: session } = useSession();
   const dispatch = useAppDispatch();
-  const { loading, blogs, fetchBlogList } = useBlogs();
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { scrollY } = useScroll();
@@ -87,6 +90,7 @@ const Navbar: React.FC = () => {
     try {
       dispatch(clearCredentials());
       await logoutAction();
+      router.refresh();
       toast.success('Signed out successfully', { id: toastId });
     } catch (error) {
       if (isRedirectError(error)) {
@@ -96,12 +100,6 @@ const Navbar: React.FC = () => {
       toast.error('Failed to sign out', { id: toastId });
     }
   };
-
-  useEffect(() => {
-    if (isMobileMenuOpen && !blogs) {
-      (async () => await fetchBlogList())();
-    }
-  }, [isMobileMenuOpen, blogs, fetchBlogList]);
 
   return (
     <motion.nav
@@ -126,7 +124,7 @@ const Navbar: React.FC = () => {
         <div className="flex h-full items-center justify-between gap-3">
           {/* Mobile menu button */}
           <button
-            className="flex size-9 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:hidden"
+            className="absolute flex size-9 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:hidden"
             aria-label="Open menu"
             onClick={(e) => {
               e.stopPropagation();
@@ -142,7 +140,7 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Center: Nav + Search */}
-          <div className="flex flex-1 items-center justify-center gap-2 max-sm:-translate-x-0.5">
+          <div className="flex flex-1 items-center justify-center gap-2">
             {/* Pill navigation */}
             <div className="flex items-center gap-0.5 rounded-full border border-border/70 bg-muted/50 p-1 shadow-sm shadow-black/5 dark:shadow-black/20">
               {updatedNavigation.map((item) => (
@@ -259,7 +257,7 @@ const Navbar: React.FC = () => {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', stiffness: 320, damping: 34 }}
-              className="fixed left-0 top-0 z-50 flex h-screen w-[min(18rem,85vw)] flex-col border-r border-border bg-card px-4 py-5 shadow-2xl sm:hidden"
+              className="fixed left-0 top-0 z-50 flex h-screen w-[min(18rem,85vw)] flex-col border-r border-border bg-card px-2 py-5 shadow-2xl sm:hidden"
             >
               {/* Header */}
               <div className="relative mb-5">
@@ -301,23 +299,14 @@ const Navbar: React.FC = () => {
               </nav>
 
               {/* Recent posts */}
-              <div className="my-4 flex-1 overflow-y-auto overflow-x-hidden rounded-xl custom-scrollbar">
+              <div className="my-4 py-2 flex-1 overflow-y-auto overflow-x-hidden rounded-md border border-primary/15">
                 <p className="mb-2.5 px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                   Recent Posts
                 </p>
                 <div className="flex flex-col gap-1">
-                  {!loading ? (
-                    blogs?.map((blog) => (
-                      <AnimatedLink
-                        key={blog._id}
-                        slug={blog.slug}
-                        source={blog.source}
-                        title={blog.title}
-                      />
-                    ))
-                  ) : (
-                    <Loading />
-                  )}
+                  <div className="flex-1">
+                    <SidebarTree nodes={tree} />
+                  </div>
                 </div>
               </div>
 

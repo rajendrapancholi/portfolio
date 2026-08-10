@@ -74,7 +74,7 @@ export default function Toc({
     <nav
       aria-label="Article headings"
       ref={navRef}
-      className="flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-0.5 py-2 pr-2 max-h-[80vh]"
+      className="flex-1 overflow-y-auto flex flex-col gap-0.5 py-2 pr-2 max-h-[80vh]"
     >
       {toc.map((item, index) => {
         const isActive = active === item.id;

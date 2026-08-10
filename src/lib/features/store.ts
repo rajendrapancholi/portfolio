@@ -1,12 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './auth/authSlice';
-import blogReducer from './blog/blogSlice';
 
 export const makeStore = (preloadedState = {}) => {
   return configureStore({
     reducer: {
       auth: authReducer,
-      blog: blogReducer,
     },
     preloadedState,
   });

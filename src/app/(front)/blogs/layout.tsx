@@ -2,17 +2,21 @@ import { BlogSearchListener } from '@/components/blog/BlogSearchListener';
 import ClientSideElements from '@/components/blog/ClientElements';
 import Navbar from '@/components/blog/Navbar';
 import Footer from '@/components/Footer';
+import { buildBlogTree } from '@/lib/utils/buildBlogTree';
+import fetchAllBlogs from '@/lib/utils/fetchAllBlogs';
 
-export default function MainBlogLayout({
+export default async function MainBlogLayout({
   children,
   modal,
 }: {
   children: React.ReactNode;
   modal: React.ReactNode;
 }) {
+  const blogs = await fetchAllBlogs();
+  const tree = buildBlogTree(blogs);
   return (
     <div className="relative min-h-screen bg-main-bg text-main-text">
-      <Navbar />
+      <Navbar tree={tree} />
 
       <div
         className="shrink-0 transition-[height] duration-300 ease-out"

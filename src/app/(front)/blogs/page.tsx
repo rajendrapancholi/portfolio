@@ -24,7 +24,7 @@ export default async function BlogPage() {
   ] = await Promise.all([getBlogList(), getPostList()]);
 
   if (!success || !sdb) {
-    throw new Error(error || sde || 'Failed to fetch blogs');
+    throw new Error('Failed to fetch blogs');
   }
 
   const jsonLd = generateDynamicJsonLd({

@@ -1,9 +1,14 @@
 'use client';
 
-import { motion, MotionProps } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
 import { formatString } from '@/lib/utils/formatter';
 import { usePathname } from 'next/navigation';
+import Tooltip from '@/components/ui/Tooltip';
+
+const TITLE_LIMIT = 50;
+
+const MotionLink = motion(Link);
 
 export default function AnimatedLink({
   slug,
@@ -14,35 +19,46 @@ export default function AnimatedLink({
   title: string;
   source: string;
 }) {
-  const pathname = `/blogs/b/${source}/${slug}` === usePathname();
-  const MotionDiv = motion.div as React.FC<
-    MotionProps & React.HTMLAttributes<HTMLDivElement>
-  >;
+  const isActive = usePathname() === `/blogs/b/${source}/${slug}`;
+  const isTruncated = title.length > TITLE_LIMIT;
+  const reduceMotion = useReducedMotion();
+
   return (
-    <MotionDiv
-      whileHover={{ x: 5 }}
-      transition={{ type: 'spring', stiffness: 300 }}
-    >
-      <Link
+    <Tooltip label={title} side="right" disabled={!isTruncated}>
+      <MotionLink
         href={`/blogs/b/${source}/${slug}`}
-        className="flex flex-wrap items-center gap-2 lg:gap-4 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all group relative overflow-hidden"
+        className="flex items-center gap-2 lg:gap-4 py-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors duration-200 relative isolate"
+        whileHover={reduceMotion ? undefined : { x: 3 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+        transition={{ type: 'spring', stiffness: 500, damping: 35 }}
       >
-        <div
-          className={`absolute inset-0 bg-linear-to-r from-primary/20 to-transparent group-hover:opacity-100 transition-opacity ${
-            pathname ? 'opacity-100' : 'opacity-0'
-          }`}
+        <motion.div
+          className="absolute inset-0 rounded-lg bg-muted/70 -z-10"
+          initial={false}
+          animate={{ opacity: isActive ? 1 : 0 }}
+          transition={{ duration: 0.15 }}
         />
 
-        <span className="font-medium tracking-wide text-wrap text-xs lg:text-sm relative z-10">
-          {formatString(title, 50)}
+        <div className="absolute inset-0 rounded-lg overflow-hidden pointer-events-none -z-10">
+          <motion.div
+            className="absolute inset-0 bg-linear-to-r from-primary/15 to-transparent"
+            initial={{ opacity: 0 }}
+            whileHover={{ opacity: 1 }}
+            transition={{ duration: 0.18 }}
+          />
+        </div>
+
+        <span className="font-medium tracking-wide truncate text-xs lg:text-sm relative z-10">
+          {formatString(title, TITLE_LIMIT)}
         </span>
 
-        <div
-          className={`absolute right-3 ml-auto w-1.5 h-1.5 rounded-full bg-primary transition-opacity shadow-[0_0_8px_var(--color-primary)] ${
-            pathname ? 'opacity-100' : 'opacity-0'
-          }`}
+        <motion.div
+          className="absolute right-3 w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--color-primary)] z-10"
+          initial={false}
+          animate={{ scale: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 25 }}
         />
-      </Link>
-    </MotionDiv>
+      </MotionLink>
+    </Tooltip>
   );
 }

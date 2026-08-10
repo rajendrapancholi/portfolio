@@ -38,6 +38,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: safeJSONStringify(jsonLd) }}
         />
+        <div id="tooltip-root" />
       </body>
     </html>
   );

@@ -106,7 +106,7 @@ export default function SearchModal() {
         </div>
 
         {/* Results */}
-        <div className="custom-scrollbar flex-1 overflow-y-auto p-2">
+        <div className="flex-1 overflow-y-auto p-2">
           {isLoading ? (
             <div className="flex h-full flex-col items-center justify-center gap-3 text-muted-foreground">
               <Loader2 className="size-6 animate-spin text-primary" />
