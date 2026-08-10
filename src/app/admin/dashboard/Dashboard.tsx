@@ -25,7 +25,7 @@ import {
   BarElement,
   ArcElement,
 } from 'chart.js';
-import Loading from '@/components/Loading';
+import { Loading } from '@/components/Loading';
 
 ChartJS.register(
   CategoryScale,

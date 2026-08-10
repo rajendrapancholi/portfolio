@@ -3,7 +3,7 @@ import { createPageMetadata } from '@/lib/seo/metadata';
 import { Blog } from '@/lib/models/BlogModel';
 import Blogs from './Blogs';
 import { Suspense } from 'react';
-import Loading from '@/components/Loading';
+import { Loading } from '@/components/Loading';
 import fetchAllBlogs from '@/lib/utils/fetchAllBlogs';
 
 export const metadata = createPageMetadata({

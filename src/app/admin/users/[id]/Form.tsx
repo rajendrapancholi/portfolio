@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Loading from '@/components/Loading';
+import { Loading } from '@/components/Loading';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Lable';
 

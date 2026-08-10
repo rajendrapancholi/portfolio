@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { formatId } from '@/lib/utils/formatter';
 import { useRouter } from 'next/navigation';
 import { Project } from '@/lib/models/ProjectModel';
-import Loading from '@/components/Loading';
+import { Loading } from '@/components/Loading';
 import { iconList } from '@/data';
 import Image from 'next/image';
 import Button from '@/components/ui/Button';

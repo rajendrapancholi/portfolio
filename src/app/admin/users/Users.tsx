@@ -3,7 +3,7 @@
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import { toast } from 'react-hot-toast';
-import Loading from '@/components/Loading';
+import { Loading } from '@/components/Loading';
 import { formatId } from '@/lib/utils/formatter';
 import Link from 'next/link';
 import {

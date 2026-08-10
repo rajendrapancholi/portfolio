@@ -5,7 +5,7 @@ import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import { ComponentProps, memo, useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
-import Loading from '@/components/Loading';
+import { Loading } from '@/components/Loading';
 
 type CodeProps = ComponentProps<'code'> & {
   inline?: boolean;
