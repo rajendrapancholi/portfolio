@@ -1060,48 +1060,49 @@
   .markdown-render li {
     @apply wrap-break-word;
   }
-
   .markdown-render table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     margin: 1.75rem 0;
     font-size: 0.875rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+    overflow: hidden;
   }
-
   .markdown-render thead {
-    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-muted);
   }
-
   .markdown-render th {
     text-align: left;
-    padding: 0.6rem 1.25rem 0.6rem 0;
+    padding: 0.7rem 1.25rem;
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--color-muted-foreground);
     white-space: nowrap;
+    border-bottom: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border);
   }
-
   .markdown-render td {
-    padding: 0.9rem 1.25rem 0.9rem 0;
+    padding: 0.9rem 1.25rem;
     color: var(--color-foreground);
     vertical-align: top;
+    border-bottom: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border);
   }
-
-  .markdown-render tbody tr {
-    border-bottom: 1px solid
-      color-mix(in oklab, var(--color-border) 60%, transparent);
+  .markdown-render th:last-child,
+  .markdown-render td:last-child {
+    border-right: none;
   }
-
-  .markdown-render tbody tr:last-child {
+  .markdown-render tbody tr:last-child td {
     border-bottom: none;
   }
-
-  .markdown-render td:first-child,
-  .markdown-render th:first-child {
-    padding-right: 2rem;
+  .markdown-render tbody tr:hover {
+    background-color: color-mix(in oklab, var(--color-muted) 60%, transparent);
   }
+
   .markdown-render :not(pre) > code {
     @apply px-[0.5em] py-[0.2em] rounded-md font-mono text-[0.85em]
     text-warning border border-warning/15
