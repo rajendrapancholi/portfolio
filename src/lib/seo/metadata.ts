@@ -267,7 +267,7 @@ export function createPageMetadata({
       : new URL(safeImage, SITE_URL).toString();
   }
   if (process.env.NODE_ENV === 'development') {
-    console.log('🚀 OG Image Path:', absoluteImage);
+    console.log('OG Image Path:', absoluteImage);
   }
   return {
     ...baseMetadata,

@@ -57,9 +57,10 @@ export default async function Home() {
     <>
       {/* Screen-reader only intro */}
       <section className="sr-only">
-        Hi, I&apos;m Rajendra Pancholi, a Full Stack Developer focused on
-        building high-performance, scalable web applications with Next.js,
-        React, and TypeScript.
+        Hi, I&apos;m Rajendra Pancholi, a Full Stack Developer. I work with
+        Next.js and React to build things people actually use. Handle everything
+        from frontend to backend—databases, APIs, and I deploy with Docker and
+        manage infrastructure. Basically, I ship complete products.
       </section>
 
       <Script

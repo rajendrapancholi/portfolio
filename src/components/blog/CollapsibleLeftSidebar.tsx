@@ -30,7 +30,7 @@ export default function CollapsibleLeftSidebar({
         >
           {isOpen && (
             <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-              Recent
+              Blogs
             </span>
           )}
 

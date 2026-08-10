@@ -1,0 +1,44 @@
+.glassEditor {
+  background: rgba(15, 23, 42, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.editorGradientBorder {
+  background: linear-gradient(to right, #06b6d4, #3b82f6, #8b5cf6);
+  padding: 1px;
+}
+
+:global(.w-md-editor-text-input) {
+  counter-reset: line;
+}
+
+:global(.w-md-editor-text-pre .bold) {
+  display: inline-block;
+  width: 3rem;
+  text-align: right;
+  padding-right: 1rem;
+  margin-right: 1rem;
+  color: #4b5563;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  user-select: none;
+}
+
+:global(.cm-lineNumbers) {
+  display: block !important;
+  background-color: transparent !important;
+  color: #64748b !important;
+}
+
+:global(.cm-gutterElement) {
+  padding-left: 10px !important;
+}
+
+:global(.copied),
+:global(action) {
+  display: none;
+}
+
+:global(.octicon-check),
+:global(.octicon-copy) {
+  display: none;
+}

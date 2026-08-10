@@ -4,7 +4,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import LinkedInProvider from 'next-auth/providers/linkedin';
 import bcrypt from 'bcryptjs';
 import UserModel from './models/UserModel';
-import NextAuth, { Account, Profile, User } from 'next-auth';
+import NextAuth from 'next-auth';
 import { connectToDB } from './database';
 import { ENV } from '@/config/env';
 

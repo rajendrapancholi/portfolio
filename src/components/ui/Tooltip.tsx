@@ -1,46 +1,54 @@
-// components/ui/Tooltip.tsx
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 
 type Side = 'top' | 'bottom' | 'left' | 'right';
+
+interface TooltipProps {
+  label: string;
+  side?: Side;
+  disabled?: boolean;
+  children: React.ReactNode;
+}
 
 export default function Tooltip({
   label,
   side = 'right',
   disabled = false,
   children,
-}: {
-  label: string;
-  side?: Side;
-  disabled?: boolean;
-  children: React.ReactNode;
-}) {
+}: TooltipProps) {
   const anchorRef = useRef<HTMLSpanElement>(null);
-  const [mounted, setMounted] = useState(false);
+  const isTouchRef = useRef(false);
   const [visible, setVisible] = useState(false);
   const [coords, setCoords] = useState({ top: 0, left: 0 });
+
   const gap = 10;
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const show = useCallback(() => {
+    if (disabled || isTouchRef.current || !anchorRef.current) return;
 
-  const show = () => {
-    if (disabled || !anchorRef.current) return;
     const rect = anchorRef.current.getBoundingClientRect();
+
     const map: Record<Side, { top: number; left: number }> = {
       right: { top: rect.top + rect.height / 2, left: rect.right + gap },
       left: { top: rect.top + rect.height / 2, left: rect.left - gap },
       bottom: { top: rect.bottom + gap, left: rect.left + rect.width / 2 },
       top: { top: rect.top - gap, left: rect.left + rect.width / 2 },
     };
+
     setCoords(map[side]);
     setVisible(true);
-  };
+  }, [disabled, side]);
 
-  const hide = () => setVisible(false);
+  const hide = useCallback(() => {
+    setVisible(false);
+    isTouchRef.current = false;
+  }, []);
+
+  const handleTouchStart = useCallback(() => {
+    isTouchRef.current = true;
+  }, []);
 
   const transform: Record<Side, string> = {
     right: 'translateY(-50%)',
@@ -50,7 +58,7 @@ export default function Tooltip({
   };
 
   const portalTarget =
-    mounted && typeof document !== 'undefined'
+    typeof document !== 'undefined'
       ? document.getElementById('tooltip-root')
       : null;
 
@@ -62,10 +70,11 @@ export default function Tooltip({
       onMouseLeave={hide}
       onFocus={show}
       onBlur={hide}
+      onTouchStart={handleTouchStart}
     >
       {children}
-      {mounted &&
-        visible &&
+
+      {visible &&
         !disabled &&
         portalTarget &&
         createPortal(

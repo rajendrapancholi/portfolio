@@ -219,7 +219,7 @@ const Navbar: React.FC<NavbarProps> = ({ tree }) => {
           </div>
 
           {/* Desktop actions */}
-          <div className="hidden items-center gap-2.5 md:flex">
+          <div className="hidden items-center gap-2.5 md:flex mr-2">
             <ThemeButton />
             {session?.user ? (
               <UserMenu user={session.user as User} />

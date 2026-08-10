@@ -15,7 +15,6 @@
   --popover-foreground: #0f0e17;
   --shadow-color: 30 27 75;
 
-  /* Brand / Primary – richer violet */
   --primary: #7c3aed;
   --primary-foreground: #ffffff;
   --secondary: #f3f0ff;
@@ -26,16 +25,14 @@
   --neutral-foreground: #ffffff;
 
   --muted: #f1f0f7;
-  --muted-foreground: #6b6880;
+  --muted-foreground: #74727d;
   --border: #e4e2f0;
   --input: #e4e2f0;
   --ring: #8b5cf6;
 
-  /* Accent brand (cyan) */
   --brand: #4e6bdf;
   --brand-foreground: #ffffff;
 
-  /* Semantic */
   --destructive: #e11d48;
   --destructive-foreground: #ffffff;
   --error: #e11d48;
@@ -83,8 +80,8 @@
   --neutral: #e7e5f1;
   --neutral-foreground: #1a0b2e;
 
-  --muted: #1a182c;
-  --muted-foreground: #a6a2c0;
+  --muted: #141322;
+  --muted-foreground: #c3c0d3;
   --border: #2a2745;
   --input: #2a2745;
   --ring: #a78bfa;
@@ -313,6 +310,14 @@
   html {
     color-scheme: light dark;
     scroll-behavior: smooth;
+    transition:
+      background-color 0.35s ease,
+      color 0.35s ease;
+  }
+
+  h2,
+  h3 {
+    scroll-margin-top: 100px;
   }
 
   body {
@@ -331,9 +336,14 @@
     @apply outline-2 outline-offset-2 outline-primary;
   }
 
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
   /* Firefox */
   @supports (-moz-appearance: none) {
-    /* Firefox */
     * {
       scrollbar-width: thin;
       scrollbar-color: var(--border) transparent;
@@ -359,23 +369,6 @@
   ::-webkit-scrollbar-thumb:hover {
     background: var(--primary);
   }
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-
-html {
-  transition:
-    background-color 0.35s ease,
-    color 0.35s ease;
-}
-
-h2,
-h3 {
-  scroll-margin-top: 100px;
 }
 
 /* Buttons */
@@ -494,14 +487,12 @@ h3 {
   font-size: 0.7rem;
   border-radius: 0.45rem;
 }
-
 @utility btn-sm {
   height: 2.15rem;
   padding: 0 0.85rem;
   font-size: 0.8rem;
   border-radius: 0.55rem;
 }
-
 @utility btn-lg {
   height: 3.15rem;
   padding: 0 1.6rem;
@@ -659,13 +650,13 @@ h3 {
     margin-left: -1px;
   }
 }
+
 @utility tooltip {
   position: relative;
   --tt-bg: var(--tooltip-bg);
   --tt-fg: var(--tooltip-fg);
   --tt-arrow-size: 6px;
 
-  /* The tooltip box */
   &::before {
     content: attr(data-tip);
     position: absolute;
@@ -742,7 +733,6 @@ h3 {
   }
 }
 
-/* BOTTOM  */
 @utility tooltip-bottom {
   &::before {
     bottom: auto;
@@ -767,7 +757,6 @@ h3 {
   }
 }
 
-/* LEFT  */
 @utility tooltip-left {
   &::before {
     bottom: auto;
@@ -798,7 +787,6 @@ h3 {
   }
 }
 
-/* RIGHT  */
 @utility tooltip-right {
   &::before {
     bottom: auto;
@@ -839,6 +827,7 @@ h3 {
   --tt-bg: var(--color-success);
   --tt-fg: var(--color-success-foreground);
 }
+
 @keyframes tw-spin {
   to {
     transform: rotate(360deg);
@@ -852,11 +841,9 @@ h3 {
   background-color: transparent;
   outline: none;
 }
-
 @utility input-bordered {
   border: 1px solid var(--color-border);
 }
-
 @utility input-sm {
   font-size: 0.8rem;
 }
@@ -888,7 +875,6 @@ h3 {
          text-muted-foreground transition-all duration-200
          hover:text-primary hover:bg-primary/8;
 }
-
 @utility nav-item-active {
   @apply nav-item bg-primary/12 text-primary;
 }
@@ -901,11 +887,9 @@ h3 {
   .shadow_cyan {
     @apply shadow-sm dark:shadow-primary shadow-primary/50;
   }
-
   .shadow-interactive-cyan {
     @apply shadow-primary transition-shadow duration-300 dark:shadow-lg dark:shadow-primary/40;
   }
-
   .shadow-interactive-cyan:hover {
     @apply shadow-xl shadow-primary/40 transform transition-colors dark:shadow-primary/40;
   }
@@ -981,7 +965,7 @@ h3 {
     padding: 0 0.25rem;
   }
 
-  /* Markdown themes kept intact + slight polish */
+  /* Markdown (public reader) theme */
   .markdown-render-theme {
     @apply prose prose-slate max-w-none
     text-slate-900
@@ -993,6 +977,13 @@ h3 {
     prose-a:text-cyan-600 hover:prose-a:text-cyan-700
     prose-ul:text-slate-900
     prose-ol:text-slate-900
+    prose-hr:border-slate-200
+    prose-img:rounded-lg prose-img:border prose-img:border-slate-200
+    prose-table:text-slate-900 prose-table:border-collapse
+    prose-thead:border-b prose-thead:border-slate-300
+    prose-th:text-slate-700 prose-th:font-semibold prose-th:text-left
+    prose-td:border-t prose-td:border-slate-200
+    prose-tr:border-slate-200
     dark:prose-invert
     dark:text-white
     dark:prose-headings:text-white
@@ -1000,127 +991,133 @@ h3 {
     dark:prose-em:text-white
     dark:prose-blockquote:text-slate-300
     dark:prose-li:text-slate-200
-    dark:prose-a:text-cyan-400;
+    dark:prose-a:text-cyan-400
+    dark:prose-hr:border-slate-700
+    dark:prose-img:border-slate-700
+    dark:prose-table:text-slate-100
+    dark:prose-thead:border-slate-700
+    dark:prose-th:text-slate-300
+    dark:prose-td:border-slate-800
+    dark:prose-tr:border-slate-800;
   }
   .markdown-render-theme pre code {
     @apply bg-transparent border-none p-0 m-0;
   }
   .markdown-render-theme :not(pre) > code {
-    @apply text-pink-600 dark:text-pink-400 bg-slate-100 dark:bg-slate-800 px-1 rounded font-normal border-none!;
+    @apply text-pink-600 dark:text-pink-400 bg-slate-100 dark:bg-slate-800 px-1 font-normal border-none!;
   }
 
+  /* Markdown (app-themed) */
   .markdown-render {
     background-color: transparent !important;
     @apply prose max-w-none
     text-[15px] leading-[1.75] text-foreground/85
-    prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-foreground;
+    prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-foreground
 
-    @apply prose-h1:text-2xl prose-h1:mt-0 prose-h1:mb-4 prose-h1:pb-3
-    prose-h1:border-b prose-h1:border-border prose-h1:text-foreground;
-    @apply prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3
+    prose-h1:text-2xl prose-h1:mt-0 prose-h1:mb-4 prose-h1:pb-3
+    prose-h1:border-b prose-h1:border-border prose-h1:text-foreground
+
+    prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3
     prose-h2:text-foreground prose-h2:pb-1.5
-    prose-h2:border-b prose-h2:border-border/60;
-    @apply prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2 prose-h3:text-foreground/95;
-    @apply prose-h4:text-base prose-h4:mt-5 prose-h4:mb-1.5 prose-h4:text-foreground/90;
-    @apply prose-h5:text-sm prose-h5:mt-4 prose-h5:mb-1 prose-h5:text-muted-foreground prose-h5:font-semibold;
-    @apply prose-h6:text-xs prose-h6:mt-4 prose-h6:mb-1 prose-h6:text-muted-foreground
-    prose-h6:font-semibold prose-h6:uppercase prose-h6:tracking-wide;
+    prose-h2:border-b prose-h2:border-border/60
 
-    @apply prose-a:text-primary prose-a:font-medium prose-a:no-underline
+    prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2 prose-h3:text-foreground/95
+    prose-h4:text-base prose-h4:mt-5 prose-h4:mb-1.5 prose-h4:text-foreground/90
+    prose-h5:text-sm prose-h5:mt-4 prose-h5:mb-1 prose-h5:text-muted-foreground prose-h5:font-semibold
+    prose-h6:text-xs prose-h6:mt-4 prose-h6:mb-1 prose-h6:text-muted-foreground
+    prose-h6:font-semibold prose-h6:uppercase prose-h6:tracking-wide
+
+    prose-a:text-primary prose-a:font-medium prose-a:no-underline
     prose-a:underline-offset-4 prose-a:decoration-primary/40
-    hover:prose-a:underline hover:prose-a:decoration-primary;
+    hover:prose-a:underline hover:prose-a:decoration-primary
 
-    @apply prose-strong:text-foreground prose-strong:font-semibold
+    prose-strong:text-foreground prose-strong:font-semibold
     prose-em:text-foreground/90
     prose-ul:my-3 prose-ol:my-3
     prose-li:my-1 prose-li:marker:text-muted-foreground
-    prose-ul:list-disc prose-ol:list-decimal;
+    prose-ul:list-disc prose-ol:list-decimal
 
-    @apply prose-blockquote:border-l-2 prose-blockquote:border-primary/50
+    prose-blockquote:border-l-2 prose-blockquote:border-primary/50
     prose-blockquote:bg-muted/40 prose-blockquote:rounded-r-lg
     prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:my-4
     prose-blockquote:not-italic prose-blockquote:text-foreground/75
-    prose-blockquote:font-normal;
+    prose-blockquote:font-normal
 
-    @apply prose-hr:border-border prose-hr:my-8
+    prose-hr:border-border prose-hr:my-8
 
     prose-img:rounded-xl prose-img:border prose-img:border-border prose-img:shadow-soft
-
-    prose-table:my-5 prose-table:text-sm
-    prose-th:text-muted-foreground prose-th:font-semibold prose-th:text-xs
-    prose-th:uppercase prose-th:tracking-wide prose-th:text-left
-    prose-td:border-t prose-td:border-border prose-th:border-b prose-th:border-border
 
     prose-code:before:content-none prose-code:after:content-none;
   }
 
-  .markdown-render :not(pre) > code {
-    @apply px-[0.4em] py-[0.15em] rounded-md font-mono text-[0.85em]
-    text-warning
-    border border-warning/15
-    whitespace-normal wrap-break-word
-    font-medium;
-  }
-
-  .markdown-render pre {
-    background-color: var(--code-bg);
-    @apply border border-border/80
-    rounded-xl shadow-elevated p-4 my-4
-    overflow-x-auto;
-  }
-  .markdown-render pre code {
-    @apply text-foreground/90 bg-transparent! p-0! border-none! text-[0.85em] leading-relaxed;
-  }
-
-  /* Give inline code inside list items breathing room */
   .markdown-render li {
     @apply leading-[1.85];
   }
   .markdown-render li code {
     @apply mx-0.5;
   }
-
-  /* Long inline commands wrap instead of clipping off the container edge */
   .markdown-render p,
   .markdown-render li {
-    @apply break-words;
+    @apply wrap-break-word;
+  }
+
+  .markdown-render table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.75rem 0;
+    font-size: 0.875rem;
+  }
+
+  .markdown-render thead {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .markdown-render th {
+    text-align: left;
+    padding: 0.6rem 1.25rem 0.6rem 0;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-muted-foreground);
+    white-space: nowrap;
+  }
+
+  .markdown-render td {
+    padding: 0.9rem 1.25rem 0.9rem 0;
+    color: var(--color-foreground);
+    vertical-align: top;
+  }
+
+  .markdown-render tbody tr {
+    border-bottom: 1px solid
+      color-mix(in oklab, var(--color-border) 60%, transparent);
+  }
+
+  .markdown-render tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .markdown-render td:first-child,
+  .markdown-render th:first-child {
+    padding-right: 2rem;
+  }
+  .markdown-render :not(pre) > code {
+    @apply px-[0.4em] py-[0.15em] rounded-md font-mono text-[0.85em]
+    text-warning border border-warning/15
+    whitespace-normal wrap-break-word font-medium;
+  }
+  .markdown-render :not(pre) > code {
+    @apply px-[0.5em] py-[0.2em] rounded-md font-mono text-[0.85em]
+    text-warning
+    border border-warning/25
+    bg-warning/5
+    whitespace-nowrap
+    font-medium;
   }
 
   .markdown-render input[type='checkbox'] {
     @apply rounded border-border text-primary focus:ring-ring mr-2 mb-1 accent-primary;
-  }
-
-  .markdown-render .wmde-markdown {
-    overflow-x: hidden !important;
-    word-break: break-word !important;
-    overflow-wrap: anywhere !important;
-  }
-  .markdown-render .wmde-markdown pre {
-    white-space: pre !important;
-    overflow-x: auto !important;
-    max-width: 100% !important;
-  }
-
-  .wmde-markdown,
-  .wmde-markdown-var,
-  .w-md-editor {
-    --color-fg-default: var(--main-text) !important;
-    --color-fg-muted: var(--muted-foreground) !important;
-    --color-fg-subtle: var(--muted-foreground) !important;
-    --color-canvas-default: transparent !important;
-    --color-canvas-subtle: var(--code-bg) !important;
-    --color-border-default: var(--border) !important;
-    --color-border-muted: var(--border) !important;
-    --color-accent-fg: var(--primary) !important;
-    --color-accent-emphasis: var(--primary) !important;
-    --color-neutral-muted: color-mix(
-      in oklab,
-      var(--muted) 60%,
-      transparent
-    ) !important;
-    --color-danger-fg: var(--error) !important;
-    --color-success-fg: var(--success) !important;
-    --color-attention-fg: var(--warning) !important;
   }
 
   .markdown-render .anchor-icon {
@@ -1192,7 +1189,6 @@ h3 {
   .skeleton-md {
     @apply relative overflow-hidden bg-slate-300/80 rounded-lg;
   }
-
   .skeleton-md::after {
     content: '';
     @apply absolute inset-0 -translate-x-full;
@@ -1211,11 +1207,9 @@ h3 {
     border-radius: 0.4rem;
     background-color: rgba(0, 0, 0, 0.05);
   }
-
   .dark .loading-md {
     background-color: rgba(255, 255, 255, 0.05);
   }
-
   .loading-md::after {
     content: '';
     position: absolute;
@@ -1230,65 +1224,29 @@ h3 {
     );
     animation: shimmer-skeleton 2.5s infinite;
   }
-}
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.55s ease-out forwards;
-}
-.animate-in-view {
-  animation: fadeInScale 0.45s ease-out forwards;
-}
+  .animate-fade-in-up {
+    animation: fadeInUp 0.55s ease-out forwards;
+  }
+  .animate-in-view {
+    animation: fadeInScale 0.45s ease-out forwards;
+  }
+  .animate-spin-slow {
+    animation: spin-slow 8s linear infinite;
+  }
+  .writing-mode-vertical {
+    writing-mode: vertical-rl;
+  }
 
-.glass-input-focus:focus {
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 0 18px rgba(59, 130, 246, 0.45);
-}
-.glass-editor {
-  background: rgba(15, 23, 42, 0.82);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-.glow-on-hover:hover {
-  box-shadow: 0 0 24px rgba(6, 182, 212, 0.4);
-}
-.editor-gradient-border {
-  background: linear-gradient(to right, #06b6d4, #3b82f6, #8b5cf6);
-  padding: 1px;
-}
-.glass-sidebar {
-  background: rgba(15, 23, 42, 0.62);
-  backdrop-filter: blur(22px);
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  overflow-y: scroll;
-}
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.w-md-editor-text-input {
-  counter-reset: line;
-}
-.w-md-editor-text-pre .bold {
-  display: inline-block;
-  width: 3rem;
-  text-align: right;
-  padding-right: 1rem;
-  margin-right: 1rem;
-  color: #4b5563;
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  user-select: none;
-}
-.cm-lineNumbers {
-  display: block !important;
-  background-color: transparent !important;
-  color: #64748b !important;
-}
-.cm-gutterElement {
-  padding-left: 10px !important;
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
 }
 
 @keyframes marquee-up {
@@ -1399,11 +1357,17 @@ h3 {
   }
 }
 
-.animate-spin-slow {
-  animation: spin-slow 8s linear infinite;
+.glass-input-focus:focus {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 18px rgba(59, 130, 246, 0.45);
 }
-.writing-mode-vertical {
-  writing-mode: vertical-rl;
+.glow-on-hover:hover {
+  box-shadow: 0 0 24px rgba(6, 182, 212, 0.4);
+}
+.glass-sidebar {
+  background: rgba(15, 23, 42, 0.62);
+  backdrop-filter: blur(22px);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .copied,

@@ -14,6 +14,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeSanitize from 'rehype-sanitize';
 import rehypePrismPlus from 'rehype-prism-plus';
 import { formatString } from '@/lib/utils/formatter';
+import styles from './CreateBlogForm.module.css';
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false });
 
@@ -257,7 +258,9 @@ const CreateBlogForm = () => {
               </div>
 
               <div className="rounded-2xl overflow-hidden border border-border focus-within:border-primary/50 transition-colors">
-                <div className="editor-shell">
+                <div
+                  className={`${styles.editorGradientBorder} ${styles.glassEditor}`}
+                >
                   <MDEditor
                     value={blogData.content}
                     onChange={(val) =>

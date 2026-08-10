@@ -2,11 +2,9 @@
 
 import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
-import { formatString } from '@/lib/utils/formatter';
 import { usePathname } from 'next/navigation';
+import { useLayoutEffect, useRef, useState } from 'react';
 import Tooltip from '@/components/ui/Tooltip';
-
-const TITLE_LIMIT = 50;
 
 const MotionLink = motion(Link);
 
@@ -20,14 +18,27 @@ export default function AnimatedLink({
   source: string;
 }) {
   const isActive = usePathname() === `/blogs/b/${source}/${slug}`;
-  const isTruncated = title.length > TITLE_LIMIT;
   const reduceMotion = useReducedMotion();
+  const [isTruncated, setIsTruncated] = useState(false);
+  const textRef = useRef<HTMLSpanElement>(null);
 
+  useLayoutEffect(() => {
+    const element = textRef.current;
+    if (!element) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { scrollWidth, clientWidth } = entry.target;
+        setIsTruncated(scrollWidth > clientWidth);
+      }
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [title]);
   return (
     <Tooltip label={title} side="right" disabled={!isTruncated}>
       <MotionLink
         href={`/blogs/b/${source}/${slug}`}
-        className="flex items-center gap-2 lg:gap-4 py-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors duration-200 relative isolate"
+        className="flex items-center gap-2 lg:gap-4 py-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors duration-200 relative isolate select-none"
         whileHover={reduceMotion ? undefined : { x: 3 }}
         whileTap={reduceMotion ? undefined : { scale: 0.98 }}
         transition={{ type: 'spring', stiffness: 500, damping: 35 }}
@@ -48,12 +59,16 @@ export default function AnimatedLink({
           />
         </div>
 
-        <span className="font-medium tracking-wide truncate text-xs lg:text-sm relative z-10">
-          {formatString(title, TITLE_LIMIT)}
+        <span
+          ref={textRef}
+          title={isTruncated ? title : undefined}
+          className={`font-medium tracking-wide truncate text-xs lg:text-sm relative z-10 block min-w-0 flex-1 md:pointer-events-none ${isActive && 'text-primary'}`}
+        >
+          {title}
         </span>
 
         <motion.div
-          className="absolute right-3 w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--color-primary)] z-10"
+          className="absolute lg:-left-4 w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--color-primary)] z-10"
           initial={false}
           animate={{ scale: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
           transition={{ type: 'spring', stiffness: 500, damping: 25 }}
