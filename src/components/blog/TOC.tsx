@@ -84,10 +84,7 @@ export default function Toc({
             href={`#${item.id}`}
             onClick={(e) => handleLinkClick(e, item.id)}
             style={{ paddingLeft: `${item.level * 0.75 + 0.5}rem` }}
-            className={`
-              group relative block py-1.5 pr-2 text-[13px] font-medium leading-snug
-              transition-all duration-200 ease-in-out rounded-md
-              wrap-break-word
+            className={`group relative block py-1.5 pr-2 text-[13px] font-medium leading-snug transition-all duration-200 ease-in-out rounded-md wrap-break-word
               ${
                 isActive
                   ? 'text-primary translate-x-1 bg-primary/10'

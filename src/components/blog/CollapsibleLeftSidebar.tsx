@@ -19,17 +19,17 @@ export default function CollapsibleLeftSidebar({
       <aside
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        className={`z-20 hidden h-[calc(100vh-3.5rem)] shrink-0 border-r rounded-tr-md rouunted-br-md border-border/50 bg-main-bg transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] md:flex md:flex-col ${isOpen ? 'w-60 lg:w-64' : 'w-12'} ${pinned ? 'sticky top-14' : 'fixed top-14 left-0'}`}
+        className={`z-20 hidden h-[calc(100vh-3.5rem)] shrink-0 border-r rounded-tr-md rouunted-br-md border-border/50 bg-main-bg transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] md:flex md:flex-col ${isOpen ? 'w-60 lg:w-72' : 'w-12'} ${pinned ? 'sticky top-14' : 'fixed top-14 left-0'}`}
       >
         {/* Header */}
         <div
           className={`
-          flex shrink-0 items-center border-b border-border/40
-          ${isOpen ? 'justify-between px-3 py-3' : 'justify-center py-3'}
+          flex shrink-0 items-center border-b border-border/60
+          ${isOpen ? 'justify-between pr-1 pl-3 py-3' : 'justify-center py-3'}
         `}
         >
           {isOpen && (
-            <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+            <span className="text-md font-semibold uppercase tracking-widest text-muted-foreground">
               Blogs
             </span>
           )}
@@ -62,10 +62,7 @@ export default function CollapsibleLeftSidebar({
 
           {/* Collapsed strip */}
           <div
-            className={`
-            absolute inset-0 flex flex-col items-center gap-4 pt-4
-            text-muted-foreground transition-opacity duration-200
-            ${isOpen ? 'pointer-events-none opacity-0' : 'opacity-100'}
+            className={`absolute inset-0 flex flex-col items-center gap-4 pt-4 text-muted-foreground transition-opacity duration-200 ${isOpen ? 'pointer-events-none opacity-0' : 'opacity-100'}
           `}
           >
             <BookOpen size={16} className="opacity-70" />

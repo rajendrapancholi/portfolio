@@ -9,8 +9,9 @@ import {
 } from 'lucide-react';
 import TocSidebar from './TOCSidebar';
 import { useSidebarToggle } from '@/hooks/useSidebarToggle';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { LoadingToc } from '../Loading';
 
 type Heading = { id: string; text: string; level: number };
 
@@ -18,8 +19,14 @@ export default function CollapsibleToc({ headings }: { headings: Heading[] }) {
   const { pinned, isOpen, toggle, onMouseEnter, onMouseLeave } =
     useSidebarToggle('right-toc', true);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const hasHeadings = headings && headings.length > 0;
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return <LoadingToc />;
   return (
     <>
       {/* Desktop (xl+) */}
@@ -29,7 +36,7 @@ export default function CollapsibleToc({ headings }: { headings: Heading[] }) {
       <aside
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        className={`z-30 hidden h-[calc(100vh-3.5rem)] shrink-0 border-l rounded-tr-md rouunted-br-md border-border/50 bg-main-bg shadow-xl transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] xl:flex xl:flex-col ${isOpen ? 'w-72' : 'w-12'} ${pinned ? 'sticky top-14' : 'fixed top-14 right-0'}`}
+        className={`z-30 hidden h-[calc(100vh-3.5rem)] shrink-0 border-l rounded-tl-md rouunted-bl-md border-border/60 bg-main-bg shadow-xl transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] xl:flex xl:flex-col ${isOpen ? 'w-72' : 'w-12'} ${pinned ? 'sticky top-14' : 'fixed top-14 right-0'}`}
       >
         {/* Header */}
         <div
@@ -40,7 +47,7 @@ export default function CollapsibleToc({ headings }: { headings: Heading[] }) {
         >
           <span
             className={`
-            text-[11px] font-semibold uppercase tracking-widest text-muted-foreground
+            text-xs font-semibold uppercase tracking-widest text-muted-foreground
             transition-opacity duration-200
             ${isOpen ? 'opacity-100' : 'sr-only opacity-0'}
           `}

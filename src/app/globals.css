@@ -1103,17 +1103,9 @@
     padding-right: 2rem;
   }
   .markdown-render :not(pre) > code {
-    @apply px-[0.4em] py-[0.15em] rounded-md font-mono text-[0.85em]
+    @apply px-[0.5em] py-[0.2em] rounded-md font-mono text-[0.85em]
     text-warning border border-warning/15
     whitespace-normal wrap-break-word font-medium;
-  }
-  .markdown-render :not(pre) > code {
-    @apply px-[0.5em] py-[0.2em] rounded-md font-mono text-[0.85em]
-    text-warning
-    border border-warning/25
-    bg-warning/5
-    whitespace-nowrap
-    font-medium;
   }
 
   .markdown-render input[type='checkbox'] {

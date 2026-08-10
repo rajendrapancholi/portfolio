@@ -161,7 +161,6 @@ export default async function BlogPage({ params }: Props) {
           __html: safeJSONStringify(jsonLd, { decodeUri: true }),
         }}
       />
-
       <div className="flex">
         <article className="min-w-0 flex-1 px-2">
           <div

@@ -1,4 +1,16 @@
-import LoadingAbsoluteDots from './LoadingAbsoluteDots';
+'use client';
+
+const AbsoluteDots = () => {
+  return (
+    <div className="absolute top-0 left-0 right-0 z-1 flex justify-center items-center m-2 pointer-events-none">
+      <div className="flex items-center gap-2">
+        <span className="w-3 h-3 rounded-full bg-primary animate-bounce [animation-delay:-0.3s]" />
+        <span className="w-3 h-3 rounded-full bg-primary animate-bounce [animation-delay:-0.15s]" />
+        <span className="w-3 h-3 rounded-full bg-primary animate-bounce" />
+      </div>
+    </div>
+  );
+};
 
 export default function Loading() {
   const skeletons = Array.from({ length: 6 });
@@ -6,7 +18,7 @@ export default function Loading() {
   return (
     <section className="max-w-8xl relative mx-auto px-4 sm:px-6 py-8">
       <div className="sticky top-2/5">
-        <LoadingAbsoluteDots />
+        <AbsoluteDots />
       </div>
 
       {/* Header skeleton */}

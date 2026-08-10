@@ -4,9 +4,9 @@ export default function LoadingSidebar() {
   const skeletonItems = Array.from({ length: 6 });
 
   return (
-    <div className="flex flex-col h-full animate-fade-in">
+    <div className="flex flex-col h-full">
       {/* Title skeleton */}
-      <div className="mb-6 px-2">
+      <div className="mb-6 px-2 animate-fade-in">
         <div className="loading-md h-3 w-20 rounded-md" />
       </div>
 
@@ -14,8 +14,11 @@ export default function LoadingSidebar() {
         {skeletonItems.map((_, index) => (
           <div
             key={index}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
-            style={{ animationDelay: `${index * 60}ms` }}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl opacity-0 animate-fade-in-up"
+            style={{
+              animationDelay: `${index * 60}ms`,
+              animationFillMode: 'both',
+            }}
           >
             {/* Icon */}
             <div className="loading-md size-7 shrink-0 rounded-lg" />

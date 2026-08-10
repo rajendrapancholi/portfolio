@@ -21,7 +21,7 @@ async function BlogListContent() {
   }
   const tree = buildBlogTree(blogs);
   return (
-    <div className="flex-1 mx-2">
+    <div className="flex-1 mx-2 pr-2">
       <SidebarTree nodes={tree} />
     </div>
   );

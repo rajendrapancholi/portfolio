@@ -44,7 +44,6 @@ const HighlighterCore = memo(function HighlighterCore({
       codeTagProps={{
         style: { fontFamily: 'inherit' },
       }}
-      className="scrollbar-hide"
     >
       {children}
     </SyntaxHighlighter>

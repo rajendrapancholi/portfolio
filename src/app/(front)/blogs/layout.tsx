@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { BlogSearchListener } from '@/components/blog/BlogSearchListener';
 import ClientSideElements from '@/components/blog/ClientElements';
 import Footer from '@/components/Footer';
@@ -25,18 +26,21 @@ export default async function MainBlogLayout({
         aria-hidden="true"
       />
 
-      <main
-        className="relative z-10"
-        style={{ minHeight: 'calc(100vh - var(--navbar-height, 70px))' }}
-      >
-        {children}
-      </main>
+      <Suspense fallback={<div>Loading layout content...</div>}>
+        <main
+          className="relative z-10"
+          style={{ minHeight: 'calc(100vh - var(--navbar-height, 70px))' }}
+        >
+          {children}
+        </main>
 
-      <div className="mx-auto max-w-7xl px-4">
-        <div className="h-px bg-linear-to-r from-transparent via-border to-transparent" />
-      </div>
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="h-px bg-linear-to-r from-transparent via-border to-transparent" />
+        </div>
 
-      {modal}
+        {modal}
+      </Suspense>
+
       <BlogSearchListener />
       <Footer />
       <ClientSideElements />

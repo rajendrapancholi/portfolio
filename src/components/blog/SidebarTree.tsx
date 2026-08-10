@@ -45,7 +45,7 @@ function SidebarFolder({
   return (
     <div>
       <div
-        className="flex items-center gap-1 rounded-md md:rounded-lg hover:bg-muted/60 transition-colors"
+        className="flex items-center gap-1 rounded-md hover:bg-muted/60 transition-colors"
         style={{ marginLeft: depth * INDENT }}
       >
         <button

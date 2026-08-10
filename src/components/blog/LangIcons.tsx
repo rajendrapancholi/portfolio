@@ -9,8 +9,9 @@ import {
   SiCss3,
   SiGo,
 } from 'react-icons/si';
-import { CurlyBraces, FileCode, Terminal } from 'lucide-react';
-import { IconDatabase } from '@tabler/icons-react';
+import { CurlyBraces, FileCode, Globe, Terminal } from 'lucide-react';
+import { IconDatabase, IconHttpConnect } from '@tabler/icons-react';
+import { MdHttp } from 'react-icons/md';
 
 type IconComponent = React.ComponentType<{
   className?: string;
@@ -89,6 +90,13 @@ export const LANGUAGE_ICON_MAP: Record<
     color: '#00758F',
     name: 'SQL',
     ext: 'sql',
+  },
+  http: {
+    Icon: MdHttp,
+    aliases: ['http', 'https', 'req', 'rest'],
+    color: '#22C55E',
+    name: 'HTTP',
+    ext: 'http',
   },
 };
 

@@ -4,8 +4,8 @@ import MarkdownPreview from '@uiw/react-markdown-preview';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import { useTheme } from 'next-themes';
-import { useEffect, useState, useMemo, memo } from 'react';
-import Loading from '@/components/Loading';
+import { useEffect, useState, useMemo, memo, useRef } from 'react';
+import { Loading } from '@/components/Loading';
 import { ENV } from '@/config/env';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -114,17 +114,28 @@ const MarkdownLink = memo(function MarkdownLink({
   );
 });
 
-const MarkdownImage = memo(function MarkdownImage({ src, alt, ...props }: any) {
+const MarkdownImage = memo(function MarkdownImage({
+  src,
+  alt,
+  node,
+  ...props
+}: any) {
   const imageSrc = typeof src === 'string' ? src : '';
   const [mounted, setMounted] = useState(false);
   const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>(
     'loading',
   );
-  if (!imageSrc) return null;
+  const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
+      setStatus('loaded');
+    }
+  }, [imageSrc]);
 
   const modalId = useMemo(
     () => `modal-${imageSrc.split('/').pop()?.split('.')[0] || Math.random()}`,
@@ -132,7 +143,7 @@ const MarkdownImage = memo(function MarkdownImage({ src, alt, ...props }: any) {
   );
 
   const openModal = () => {
-    if (status !== 'loaded') return; // don't open a modal on a broken/unloaded image
+    if (status !== 'loaded') return;
     const dialog = document.getElementById(modalId) as HTMLDialogElement | null;
     dialog?.showModal();
   };
@@ -141,6 +152,8 @@ const MarkdownImage = memo(function MarkdownImage({ src, alt, ...props }: any) {
     const dialog = document.getElementById(modalId) as HTMLDialogElement | null;
     dialog?.close();
   };
+
+  if (!imageSrc) return null;
 
   if (status === 'error') {
     return (
@@ -161,7 +174,6 @@ const MarkdownImage = memo(function MarkdownImage({ src, alt, ...props }: any) {
         }`}
         onClick={openModal}
       >
-        {/* Skeleton shown until the real image has decoded */}
         {status === 'loading' && (
           <span className="absolute inset-0 block animate-pulse bg-muted" />
         )}
@@ -169,6 +181,7 @@ const MarkdownImage = memo(function MarkdownImage({ src, alt, ...props }: any) {
         <span className="relative block overflow-hidden">
           <img
             {...props}
+            ref={imgRef}
             src={imageSrc}
             alt={alt || ''}
             loading="lazy"
@@ -204,7 +217,7 @@ const MarkdownImage = memo(function MarkdownImage({ src, alt, ...props }: any) {
               <img
                 src={imageSrc}
                 alt={alt}
-                onClick={(e) => e.stopPropagation()} // clicking the image itself shouldn't close it
+                onClick={(e) => e.stopPropagation()}
                 className="w-full h-[90vh] rounded-lg shadow-2xl object-contain cursor-default animate-in zoom-in-95 duration-200"
               />
               <button

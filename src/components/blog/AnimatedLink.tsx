@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useLayoutEffect, useRef, useState } from 'react';
 import Tooltip from '@/components/ui/Tooltip';
 
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 
 export default function AnimatedLink({
   slug,
@@ -38,19 +38,19 @@ export default function AnimatedLink({
     <Tooltip label={title} side="right" disabled={!isTruncated}>
       <MotionLink
         href={`/blogs/b/${source}/${slug}`}
-        className="flex items-center gap-2 lg:gap-4 py-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors duration-200 relative isolate select-none"
+        className="flex items-center gap-2 lg:gap-4 py-1.5 rounded-md text-muted-foreground hover:text-foreground transition-colors duration-200 relative isolate select-none"
         whileHover={reduceMotion ? undefined : { x: 3 }}
         whileTap={reduceMotion ? undefined : { scale: 0.98 }}
         transition={{ type: 'spring', stiffness: 500, damping: 35 }}
       >
         <motion.div
-          className="absolute inset-0 rounded-lg bg-muted/70 -z-10"
+          className="absolute inset-0 rounded-md bg-muted/70 -z-10"
           initial={false}
           animate={{ opacity: isActive ? 1 : 0 }}
           transition={{ duration: 0.15 }}
         />
 
-        <div className="absolute inset-0 rounded-lg overflow-hidden pointer-events-none -z-10">
+        <div className="absolute inset-0 rounded-md overflow-hidden pointer-events-none -z-10">
           <motion.div
             className="absolute inset-0 bg-linear-to-r from-primary/15 to-transparent"
             initial={{ opacity: 0 }}
@@ -68,7 +68,7 @@ export default function AnimatedLink({
         </span>
 
         <motion.div
-          className="absolute lg:-left-4 w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--color-primary)] z-10"
+          className="absolute -right-2 w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--color-primary)] z-10"
           initial={false}
           animate={{ scale: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
           transition={{ type: 'spring', stiffness: 500, damping: 25 }}
