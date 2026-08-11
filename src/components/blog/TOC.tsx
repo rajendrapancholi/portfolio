@@ -37,7 +37,7 @@ export default function Toc({
         }
       }
 
-      setActive((prev) => (currentId !== prev ? currentId : prev)); // ← functional update
+      setActive((prev) => (currentId !== prev ? currentId : prev));
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -84,11 +84,11 @@ export default function Toc({
             href={`#${item.id}`}
             onClick={(e) => handleLinkClick(e, item.id)}
             style={{ paddingLeft: `${item.level * 0.75 + 0.5}rem` }}
-            className={`group relative block py-1.5 pr-2 text-[13px] font-medium leading-snug transition-all duration-200 ease-in-out rounded-md wrap-break-word
+            className={`group relative block py-1.5 md:py-0 pr-2 text-xs font-medium leading-snug transition-all duration-200 ease-in-out rounded-md wrap-break-word
               ${
                 isActive
-                  ? 'text-primary translate-x-1 bg-primary/10'
-                  : 'text-muted-foreground hover:text-foreground hover:translate-x-1 hover:bg-muted/50'
+                  ? 'text-primary translate-x-0.5 bg-primary/10'
+                  : 'text-muted-foreground hover:text-foreground hover:translate-x-0.5 hover:bg-muted/50'
               }
             `}
           >
