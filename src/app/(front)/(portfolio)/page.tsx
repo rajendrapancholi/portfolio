@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     absolute: 'Rajendra Pancholi | Full Stack Developer',
   },
   description:
-    'Portfolio - building scalable web applications with Next.js, React, TypeScript',
+    "Hi, I'm Rajendra Pancholi, a Full Stack Developer. I work with Next.js and React to build things people actually use. Handle everything from frontend to backend—databases, APIs, and I deploy with Docker and manage infrastructure. Basically, I ship complete products.",
   alternates: {
     canonical: '/',
   },
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     ...baseMetadata.openGraph,
     title: 'Rajendra Pancholi | Full Stack Developer',
     description:
-      'Portfolio - building scalable web applications with Next.js, React, TypeScript',
+      "Hi, I'm Rajendra Pancholi, a Full Stack Developer. I work with Next.js and React to build things people actually use. Handle everything from frontend to backend—databases, APIs, and I deploy with Docker and manage infrastructure. Basically, I ship complete products.",
     url: baseUrl,
     images: [
       {
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     ...baseMetadata.twitter,
     title: 'Rajendra Pancholi | Full Stack Developer',
     description:
-      'Portfolio - building scalable web applications with Next.js, React, TypeScript',
+      "Hi, I'm Rajendra Pancholi, a Full Stack Developer. I work with Next.js and React to build things people actually use. Handle everything from frontend to backend—databases, APIs, and I deploy with Docker and manage infrastructure. Basically, I ship complete products.",
     images: ['/og-home.png'],
   },
 };
@@ -59,7 +59,7 @@ export default async function Home() {
       <section className="sr-only">
         Hi, I&apos;m Rajendra Pancholi, a Full Stack Developer. I work with
         Next.js and React to build things people actually use. Handle everything
-        from frontend to backend—databases, APIs, and I deploy with Docker and
+        from frontend to backend-databases, APIs, and I deploy with Docker and
         manage infrastructure. Basically, I ship complete products.
       </section>
 
