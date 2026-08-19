@@ -8,7 +8,14 @@ import {
 } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useTheme } from 'next-themes';
 import { getDownloadFilename, getLanguageIcon } from './LangIcons';
-import { WrapText, Download, Check, Copy } from 'lucide-react';
+import {
+  WrapText,
+  Download,
+  Check,
+  Copy,
+  Maximize2Icon,
+  Minimize2Icon,
+} from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import Tooltip from '../ui/Tooltip';
 import { HiNumberedList } from 'react-icons/hi2';
@@ -60,11 +67,32 @@ export const CodeBlock = ({
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [showLineNumbers, setShowLineNumbers] = useState(false);
+  const [maximize, setMaximize] = useState(false);
   const [wrapLongLines, setWrapLongLines] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const codeContainerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+
+  useEffect(() => {
+    const content = contentRef.current;
+    if (!content) return;
+
+    const checkOverflow = () => {
+      // Check if content height exceeds max-h-80 (320px)
+      const maxHeight = 320; // 20rem in pixels
+      setIsOverflowing(content.scrollHeight > maxHeight);
+    };
+
+    checkOverflow();
+    const resizeObserver = new ResizeObserver(checkOverflow);
+    resizeObserver.observe(content);
+
+    return () => resizeObserver.disconnect();
+  }, [children, showLineNumbers, wrapLongLines]);
 
   useEffect(() => {
     setMounted(true);
@@ -113,12 +141,19 @@ export const CodeBlock = ({
     }
   }, [children]);
 
+  const toggleMaximize = useCallback(() => setMaximize((v) => !v), []);
+
   const toggleLineNumbers = useCallback(
     () => setShowLineNumbers((v) => !v),
     [],
   );
 
   const toggleWrapLines = useCallback(() => setWrapLongLines((v) => !v), []);
+
+  const maximizeLabel = useMemo(
+    () => (maximize ? 'Minimize' : 'Maximize'),
+    [maximize],
+  );
 
   const lineNumbersLabel = useMemo(
     () => (showLineNumbers ? 'Hide line numbers' : 'Show line numbers'),
@@ -159,6 +194,25 @@ export const CodeBlock = ({
               : 'opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto',
           )}
         >
+          {isOverflowing && (
+            <Tooltip label={maximizeLabel} side="top" disabled={isMobile}>
+              <button
+                title={isMobile ? maximizeLabel : undefined}
+                onClick={toggleMaximize}
+                className={cn(
+                  'p-1 rounded-md transition-colors duration-200 border text-muted-foreground/80 cursor-pointer',
+                  'hover:bg-accent/50 active:bg-accent/70 bg-accent text-foreground border-border',
+                )}
+              >
+                {maximize ? (
+                  <Minimize2Icon className="w-3.5 h-3.5" />
+                ) : (
+                  <Maximize2Icon className="w-3.5 h-3.5" />
+                )}
+              </button>
+            </Tooltip>
+          )}
+
           <Tooltip label={lineNumbersLabel} side="top" disabled={isMobile}>
             <button
               title={isMobile ? lineNumbersLabel : undefined}
@@ -230,15 +284,23 @@ export const CodeBlock = ({
         </div>
       </div>
 
-      <div className="max-h-80 overflow-scroll">
-        <HighlighterCore
-          lang={lang}
-          isDark={isDark}
-          showLineNumbers={showLineNumbers}
-          wrapLongLines={wrapLongLines}
-        >
-          {children}
-        </HighlighterCore>
+      <div
+        ref={codeContainerRef}
+        className={cn(
+          'overflow-scroll transition-[height]',
+          maximize ? 'h-full' : 'max-h-80',
+        )}
+      >
+        <div ref={contentRef}>
+          <HighlighterCore
+            lang={lang}
+            isDark={isDark}
+            showLineNumbers={showLineNumbers}
+            wrapLongLines={wrapLongLines}
+          >
+            {children}
+          </HighlighterCore>
+        </div>
       </div>
     </div>
   );
