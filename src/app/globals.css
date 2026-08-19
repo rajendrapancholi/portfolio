@@ -323,6 +323,7 @@
   body {
     @apply bg-main-bg text-main-text antialiased;
     min-height: 100vh;
+    cursor: default;
     transition:
       background-color 0.35s ease,
       color 0.35s ease;
