@@ -3,10 +3,14 @@ import { getBlogList } from '@/app/actions/blog';
 import { getPostList } from '@/app/actions/githubBlog';
 
 const fetchAllBlogs = cache(async () => {
-  const [{ data: mongoBlogs }, { data: gitBlogs }] = await Promise.all([
+  const [mongoResult, gitResult] = await Promise.allSettled([
     getBlogList(),
     getPostList(),
   ]);
+
+  const mongoBlogs =
+    mongoResult.status === 'fulfilled' ? mongoResult.value.data : [];
+  const gitBlogs = gitResult.status === 'fulfilled' ? gitResult.value.data : [];
 
   const merged = [
     ...(mongoBlogs || []).map((b) => ({ ...b, source: 'main' as const })),

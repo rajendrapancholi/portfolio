@@ -45,6 +45,19 @@ export default function Toc({
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, [toc]);
+
+  // Auto-scroll TOC to active heading
+  useEffect(() => {
+    if (navRef.current && active) {
+      const activeElement = navRef.current.querySelector(
+        `a[href="#${active}"]`,
+      );
+      if (activeElement) {
+        activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  }, [active]);
+
   const handleLinkClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     id: string,
@@ -84,15 +97,19 @@ export default function Toc({
             href={`#${item.id}`}
             onClick={(e) => handleLinkClick(e, item.id)}
             style={{ paddingLeft: `${item.level * 0.75 + 0.5}rem` }}
-            className={`group relative block py-1.5 md:py-0 pr-2 text-xs font-medium leading-snug transition-all duration-200 ease-in-out rounded-md wrap-break-word
-              ${
-                isActive
-                  ? 'text-primary translate-x-0.5 bg-primary/10'
-                  : 'text-muted-foreground hover:text-foreground hover:translate-x-0.5 hover:bg-muted/50'
-              }
-            `}
+            className={`relative block py-1.5 md:py-1 pr-2 text-[11px] font-medium leading-snug rounded-md
+            ${
+              isActive
+                ? 'text-primary bg-primary/10 whitespace-normal'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+            }
+          `}
           >
-            <span>{item.text}</span>
+            <span
+              className={`overflow-hidden text-ellipsis block hover:whitespace-normal ${isActive ? 'whitespace-normal' : 'whitespace-nowrap'}`}
+            >
+              {item.text}
+            </span>
           </Link>
         );
       })}

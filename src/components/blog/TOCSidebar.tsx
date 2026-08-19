@@ -1,6 +1,6 @@
 'use client';
 
-import dynamic from 'next/dynamic';
+import Toc from './TOC';
 
 type HeadingProps = { text: string; id: string; level: number };
 
@@ -11,8 +11,6 @@ export default function TocSidebar({
   headings: HeadingProps[];
   bare?: boolean;
 }) {
-  const Toc = dynamic(() => import('./TOC'), { ssr: false });
-
   const body = (
     <>
       {!bare && (
