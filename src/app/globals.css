@@ -1374,3 +1374,7 @@ action {
 .octicon-copy {
   display: none;
 }
+
+.relative.group:has(pre) ::-webkit-scrollbar-corner {
+  background: transparent !important;
+}
