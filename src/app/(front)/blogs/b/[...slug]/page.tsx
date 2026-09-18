@@ -162,7 +162,7 @@ export default async function BlogPage({ params }: Props) {
         }}
       />
       <div className="flex">
-        <article className="min-w-0 flex-1 px-2">
+        <article className="min-w-0 flex-1 px-2 md:max-w-5xl mx-auto md:px-4">
           <div
             className="py-0.5 mt-2 mb-3 backdrop-blur-md border-b border-border/50 transition-[top] duration-300 ease-out"
             style={{ top: 'var(--navbar-height, 70px)' }}
