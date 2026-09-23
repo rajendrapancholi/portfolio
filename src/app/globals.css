@@ -6,9 +6,9 @@
 
 :root {
   /* Core */
-  --main-bg: #f6f5fb;
+  --main-bg: #fafaf9;
   --main-text: #0f0e17;
-  --code-bg: #f4f3f9;
+  --code-bg: #f3f4f6;
   --card: #ffffff;
   --card-foreground: #0f0e17;
   --popover: #ffffff;
@@ -17,7 +17,7 @@
 
   --primary: #7c3aed;
   --primary-foreground: #ffffff;
-  --secondary: #f3f0ff;
+  --secondary: #f0f0f0;
   --secondary-foreground: #1e1b4b;
   --accent: #eef2ff;
   --accent-foreground: #4338ca;
@@ -73,7 +73,7 @@
 
   --primary: #a78bfa;
   --primary-foreground: #1a0b2e;
-  --secondary: #1c1930;
+  --secondary: #1f2937;
   --secondary-foreground: #e9e7f7;
   --accent: #1e1b3f;
   --accent-foreground: #c4b5fd;
@@ -1069,7 +1069,8 @@
     font-size: 0.875rem;
     border: 1px solid var(--color-border);
     border-radius: 0.375rem;
-    overflow: hidden;
+    overflow: scroll;
+    display: block;
   }
   .markdown-render thead {
     background-color: var(--color-muted);
