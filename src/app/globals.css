@@ -1073,6 +1073,7 @@
     overflow: scroll;
     display: block;
   }
+  
   .markdown-render thead {
     background-color: var(--color-muted);
   }
@@ -1385,5 +1386,9 @@ action {
 }
 
 .relative.group:has(pre) ::-webkit-scrollbar-corner {
+  background: transparent !important;
+}
+
+.markdown-render table::-webkit-scrollbar-corner {
   background: transparent !important;
 }
