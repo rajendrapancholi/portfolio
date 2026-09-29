@@ -1,16 +1,88 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-export default function Toc({
-  toc,
+type TocItem = { id: string; text: string; level: number };
+type TocNode = TocItem & { children: TocNode[] };
+
+function buildTree(toc: TocItem[]): TocNode[] {
+  const root: TocNode = { id: '', text: '', level: -Infinity, children: [] };
+  const stack: TocNode[] = [root];
+
+  toc.forEach((item) => {
+    const node: TocNode = { ...item, children: [] };
+    while (stack.length > 1 && stack[stack.length - 1].level >= item.level) {
+      stack.pop();
+    }
+    stack[stack.length - 1].children.push(node);
+    stack.push(node);
+  });
+
+  return root.children;
+}
+
+const containsActive = (node: TocNode, active: string): boolean =>
+  node.id === active || node.children.some((c) => containsActive(c, active));
+
+function TocGroup({
+  nodes,
+  active,
+  onLinkClick,
 }: {
-  toc: { id: string; text: string; level: number }[];
+  nodes: TocNode[];
+  active: string;
+  onLinkClick: (e: React.MouseEvent<HTMLAnchorElement>, id: string) => void;
 }) {
+  const activeIdx = nodes.findIndex((n) => containsActive(n, active));
+
+  return (
+    <ul className="toc-list">
+      {nodes.map((node, i) => {
+        const isLast = i === nodes.length - 1;
+        const isActive = node.id === active;
+
+        const itemClass = [
+          'toc-item',
+          isLast && 'is-last',
+          i === activeIdx && 'on-path',
+          activeIdx !== -1 && i < activeIdx && 'line-active',
+        ]
+          .filter(Boolean)
+          .join(' ');
+
+        return (
+          <li key={node.id} className={itemClass}>
+            <div className="toc-row">
+              <Link
+                href={`#${node.id}`}
+                onClick={(e) => onLinkClick(e, node.id)}
+                className={`toc-link ${isActive ? 'is-active' : ''}`}
+              >
+                <span>{node.text}</span>
+              </Link>
+            </div>
+
+            {node.children.length > 0 && (
+              <div className="toc-children">
+                <TocGroup
+                  nodes={node.children}
+                  active={active}
+                  onLinkClick={onLinkClick}
+                />
+              </div>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+export default function Toc({ toc }: { toc: TocItem[] }) {
   const [active, setActive] = useState<string>('');
   const isClicking = useRef(false);
-  const navRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,10 +93,7 @@ export default function Toc({
       const headingPositions = toc
         .map((item) => {
           const element = document.getElementById(item.id);
-          if (element) {
-            return { id: item.id, top: element.offsetTop };
-          }
-          return null;
+          return element ? { id: item.id, top: element.offsetTop } : null;
         })
         .filter((item): item is { id: string; top: number } => item !== null);
 
@@ -46,15 +115,10 @@ export default function Toc({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [toc]);
 
-  // Auto-scroll TOC to active heading
   useEffect(() => {
     if (navRef.current && active) {
-      const activeElement = navRef.current.querySelector(
-        `a[href="#${active}"]`,
-      );
-      if (activeElement) {
-        activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
+      const el = navRef.current.querySelector(`a[href="#${active}"]`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [active]);
 
@@ -66,53 +130,28 @@ export default function Toc({
     setActive(id);
     isClicking.current = true;
 
-    const targetElement = document.getElementById(id);
-    if (targetElement) {
+    const target = document.getElementById(id);
+    if (target) {
       const offset = 100;
       const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = targetElement.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
+      const elementRect = target.getBoundingClientRect().top;
       window.scrollTo({
-        top: offsetPosition,
+        top: elementRect - bodyRect - offset,
         behavior: 'smooth',
       });
     }
 
-    setTimeout(() => (isClicking.current = false), 1000);
+    setTimeout(() => {
+      isClicking.current = false;
+    }, 1000);
   };
 
+  const tree = buildTree(toc);
+
   return (
-    <nav
-      aria-label="Article headings"
-      ref={navRef}
-      className="flex-1 overflow-y-auto flex flex-col gap-0.5 py-2 pr-2 max-h-[80vh]"
-    >
-      {toc.map((item, index) => {
-        const isActive = active === item.id;
-        return (
-          <Link
-            key={`${item.id}-${index}`}
-            href={`#${item.id}`}
-            onClick={(e) => handleLinkClick(e, item.id)}
-            style={{ paddingLeft: `${item.level * 0.75 + 0.5}rem` }}
-            className={`relative block py-1.5 md:py-1 pr-2 text-[11px] font-medium leading-snug rounded-md
-            ${
-              isActive
-                ? 'text-primary bg-primary/10 whitespace-normal'
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-            }
-          `}
-          >
-            <span
-              className={`overflow-hidden text-ellipsis block hover:whitespace-normal ${isActive ? 'whitespace-normal' : 'whitespace-nowrap'}`}
-            >
-              {item.text}
-            </span>
-          </Link>
-        );
-      })}
+    <nav aria-label="Article headings" ref={navRef} className="toc">
+      <p className="toc-title">On this page</p>
+      <TocGroup nodes={tree} active={active} onLinkClick={handleLinkClick} />
     </nav>
   );
 }
