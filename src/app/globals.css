@@ -1394,9 +1394,18 @@ action {
 }
 
 .toc {
-  --toc-line: color-mix(in oklab, var(--muted-foreground) 35%, transparent);
-  --toc-active: var(--brand);
+  --toc-line: color-mix(in oklab, var(--muted-foreground) 20%, transparent);
+  --toc-active: var(--primary);
   --toc-indent: 20px;
+
+  --toc-fs: 12px;
+  --toc-lh: 1.4;
+  --toc-py: 5px;
+  --toc-elbow-h: calc(var(--toc-py) + (var(--toc-fs) * var(--toc-lh)) / 2);
+
+  /* animation control */
+  --toc-dur: 0.3s;
+  --toc-ease: cubic-bezier(0.4, 0, 0.2, 1);
 
   max-height: 80vh;
   overflow-y: auto;
@@ -1429,16 +1438,11 @@ action {
   bottom: 0;
   width: 1px;
   background: var(--toc-line);
+  transition: background-color var(--toc-dur) var(--toc-ease);
 }
 
 /* blue vertical line */
 .toc-item.line-active::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 1px;
   background: var(--toc-active);
 }
 
@@ -1452,11 +1456,12 @@ action {
   position: absolute;
   left: 0;
   top: 0;
-  height: 40%;
-  width: 10px;
+  height: var(--toc-elbow-h);
+  width: 8px;
   border-left: 1px solid var(--toc-line);
   border-bottom: 1px solid var(--toc-line);
   border-bottom-left-radius: 8px;
+  transition: border-color var(--toc-dur) var(--toc-ease);
 }
 
 .toc-item.on-path > .toc-row::before {
@@ -1465,21 +1470,16 @@ action {
 
 .toc-link {
   display: block;
-  padding: 1px 6px 6px 20px;
-  font-size: 12px;
-  line-height: 1.4;
+  padding: var(--toc-py) 6px var(--toc-py) 20px;
+  font-size: var(--toc-fs);
+  line-height: var(--toc-lh);
   color: var(--muted-foreground);
   text-decoration: none;
-  transition: color 0.15s;
+  transition: color var(--toc-dur) var(--toc-ease);
 }
 
 .toc-link:hover {
   color: var(--foreground);
-}
-
-.toc-link.is-active {
-  color: var(--toc-active);
-  font-weight: 500;
 }
 
 .toc-link span {
@@ -1497,7 +1497,15 @@ action {
   margin-left: var(--toc-indent);
 }
 
+.toc-link.is-active,
 .toc-item.on-path > .toc-row > .toc-link {
   color: var(--toc-active);
-  font-weight: 500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toc-item::before,
+  .toc-row::before,
+  .toc-link {
+    transition: none;
+  }
 }
