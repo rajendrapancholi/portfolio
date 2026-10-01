@@ -1070,7 +1070,7 @@
     border: 1px solid var(--color-border);
     border-radius: 0.375rem;
     max-width: fit-content;
-    overflow: scroll;
+    overflow: auto;
     display: block;
   }
 
