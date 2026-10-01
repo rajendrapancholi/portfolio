@@ -1394,14 +1394,18 @@ action {
 }
 
 .toc {
-  --toc-line: color-mix(in oklab, var(--muted-foreground) 20%, transparent);
+  --toc-line: color-mix(in oklab, var(--muted-foreground) 20%, var(--main-bg));
   --toc-active: var(--primary);
   --toc-indent: 20px;
 
   --toc-fs: 12px;
   --toc-lh: 1.4;
   --toc-py: 5px;
-  --toc-elbow-h: calc(var(--toc-py) + (var(--toc-fs) * var(--toc-lh)) / 2);
+  --toc-elbow-h: round(
+    nearest,
+    calc(var(--toc-py) + (var(--toc-fs) * var(--toc-lh)) / 2),
+    1px
+  );
 
   /* animation control */
   --toc-dur: 0.3s;
@@ -1429,21 +1433,19 @@ action {
   position: relative;
 }
 
-/* grey vertical line */
 .toc-item:not(.is-last)::before {
   content: '';
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  width: 1px;
-  background: var(--toc-line);
-  transition: background-color var(--toc-dur) var(--toc-ease);
+  width: 0;
+  border-left: 1px solid var(--toc-line);
+  transition: border-color var(--toc-dur) var(--toc-ease);
 }
 
-/* blue vertical line */
 .toc-item.line-active::before {
-  background: var(--toc-active);
+  border-left-color: var(--toc-active);
 }
 
 .toc-row {
@@ -1464,6 +1466,13 @@ action {
   transition: border-color var(--toc-dur) var(--toc-ease);
 }
 
+.toc-item.line-active > .toc-row::before {
+  top: calc(var(--toc-elbow-h) - 8px);
+  height: 8px;
+  border-left-color: transparent;
+}
+
+/* active + uske parents: poora elbow blue */
 .toc-item.on-path > .toc-row::before {
   border-color: var(--toc-active);
 }
@@ -1500,6 +1509,18 @@ action {
 .toc-link.is-active,
 .toc-item.on-path > .toc-row > .toc-link {
   color: var(--toc-active);
+}
+.toc-item.is-root::before,
+.toc-item.is-root > .toc-row::before {
+  display: none;
+}
+
+.toc-item.is-root > .toc-row > .toc-link {
+  padding-left: 0;
+}
+
+.toc-item.is-root > .toc-children {
+  margin-left: 6px;
 }
 
 @media (prefers-reduced-motion: reduce) {

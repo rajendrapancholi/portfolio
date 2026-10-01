@@ -45,6 +45,7 @@ function TocGroup({
         const itemClass = [
           'toc-item',
           isLast && 'is-last',
+          node.level === 1 && 'is-root',
           i === activeIdx && 'on-path',
           activeIdx !== -1 && i < activeIdx && 'line-active',
         ]
