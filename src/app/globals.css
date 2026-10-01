@@ -1396,29 +1396,36 @@ action {
 .toc {
   --toc-line: color-mix(in oklab, var(--muted-foreground) 20%, var(--main-bg));
   --toc-active: var(--primary);
-  --toc-indent: 20px;
 
-  --toc-fs: 12px;
+  --toc-fs: clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);
   --toc-lh: 1.4;
-  --toc-py: 5px;
-  --toc-elbow-h: round(
-    nearest,
-    calc(var(--toc-py) + (var(--toc-fs) * var(--toc-lh)) / 2),
-    1px
-  );
+  --toc-py: 0.2em;
+  --toc-indent: 1.25em;
+  --toc-r: 0.6em;
+
+  --toc-elbow-h: calc(var(--toc-py) + var(--toc-lh) * 0.5em);
 
   /* animation control */
   --toc-dur: 0.3s;
   --toc-ease: cubic-bezier(0.4, 0, 0.2, 1);
 
+  font-size: var(--toc-fs);
   max-height: 80vh;
+  max-height: 80dvh;
   overflow-y: auto;
-  padding: 8px 8px 8px 4px;
+  padding: 0.2rem 0.5rem 0.5rem 0.25rem;
+}
+
+@media (pointer: coarse) {
+  .toc {
+    --toc-fs: 0.875rem;
+    --toc-py: 0.4em;
+  }
 }
 
 .toc-title {
-  margin: 0 0 12px;
-  font-size: 12px;
+  margin: 0 0 0.75rem;
+  font-size: 0.75rem;
   font-weight: 500;
   color: var(--muted-foreground);
 }
@@ -1452,35 +1459,33 @@ action {
   position: relative;
 }
 
-/* curved elbow */
 .toc-row::before {
   content: '';
   position: absolute;
   left: 0;
   top: 0;
   height: var(--toc-elbow-h);
-  width: 8px;
+  width: var(--toc-r);
   border-left: 1px solid var(--toc-line);
   border-bottom: 1px solid var(--toc-line);
-  border-bottom-left-radius: 8px;
+  border-bottom-left-radius: var(--toc-r);
   transition: border-color var(--toc-dur) var(--toc-ease);
 }
 
 .toc-item.line-active > .toc-row::before {
-  top: calc(var(--toc-elbow-h) - 8px);
-  height: 8px;
+  top: calc(var(--toc-elbow-h) - var(--toc-r));
+  height: var(--toc-r);
   border-left-color: transparent;
 }
 
-/* active + uske parents: poora elbow blue */
 .toc-item.on-path > .toc-row::before {
   border-color: var(--toc-active);
 }
 
 .toc-link {
   display: block;
-  padding: var(--toc-py) 6px var(--toc-py) 20px;
-  font-size: var(--toc-fs);
+  padding: var(--toc-py) 0.15em var(--toc-py) 0.9em;
+  font-size: inherit;
   line-height: var(--toc-lh);
   color: var(--muted-foreground);
   text-decoration: none;
@@ -1520,7 +1525,7 @@ action {
 }
 
 .toc-item.is-root > .toc-children {
-  margin-left: 6px;
+  margin-left: 0.5em;
 }
 
 @media (prefers-reduced-motion: reduce) {
