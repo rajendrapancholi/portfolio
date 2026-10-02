@@ -151,7 +151,6 @@ export default function Toc({ toc }: { toc: TocItem[] }) {
 
   return (
     <nav aria-label="Article headings" ref={navRef} className="toc">
-      <p className="toc-title">On this page</p>
       <TocGroup nodes={tree} active={active} onLinkClick={handleLinkClick} />
     </nav>
   );
