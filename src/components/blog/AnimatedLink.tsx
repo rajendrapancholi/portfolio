@@ -12,10 +12,12 @@ export default function AnimatedLink({
   slug,
   title,
   source,
+  isParentActive = false,
 }: {
   slug: string;
   title: string;
   source: string;
+  isParentActive?: boolean;
 }) {
   const isActive = usePathname() === `/blogs/b/${source}/${slug}`;
   const reduceMotion = useReducedMotion();
@@ -46,7 +48,7 @@ export default function AnimatedLink({
         <motion.div
           className="absolute inset-0 rounded-md bg-muted/70 -z-10"
           initial={false}
-          animate={{ opacity: isActive ? 1 : 0 }}
+          animate={{ opacity: isActive ? 1 : isParentActive ? 0.45 : 0 }}
           transition={{ duration: 0.15 }}
         />
 
@@ -62,7 +64,7 @@ export default function AnimatedLink({
         <span
           ref={textRef}
           title={isTruncated ? title : undefined}
-          className={`font-medium tracking-wide truncate text-xs lg:text-sm relative z-10 block min-w-0 flex-1 md:pointer-events-none ${isActive && 'text-primary'}`}
+          className={`font-medium tracking-wide truncate text-xs lg:text-sm relative z-10 block min-w-0 flex-1 md:pointer-events-none ${isActive || isParentActive ? 'text-primary' : ''}`}
         >
           {title}
         </span>
