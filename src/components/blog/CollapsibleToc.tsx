@@ -41,8 +41,8 @@ export default function CollapsibleToc({ headings }: { headings: Heading[] }) {
         {/* Header */}
         <div
           className={`
-          flex shrink-0 items-center border-b border-border/40
-          ${isOpen ? 'justify-between px-3 py-3' : 'justify-center py-3'}
+          flex shrink-0 items-center border-b border-border/40 py-2
+          ${isOpen ? 'justify-between pr-3 ' : 'justify-center'}
         `}
         >
           <span
