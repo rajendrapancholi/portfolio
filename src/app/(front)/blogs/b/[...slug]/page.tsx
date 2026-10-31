@@ -6,14 +6,13 @@ import Script from 'next/script';
 import safeJSONStringify, { sanitizeSlug } from '@/lib/utils/safeSanitize';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { FaGithub } from 'react-icons/fa6';
 import { ArrowLeft, ArrowRight, Heart } from 'lucide-react';
 import Feedback from '@/components/blog/Feedback';
 import { getHeadings } from '@/lib/utils/getHeadings';
 import { getPostBySlug } from '@/app/actions/githubBlog';
 import MarkdownRenderer from '@/components/blog/MarkdownRenderer';
 import fetchAllBlogs from '@/lib/utils/fetchAllBlogs';
-import { auth } from '@/lib/auth';
+import GithubLink from '@/components/blog/GithubLink';
 import React from 'react';
 import {
   Breadcrumb,
@@ -24,7 +23,10 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/Breadcrumb';
 import CollapsibleToc from '@/components/blog/CollapsibleToc';
-import { Pencil } from 'lucide-react';
+
+export const revalidate = 3600;
+export const dynamicParams = true;
+export const maxDuration = 60;
 
 const baseUrl = ENV.BASE_URL ?? 'https://rajendrapancholi.vercel.app';
 
@@ -111,12 +113,11 @@ export default async function BlogPage({ params }: Props) {
     blog = blogResult?.data;
   } catch (error) {
     console.error('Fetch failed!', error);
+    throw new Error('Failed to load blog data');
   }
 
-  if (!blog) notFound();
-  if (!success || !blog || !blog.content) {
-    notFound();
-  }
+  if (!success) throw new Error('Blog source temporarily unavailable');
+  if (!blog || !blog.content) notFound();
 
   const currentIndex = allBlogs.findIndex((b) => b.slug === actualSlug);
   const blogF = allBlogs[currentIndex];
@@ -143,14 +144,7 @@ export default async function BlogPage({ params }: Props) {
 
   const headings = getHeadings(blog.content);
 
-  const session = await auth();
-  const canEdit =
-    session?.user?.role === 'admin' || session?.user?.role === 'author';
-  const githubUrl = blog.editUrl
-    ? canEdit
-      ? blog.editUrl
-      : blog.editUrl.replace('/edit/', '/blob/')
-    : null;
+  const editUrl = blog.editUrl ?? null;
 
   return (
     <>
@@ -319,25 +313,8 @@ export default async function BlogPage({ params }: Props) {
                 <p className="text-muted-foreground text-sm">
                   &#64; {' ' + blog.author.name}
                 </p>
-                {source === 'git' && githubUrl && (
-                  <Link
-                    href={githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted px-4 py-2 rounded-lg transition-all"
-                  >
-                    {canEdit ? (
-                      <>
-                        <Pencil className="w-4 h-4" />
-                        <span>Edit on GitHub</span>
-                      </>
-                    ) : (
-                      <>
-                        <FaGithub className="w-4 h-4" />
-                        <span>View on GitHub</span>
-                      </>
-                    )}
-                  </Link>
+                {source === 'git' && editUrl && (
+                  <GithubLink editUrl={editUrl} />
                 )}
               </div>
 

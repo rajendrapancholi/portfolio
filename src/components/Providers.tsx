@@ -1,17 +1,11 @@
 import { SessionProvider } from 'next-auth/react';
 import ClientProviders from './ClientProvider';
-import { auth } from '@/lib/auth';
 import StoreProvider from './ReduxProvider';
 
-export default async function Providers({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const session = await auth();
+export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <SessionProvider session={session}>
-      <StoreProvider session={session}>
+    <SessionProvider>
+      <StoreProvider>
         <ClientProviders>{children}</ClientProviders>
       </StoreProvider>
     </SessionProvider>

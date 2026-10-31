@@ -24,9 +24,10 @@ async function getFileDates(filePath: string) {
         Accept: 'application/vnd.github+json', // API stability
         'X-GitHub-Api-Version': '2022-11-28',
       },
+      signal: AbortSignal.timeout(8000),
       next: { revalidate: 3600 },
     });
-
+    if (!res.ok) return null;
     const commits = await res.json();
     return commits && commits.length > 0
       ? commits[0].commit.committer.date
@@ -59,11 +60,14 @@ export const getGithubMarkdownFiles = cache(async (): Promise<BlogResponse> => {
           Accept: 'application/vnd.github+json', // API stability
           'X-GitHub-Api-Version': '2022-11-28',
         },
-        next: { revalidate: 3600 },
+        signal: AbortSignal.timeout(8000),
+        next: { revalidate: 3600, tags: ['blogs'] },
       },
     );
 
+    if (!treeRes.ok) throw new Error('GitHub tree fetch failed');
     const treeData = await treeRes.json();
+    if (!Array.isArray(treeData.tree)) throw new Error('GitHub tree missing');
     const mdFiles = treeData.tree.filter(
       (item: any) => item.type === 'blob' && item.path.endsWith('.md'),
     );
@@ -73,8 +77,10 @@ export const getGithubMarkdownFiles = cache(async (): Promise<BlogResponse> => {
         const rawUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${file.path}`;
 
         const contentRes = await fetch(rawUrl, {
+          signal: AbortSignal.timeout(8000),
           next: { revalidate: 3600, tags: ['blogs'] },
         });
+        if (!contentRes.ok) throw new Error(`Raw fetch failed: ${file.path}`);
         const rawContent = await contentRes.text();
 
         const { data, content: bodyContent } = parseMetadata(rawContent);
