@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { X } from 'lucide-react';
 
-export default function ImageModal() {
+function ImageModalContent() {
   const router = useRouter();
   const src = useSearchParams().get('src');
 
@@ -44,5 +44,13 @@ export default function ImageModal() {
         onClick={(e) => e.stopPropagation()}
       />
     </div>
+  );
+}
+
+export default function ImageModal() {
+  return (
+    <Suspense fallback={null}>
+      <ImageModalContent />
+    </Suspense>
   );
 }

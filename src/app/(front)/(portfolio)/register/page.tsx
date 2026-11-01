@@ -1,11 +1,16 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import Form from './Form';
 
 export const metadata: Metadata = {
-  title: 'Sign In | Rajendra Pancholi',
-  description: 'Sign In Rajendra Pancholi',
+  title: 'Register | Rajendra Pancholi',
+  description: 'Register Rajendra Pancholi',
 };
 
-export default async function SignIn() {
-  return <Form />;
+export default function Register() {
+  return (
+    <Suspense fallback={null}>
+      <Form />
+    </Suspense>
+  );
 }

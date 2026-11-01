@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import Form from './Form';
 
 export const metadata: Metadata = {
@@ -6,6 +7,10 @@ export const metadata: Metadata = {
   description: 'Sign In Rajendra Pancholi',
 };
 
-export default async function SignIn() {
-  return <Form />;
+export default function SignIn() {
+  return (
+    <Suspense fallback={null}>
+      <Form />
+    </Suspense>
+  );
 }
