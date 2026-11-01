@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/sync-github-blogs.mjs && next build",
+    "sync:blogs": "node scripts/sync-github-blogs.mjs",
     "start": "next start",
     "lint": "next lint"
   },

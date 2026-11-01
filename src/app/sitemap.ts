@@ -2,10 +2,9 @@ import { ENV } from '@/config/env';
 import fetchAllBlogs from '@/lib/utils/fetchAllBlogs';
 import { MetadataRoute } from 'next';
 
-export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
 
-export default async function sitemap() {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = ENV.BASE_URL;
 
   const allBlogs = await fetchAllBlogs();
@@ -15,7 +14,7 @@ export default async function sitemap() {
     const validDate = isNaN(date.getTime()) ? new Date() : date;
 
     return {
-      url: `${baseUrl}/blogs/${blog.slug}`,
+      url: `${baseUrl}/blogs/b/${blog.source}/${blog.slug}`,
       lastModified: validDate,
       changeFrequency: 'weekly',
       priority: 0.7,

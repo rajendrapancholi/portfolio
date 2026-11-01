@@ -1,46 +1,45 @@
 import { ENV } from '@/config/env';
 import mongoose from 'mongoose';
 
-let isConnected = 0;
-export const connectToDB = async () => {
-  mongoose.set('strictQuery', true);
-  if (mongoose.connection.readyState === 1) {
-    console.log('MongoDB is already connected');
-    return mongoose.connection;
-  }
-  mongoose.set('strictQuery', true);
-  try {
-    const db = await mongoose.connect(ENV.MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000,
-      dbName: 'portfolio',
-      bufferCommands: false,
-    });
-
-    isConnected = db.connections[0].readyState;
-    console.log('MongoDB connected to: portfolio');
-    return db;
-  } catch (error) {
-    console.error('MongoDB Connection Error:', error);
-    throw new Error('Database connection failed');
-  }
+const g = globalThis as unknown as {
+  _mainDb?: Promise<typeof mongoose>;
+  _blogDb?: Promise<mongoose.Connection>;
 };
 
-let blogConnection: mongoose.Connection;
+export const connectToDB = async () => {
+  mongoose.set('strictQuery', true);
+  if (mongoose.connection.readyState === 1) return mongoose.connection;
+  if (!g._mainDb) {
+    g._mainDb = mongoose
+      .connect(ENV.MONGODB_URI, {
+        serverSelectionTimeoutMS: 5000,
+        dbName: 'portfolio',
+        bufferCommands: false,
+      })
+      .catch((error) => {
+        g._mainDb = undefined;
+        console.error('MongoDB Connection Error:', error);
+        throw new Error('Database connection failed');
+      });
+  }
+  await g._mainDb;
+  return mongoose.connection;
+};
 
 export const connectToBlogDB = async () => {
-  // If already connected, return the cached connection
-  if (blogConnection && blogConnection.readyState === 1) return blogConnection;
-  try {
-    blogConnection = mongoose.createConnection(ENV.BLOG_MONGODB_URI!, {
-      serverSelectionTimeoutMS: 5000,
-      dbName: 'blogdb',
-      bufferCommands: false,
-    });
-    await blogConnection.asPromise();
-    console.log('Connected to blogdb');
-    return blogConnection;
-  } catch (error) {
-    console.log(error);
-    throw new Error('Failed to connect to Blog Database');
+  if (!g._blogDb) {
+    g._blogDb = mongoose
+      .createConnection(ENV.BLOG_MONGODB_URI!, {
+        serverSelectionTimeoutMS: 5000,
+        dbName: 'blogdb',
+        bufferCommands: false,
+      })
+      .asPromise()
+      .catch((error) => {
+        g._blogDb = undefined;
+        console.error('Blog DB Connection Error:', error);
+        throw new Error('Failed to connect to Blog Database');
+      });
   }
+  return g._blogDb;
 };

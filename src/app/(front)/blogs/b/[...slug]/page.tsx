@@ -132,12 +132,12 @@ export default async function BlogPage({ params }: Props) {
   const jsonLd = generateDynamicJsonLd({
     type: 'blog',
     title: blog.title || 'Rajendra Pancholi',
-    url: baseUrl,
+    url: `${baseUrl}/blogs/b/${source}/${actualSlug}`,
     description: blog.description || `Read ${blog.title} by Rajendra Pancholi`,
     author: blog.author.name || 'Rajendra Pancholi',
     publishedAt: blog.createdAt,
     logo: `${baseUrl}/android-chrome-192x192.png`,
-    image: blog.thumbnail || '/default-blog-thumb-webp',
+    image: blog.thumbnail || '/default-blog-thumb.webp',
     updatedAt: blog.updatedAt,
     priceCurrency: 'rs',
   });

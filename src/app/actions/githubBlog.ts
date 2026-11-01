@@ -3,131 +3,68 @@ import { ENV } from '@/config/env';
 import { Blog } from '@/lib/models/BlogModel';
 import { parseMetadata } from '@/lib/utils/formatter';
 import { cache } from 'react';
+// Written at build time by scripts/sync-github-blogs.mjs (no GitHub calls at runtime)
+import rawPosts from '@/data/github-blogs.json';
 
-const BLOG_GITHUB_TOKEN = ENV.BLOG_GITHUB_TOKEN;
 const REPO_OWNER = ENV.NEXT_PUBLIC_REPO_OWNER;
 const REPO_NAME = ENV.NEXT_PUBLIC_REPO_NAME;
 const RAW_URL_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main`;
 
-/**
- * HELPER: Fetches the last commit date from GitHub
- */
-async function getFileDates(filePath: string) {
-  try {
-    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits?path=${filePath}&page=1&per_page=1`;
-    const res = await fetch(url, {
-      headers: {
-        ...(BLOG_GITHUB_TOKEN
-          ? { Authorization: `Bearer ${BLOG_GITHUB_TOKEN}` }
-          : {}),
-        'User-Agent': 'RajePancholi-Blog',
-        Accept: 'application/vnd.github+json', // API stability
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-      signal: AbortSignal.timeout(8000),
-      next: { revalidate: 3600 },
-    });
-    if (!res.ok) return null;
-    const commits = await res.json();
-    return commits && commits.length > 0
-      ? commits[0].commit.committer.date
-      : null;
-  } catch (error) {
-    console.error('Error fetching git date:', error);
-    return null;
-  }
-}
+type RawPost = { path: string; sha: string; raw: string; date: string | null };
 
-/**
- * Main Function: Gets all files with full content and metadata
- */
 export interface BlogResponse {
   success: boolean;
   data?: Blog[] | null;
   error?: string;
 }
 
+// Parsed once per server instance, then reused
+let parsed: Blog[] | null = null;
+
+function buildPosts(): Blog[] {
+  const posts = (rawPosts as RawPost[]).map((file) => {
+    const { data, content: bodyContent } = parseMetadata(file.raw);
+    const firstHeading = bodyContent.match(/^#\s+(.*)$/m)?.[1] || 'Untitled';
+    const now = new Date().toISOString();
+
+    return {
+      _id: file.sha,
+      type: 'Post',
+      slug: file.path.replace('.md', ''),
+      title: data.title || firstHeading || 'Untitled',
+      author: data.author || {
+        name: 'Rajendra Pancholi',
+        email: 'rpancholi522@gmail.com',
+        image: '',
+      },
+      createdAt: data.created || file.date || now,
+      updatedAt: data.updated || file.date || now,
+      description: data.description || null,
+      tags: Array.isArray(data.tags) ? data.tags : [],
+      keywords: Array.isArray(data.keywords) ? data.keywords : [],
+      thumbnail: data.thumbnail
+        ? `${RAW_URL_BASE}${data.thumbnail}`
+        : '/default-blog-thumb.webp',
+      content: bodyContent.trim(),
+      editUrl: `https://github.com/${REPO_OWNER}/${REPO_NAME}/edit/main/${file.path}`,
+    } as Blog;
+  });
+
+  return posts.sort(
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+  );
+}
+
 export const getGithubMarkdownFiles = cache(async (): Promise<BlogResponse> => {
   try {
-    const treeRes = await fetch(
-      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/trees/main?recursive=1`,
-      {
-        headers: {
-          ...(BLOG_GITHUB_TOKEN
-            ? { Authorization: `Bearer ${BLOG_GITHUB_TOKEN}` }
-            : {}),
-          'User-Agent': 'RajePancholi-Blog',
-          Accept: 'application/vnd.github+json', // API stability
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-        signal: AbortSignal.timeout(8000),
-        next: { revalidate: 3600, tags: ['blogs'] },
-      },
-    );
-
-    if (!treeRes.ok) throw new Error('GitHub tree fetch failed');
-    const treeData = await treeRes.json();
-    if (!Array.isArray(treeData.tree)) throw new Error('GitHub tree missing');
-    const mdFiles = treeData.tree.filter(
-      (item: any) => item.type === 'blob' && item.path.endsWith('.md'),
-    );
-
-    const posts = await Promise.all(
-      mdFiles.map(async (file: any) => {
-        const rawUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${file.path}`;
-
-        const contentRes = await fetch(rawUrl, {
-          signal: AbortSignal.timeout(8000),
-          next: { revalidate: 3600, tags: ['blogs'] },
-        });
-        if (!contentRes.ok) throw new Error(`Raw fetch failed: ${file.path}`);
-        const rawContent = await contentRes.text();
-
-        const { data, content: bodyContent } = parseMetadata(rawContent);
-        const firstHeading =
-          bodyContent.match(/^#\s+(.*)$/m)?.[1] || 'Untitled';
-        const gitDate = await getFileDates(file.path);
-
-        return {
-          _id: file.sha,
-          type: 'Post',
-          slug: file.path.replace('.md', ''),
-          title: data.title || firstHeading || 'Untitled',
-          author: data.author || {
-            name: 'Rajendra Pancholi',
-            email: 'rpancholi522@gmail.com',
-            image: '',
-          },
-          createdAt: data.created || gitDate || new Date().toISOString(),
-          updatedAt: data.updated || gitDate || new Date().toISOString(),
-          description: data.description || null,
-          tags: Array.isArray(data.tags) ? data.tags : [],
-          keywords: Array.isArray(data.keywords) ? data.keywords : [],
-          thumbnail: data.thumbnail
-            ? `${RAW_URL_BASE}${data.thumbnail}`
-            : '/default-blog-thumb.webp',
-          content: bodyContent.trim(),
-          editUrl: `https://github.com/${REPO_OWNER}/${REPO_NAME}/edit/main/${file.path}`,
-        } as Blog;
-      }),
-    );
-
-    posts.sort(
-      (a, b) =>
-        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-    );
-
-    return { success: true, data: posts };
+    if (!parsed) parsed = buildPosts();
+    return { success: true, data: parsed };
   } catch (error) {
     console.error('Error:', error);
     return { success: false, error: 'Failed to retrieve blogs!' };
   }
 });
 
-/**
- * Fetch the posts list
- * If the cache is empty, it triggers the initial fetch.
- */
 export async function getPostList() {
   const { success, data: posts, error } = await getGithubMarkdownFiles();
   if (!success || !posts) return { success: false, error };
@@ -136,9 +73,6 @@ export async function getPostList() {
   return { success: true, data: pList };
 }
 
-/**
- * Finds a single post by its slug.
- */
 export async function getPostBySlug(slug: string) {
   const { success, data: posts } = await getGithubMarkdownFiles();
   if (!success || !posts)
