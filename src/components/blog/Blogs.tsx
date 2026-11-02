@@ -1,69 +1,120 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Blog } from '@/lib/models/BlogModel';
+import { Reveal } from '../ui/Reveal';
 
-type BlogWithSource = Blog & { source: 'main' | 'git' };
+function useInView<T extends HTMLElement>(options?: IntersectionObserverInit) {
+  const ref = useRef<T | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
-const dateFormatter = new Intl.DateTimeFormat('en-US', {
-  month: 'short',
-  day: 'numeric',
-  year: 'numeric',
-  timeZone: 'UTC',
-});
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
 
-const getValidDate = (dateVal: unknown) => {
-  const d = new Date(dateVal as string);
-  return isNaN(d.getTime()) ? new Date(0) : d;
-};
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(node);
+        }
+      },
+      { threshold: 0.2, rootMargin: '0px 0px -60px 0px', ...options },
+    );
 
-function BlogCard({ blog }: { blog: BlogWithSource }) {
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, isVisible };
+}
+
+function BlogCard({
+  blog,
+  index,
+  dateFormatter,
+  getValidDate,
+}: {
+  blog: Blog & { source: 'main' | 'git' };
+  index: number;
+  dateFormatter: Intl.DateTimeFormat;
+  getValidDate: (dateVal: any) => Date;
+}) {
+  const { ref, isVisible } = useInView<HTMLAnchorElement>();
   const href = `/blogs/b/${blog.source}/${blog.slug}`;
-  const date = getValidDate(blog.createdAt);
+  const validDate = getValidDate(blog.createdAt);
+  const delayMs = (index % 3) * 100;
+
+  const [settled, setSettled] = useState(false);
+  useEffect(() => {
+    if (!isVisible) return;
+    const t = setTimeout(() => setSettled(true), delayMs + 500);
+    return () => clearTimeout(t);
+  }, [isVisible, delayMs]);
 
   return (
     <Link
+      ref={ref}
       href={href}
-      className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      style={{
+        transitionDelay: isVisible && !settled ? `${delayMs}ms` : '0ms',
+      }}
+      className={`group flex flex-1 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition-all duration-500 ease-out hover:border-primary/40 hover:shadow-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 md:rounded-3xl ${
+        isVisible
+          ? 'translate-y-0 opacity-100 blur-none'
+          : 'translate-y-8 opacity-0 blur-[6px]'
+      }`}
     >
-      <div className="relative aspect-video w-full overflow-hidden bg-muted">
+      <div className="relative h-52 w-full overflow-hidden bg-muted sm:h-60">
         <Image
           src={blog.thumbnail || '/default-blog-thumb.webp'}
           alt={blog.title}
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover"
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
         />
+        <div className="absolute inset-0 bg-linear-to-t from-card via-card/10 to-transparent opacity-80" />
       </div>
 
-      <div className="flex grow flex-col p-5">
-        <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
-          <time dateTime={date.toISOString()}>
-            {dateFormatter.format(date)}
+      <div className="flex grow flex-col p-5 sm:p-6">
+        <div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
+          <time dateTime={validDate.toISOString()}>
+            {dateFormatter.format(validDate)}
           </time>
-          {blog.source === 'git' && blog.author?.name && (
-            <>
-              <span aria-hidden className="h-1 w-1 rounded-full bg-border" />
-              <span className="truncate">{blog.author.name}</span>
-            </>
-          )}
+          <span className="h-1 w-1 shrink-0 rounded-full bg-border" />
+          <span className="truncate">
+            {blog.source === 'git' ? blog.author?.name : 'Author'}
+          </span>
         </div>
 
-        <h2 className="mb-2 line-clamp-2 text-lg font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">
+        <h2 className="mb-3 line-clamp-2 text-lg font-bold leading-snug text-foreground transition-colors duration-200 group-hover:text-primary sm:text-xl">
           {blog.title}
         </h2>
 
-        {blog.description && (
-          <p className="mb-4 line-clamp-3 grow text-sm leading-relaxed text-muted-foreground">
-            {blog.description}
-          </p>
-        )}
+        <p className="mb-5 grow line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+          {blog.description}
+        </p>
 
-        <span className="mt-auto text-sm font-medium text-primary">
-          Read article →
-        </span>
+        <div className="flex items-center justify-between border-t border-border pt-4">
+          <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-primary">
+            Read Full Case
+            <svg
+              className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
+            </svg>
+          </span>
+        </div>
       </div>
     </Link>
   );
@@ -76,7 +127,18 @@ export default function Blogs({
   blogFmM: Blog[];
   blogFmG: Blog[];
 }) {
-  const allBlogs = useMemo<BlogWithSource[]>(() => {
+  const getValidDate = (dateVal: any) => {
+    const d = new Date(dateVal);
+    return isNaN(d.getTime()) ? new Date() : d;
+  };
+
+  const dateFormatter = new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
+  const allBlogs = useMemo(() => {
     const mBlogs = (blogFmM || []).map((blog) => ({
       ...blog,
       source: 'main' as const,
@@ -102,20 +164,32 @@ export default function Blogs({
   }
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-16">
-      <header className="mb-10 max-w-2xl md:mb-12">
-        <h1 className="mb-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-          Blog
-        </h1>
-        <p className="text-base leading-relaxed text-muted-foreground">
-          MERN stack deep-dives, real-time architecture, and modern web
-          development strategies.
-        </p>
-      </header>
+    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20">
+      <Reveal
+        direction="up"
+        className="relative mb-12 flex flex-col justify-between gap-6 md:mb-16 md:flex-row md:items-end"
+      >
+        <div className="z-10">
+          <h1 className="mb-4 text-4xl font-black tracking-tighter text-foreground md:text-5xl lg:text-6xl">
+            LATEST <span className="text-primary">INSIGHTS</span>
+          </h1>
+          <p className="max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
+            MERN stack deep-dives, real-time architecture, and modern web
+            development strategies.
+          </p>
+        </div>
+        <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full bg-primary/15 blur-[100px]" />
+      </Reveal>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {allBlogs.map((blog) => (
-          <BlogCard key={blog._id || blog.slug} blog={blog} />
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+        {allBlogs.map((blog, index) => (
+          <BlogCard
+            key={blog._id || blog.slug}
+            blog={blog}
+            index={index}
+            dateFormatter={dateFormatter}
+            getValidDate={getValidDate}
+          />
         ))}
       </div>
     </section>
