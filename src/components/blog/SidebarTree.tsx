@@ -39,15 +39,29 @@ export default function SidebarTree({
   depth?: number;
 }) {
   const sortedNodes = useMemo(() => {
-    return [...nodes].sort((a, b) => {
-      const nameA = a.type === 'dir' ? a.name : a.blog?.title || '';
-      const nameB = b.type === 'dir' ? b.name : b.blog?.title || '';
-      return nameA.localeCompare(nameB, undefined, {
-        numeric: true,
-        sensitivity: 'base',
+    const dirs = nodes.filter((n) => n.type === 'dir');
+    const files = nodes.filter((n) => n.type !== 'dir');
+
+    if (depth > 0) {
+      files.sort((a, b) => {
+        const titleA = a.blog?.title || '';
+        const titleB = b.blog?.title || '';
+        return titleA.localeCompare(titleB, undefined, {
+          numeric: true,
+          sensitivity: 'base',
+        });
       });
-    });
-  }, [nodes]);
+
+      dirs.sort((a, b) =>
+        a.name.localeCompare(b.name, undefined, {
+          numeric: true,
+          sensitivity: 'base',
+        }),
+      );
+    }
+
+    return [...dirs, ...files];
+  }, [nodes, depth]);
 
   return (
     <div className="space-y-0.5">
