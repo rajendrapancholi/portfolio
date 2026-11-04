@@ -70,7 +70,7 @@ function SidebarFolder({
     () => hasActiveDescendant(node, current),
     [node, current],
   );
-  const [open, setOpen] = useState(depth === 0 || isParentActive);
+  const [open, setOpen] = useState(isParentActive);
   const label = node.name.replace(/-/g, ' ');
 
   useEffect(() => {
