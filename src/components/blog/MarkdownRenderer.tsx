@@ -303,7 +303,7 @@ const MarkdownRenderer = ({ content }: { content: string }) => {
 
   return (
     <div
-      className="markdown-render bg-main-bg"
+      className="max-w-4xl mx-auto markdown-render bg-main-bg"
       data-color-mode={currentTheme}
       style={{ opacity: mounted ? 1 : 0.92, transition: 'opacity 150ms ease' }}
     >

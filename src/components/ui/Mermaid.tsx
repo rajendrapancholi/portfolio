@@ -37,7 +37,7 @@ export default function Mermaid({ chart }: { chart: string }) {
 
   return (
     <div
-      className="mermaid-diagram"
+      className="w-full flex justify-center items-center mermaid-diagram"
       dangerouslySetInnerHTML={{ __html: svg }}
     />
   );
