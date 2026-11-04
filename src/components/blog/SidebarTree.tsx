@@ -38,9 +38,20 @@ export default function SidebarTree({
   nodes: BlogTreeNode[];
   depth?: number;
 }) {
+  const sortedNodes = useMemo(() => {
+    return [...nodes].sort((a, b) => {
+      const nameA = a.type === 'dir' ? a.name : a.blog?.title || '';
+      const nameB = b.type === 'dir' ? b.name : b.blog?.title || '';
+      return nameA.localeCompare(nameB, undefined, {
+        numeric: true,
+        sensitivity: 'base',
+      });
+    });
+  }, [nodes]);
+
   return (
     <div className="space-y-0.5">
-      {nodes.map((node) =>
+      {sortedNodes.map((node) =>
         node.type === 'dir' ? (
           <SidebarFolder key={node.name} node={node} depth={depth} />
         ) : (
