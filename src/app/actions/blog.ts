@@ -46,7 +46,7 @@ export async function createBlog(formData: FormData) {
 
     // manually clear the cache
     revalidatePath('/blogs');
-    revalidatePath(`/blogs/${slug}`);
+    revalidatePath(`/blogs/b/main/${slug}`);
     revalidatePath('/admin/blogs');
     updateTag('blogs');
 

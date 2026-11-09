@@ -9,8 +9,6 @@ import { ENV } from '@/config/env';
 import safeJSONStringify from '@/lib/utils/safeSanitize';
 import { getPostList } from '@/app/actions/githubBlog';
 
-export const revalidate = 3600;
-
 const baseUrl = ENV.BASE_URL ?? 'https://rajendrapancholi.vercel.app';
 export const metadata = createPageMetadata({
   title: 'Blogs',

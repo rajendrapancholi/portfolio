@@ -24,8 +24,7 @@ import {
 } from '@/components/ui/Breadcrumb';
 import CollapsibleToc from '@/components/blog/CollapsibleToc';
 
-export const revalidate = 3600;
-export const dynamicParams = true;
+export const dynamicParams = false;
 export const maxDuration = 60;
 
 const baseUrl = ENV.BASE_URL ?? 'https://rajendrapancholi.vercel.app';
