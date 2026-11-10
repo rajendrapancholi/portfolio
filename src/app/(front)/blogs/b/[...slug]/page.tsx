@@ -23,6 +23,8 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/Breadcrumb';
 import CollapsibleToc from '@/components/blog/CollapsibleToc';
+import { flattenBlogTree } from '@/lib/utils/sortTreeNodes';
+import { buildBlogTree } from '@/lib/utils/buildBlogTree';
 
 export const dynamicParams = false;
 export const maxDuration = 60;
@@ -118,15 +120,15 @@ export default async function BlogPage({ params }: Props) {
   if (!success) throw new Error('Blog source temporarily unavailable');
   if (!blog || !blog.content) notFound();
 
-  const currentIndex = allBlogs.findIndex((b) => b.slug === actualSlug);
-  const blogF = allBlogs[currentIndex];
-  if (!blogF) notFound();
+  const orderedBlogs = flattenBlogTree(buildBlogTree(allBlogs));
 
-  const prevBlog = currentIndex > 0 ? allBlogs[currentIndex - 1] : null;
-  const nextBlog =
-    currentIndex !== -1 && currentIndex < allBlogs.length - 1
-      ? allBlogs[currentIndex + 1]
-      : null;
+  const currentIndex = orderedBlogs.findIndex(
+    (b) => b.source === source && b.slug === actualSlug,
+  );
+  if (currentIndex === -1) notFound();
+
+  const prevBlog = orderedBlogs[currentIndex - 1] ?? null;
+  const nextBlog = orderedBlogs[currentIndex + 1] ?? null;
 
   const jsonLd = generateDynamicJsonLd({
     type: 'blog',

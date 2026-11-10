@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
 import AnimatedLink from '@/components/blog/AnimatedLink';
 import type { BlogTreeNode } from '@/lib/utils/buildBlogTree';
+import { sortTreeNodes } from '@/lib/utils/sortTreeNodes';
 
 const INDENT = 16;
 type DirNode = Extract<BlogTreeNode, { type: 'dir' }>;
@@ -38,30 +39,10 @@ export default function SidebarTree({
   nodes: BlogTreeNode[];
   depth?: number;
 }) {
-  const sortedNodes = useMemo(() => {
-    const dirs = nodes.filter((n) => n.type === 'dir');
-    const files = nodes.filter((n) => n.type !== 'dir');
-
-    if (depth > 0) {
-      files.sort((a, b) => {
-        const titleA = a.blog?.title || '';
-        const titleB = b.blog?.title || '';
-        return titleA.localeCompare(titleB, undefined, {
-          numeric: true,
-          sensitivity: 'base',
-        });
-      });
-
-      dirs.sort((a, b) =>
-        a.name.localeCompare(b.name, undefined, {
-          numeric: true,
-          sensitivity: 'base',
-        }),
-      );
-    }
-
-    return [...dirs, ...files];
-  }, [nodes, depth]);
+  const sortedNodes = useMemo(
+    () => sortTreeNodes(nodes, depth),
+    [nodes, depth],
+  );
 
   return (
     <div className="space-y-0.5">
