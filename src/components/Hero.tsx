@@ -77,7 +77,7 @@ const Hero = () => {
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="uppercase tracking-[0.2em] text-[11px] text-center sm:text-xs font-medium text-muted-foreground mb-3"
         >
-          Engineering Scalable Systems & Real-Time Web Apps
+          Building high-performance web experiences
         </motion.p>
 
         <motion.div

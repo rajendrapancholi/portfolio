@@ -44,21 +44,25 @@ export const BentoGridItem = ({
   spareImg?: string;
 }) => {
   const leftLists = [
-    'ReactJS',
-    'NextJS',
-    'NodeJS',
-    'ExpressJS',
+    'Next.js',
+    'React 19',
+    'TypeScript',
+    'Node.js',
+    'Express.js',
+    'PostgreSQL',
     'MongoDB',
     'MySQL',
-    'Git',
-    'Docker',
   ];
+
   const rightLists = [
-    'TypeScript',
-    'JavaScript',
+    'Docker',
+    'Kubernetes',
+    'Redis',
+    'Socket.io',
     'TailwindCSS',
-    'HTML & CSS',
-    'C/C++',
+    'Prisma',
+    'C / C++',
+    'Git & Linux',
   ];
 
   return (
