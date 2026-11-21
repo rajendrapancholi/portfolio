@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils/cn';
 import {
   Mail,
   MoreHorizontal,
@@ -145,18 +146,20 @@ export default function TeamsPage() {
                   </td>
                   <td className="px-6 py-4">
                     <span
-                      className={`inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                        roleStyle[m.role] || 'bg-muted text-muted-foreground'
-                      }`}
+                      className={cn(
+                        'inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase',
+                        roleStyle[m.role] || 'bg-muted text-muted-foreground',
+                      )}
                     >
                       {m.role}
                     </span>
                   </td>
                   <td className="px-6 py-4">
                     <span
-                      className={`inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                        statusStyle[m.status]
-                      }`}
+                      className={cn(
+                        'inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase',
+                        statusStyle[m.status],
+                      )}
                     >
                       {m.status}
                     </span>

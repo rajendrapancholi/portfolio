@@ -30,6 +30,7 @@ import { useSession } from 'next-auth/react';
 import SidebarTree from './SidebarTree';
 import type { BlogTreeNode } from '@/lib/utils/buildBlogTree';
 import { useAppDispatch } from '@/lib/features/hooks';
+import { cn } from '@/lib/utils/cn';
 
 interface NavbarProps {
   tree: BlogTreeNode[];
@@ -161,11 +162,12 @@ const Navbar: React.FC<NavbarProps> = ({ tree }) => {
                     />
                   )}
                   <span
-                    className={`relative z-10 flex items-center gap-1.5 ${
+                    className={cn(
+                      'relative z-10 flex items-center gap-1.5',
                       item.current
                         ? 'text-primary-foreground'
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
+                        : 'text-muted-foreground hover:text-foreground',
+                    )}
                   >
                     <span className="hidden sm:inline">{item.name}</span>
                     <span className="sm:hidden">{item.icon}</span>
@@ -286,11 +288,12 @@ const Navbar: React.FC<NavbarProps> = ({ tree }) => {
                     key={item.name}
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[15px] font-medium transition-colors ${
+                    className={cn(
+                      'flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[15px] font-medium transition-colors',
                       item.current
                         ? 'bg-primary text-primary-foreground shadow-sm shadow-primary/20'
-                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                    }`}
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                    )}
                   >
                     <span className="opacity-90">{item.icon}</span>
                     {item.name}

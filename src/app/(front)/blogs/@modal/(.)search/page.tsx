@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Blog } from '@/lib/models/BlogModel';
 import { useRouter } from 'next/navigation';
 import fetchAllBlogs from '@/lib/utils/fetchAllBlogs';
+import { cn } from '@/lib/utils/cn';
 
 export default function SearchModal() {
   const [query, setQuery] = useState('');
@@ -125,29 +126,32 @@ export default function SearchModal() {
                       handleSelection(blog.source, blog.slug);
                     }}
                     onMouseEnter={() => setActiveIndex(index)}
-                    className={`group flex items-center justify-between rounded-xl px-3.5 py-3 transition-all ${
+                    className={cn(
+                      'group flex items-center justify-between rounded-xl px-3.5 py-3 transition-all',
                       isActive
                         ? 'bg-primary/10 ring-1 ring-primary/25'
-                        : 'hover:bg-muted/60'
-                    }`}
+                        : 'hover:bg-muted/60',
+                    )}
                   >
                     <div className="flex items-center gap-3.5">
                       <div
-                        className={`flex size-9 items-center justify-center rounded-lg transition-colors ${
+                        className={cn(
+                          'flex size-9 items-center justify-center rounded-lg transition-colors',
                           isActive
                             ? 'bg-primary/15 text-primary'
-                            : 'bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary'
-                        }`}
+                            : 'bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary',
+                        )}
                       >
                         <FileText className="size-4" />
                       </div>
                       <div>
                         <div
-                          className={`font-medium ${
+                          className={cn(
+                            'font-medium',
                             isActive
                               ? 'text-primary'
-                              : 'group-hover:text-primary'
-                          }`}
+                              : 'group-hover:text-primary',
+                          )}
                         >
                           {blog.title}
                         </div>
@@ -155,11 +159,12 @@ export default function SearchModal() {
                     </div>
 
                     <ArrowRight
-                      className={`size-4 transition-all ${
+                      className={cn(
+                        'size-4 transition-all',
                         isActive
                           ? 'translate-x-0 opacity-100 text-primary'
-                          : '-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-primary'
-                      }`}
+                          : '-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-primary',
+                      )}
                     />
                   </Link>
                 );

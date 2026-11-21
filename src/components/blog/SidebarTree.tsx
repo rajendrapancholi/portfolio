@@ -6,6 +6,7 @@ import { ChevronRight } from 'lucide-react';
 import AnimatedLink from '@/components/blog/AnimatedLink';
 import type { BlogTreeNode } from '@/lib/utils/buildBlogTree';
 import { sortTreeNodes } from '@/lib/utils/sortTreeNodes';
+import { cn } from '@/lib/utils/cn';
 
 const INDENT = 16;
 type DirNode = Extract<BlogTreeNode, { type: 'dir' }>;
@@ -86,24 +87,29 @@ function SidebarFolder({
   return (
     <div>
       <div
-        className={`flex items-center gap-1 rounded-md border-l-2 transition-colors hover:bg-muted/60 ${
+        className={cn(
+          'flex items-center gap-1 rounded-md border-l-2 transition-colors hover:bg-muted/60',
           isParentActive
             ? 'border-primary/60 bg-primary/5'
-            : 'border-transparent'
-        }`}
+            : 'border-transparent',
+        )}
         style={{ marginLeft: depth * INDENT }}
       >
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className={`shrink-0 py-1 hover:text-foreground ${
-            isParentActive ? 'text-primary' : 'text-muted-foreground'
-          }`}
+          className={cn(
+            'shrink-0 py-1 hover:text-foreground',
+            isParentActive ? 'text-primary' : 'text-muted-foreground',
+          )}
           aria-label={open ? 'Collapse' : 'Expand'}
         >
           <ChevronRight
             size={14}
-            className={`transition-transform duration-200 ${open ? 'rotate-90' : ''}`}
+            className={cn(
+              'transition-transform duration-200',
+              open ? 'rotate-90' : '',
+            )}
           />
         </button>
 
@@ -119,9 +125,10 @@ function SidebarFolder({
         ) : (
           <span
             onClick={() => setOpen((o) => !o)}
-            className={`flex-1 cursor-pointer truncate py-1.5 text-xs font-semibold uppercase tracking-wider hover:text-foreground ${
-              isParentActive ? 'text-primary' : 'text-muted-foreground'
-            }`}
+            className={cn(
+              'flex-1 cursor-pointer truncate py-1.5 text-xs font-semibold uppercase tracking-wider hover:text-foreground',
+              isParentActive ? 'text-primary' : 'text-muted-foreground',
+            )}
           >
             {label}
           </span>

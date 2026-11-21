@@ -18,6 +18,7 @@ import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import ThemeButton from '../ui/ThemeButton';
 import { logoutAction } from '@/app/actions/authActions';
 import { IconChevronRight } from '@tabler/icons-react';
+import { cn } from '@/lib/utils/cn';
 
 type MenuItem = {
   title: string;
@@ -70,9 +71,10 @@ export default function AdminSidebar({
     <Sidebar open={open} setOpen={setOpen} animate={true}>
       {!pinned && <div className="md:w-20" />}
       <SidebarBody
-        className={`z-50 rounded-r-2xl justify-between min-h-screen md:gap-10 bg-card/90 backdrop-blur-lg border-r border-border transition-colors duration-300 ${
-          pinned ? 'relative' : 'md:fixed'
-        }`}
+        className={cn(
+          'z-50 rounded-r-2xl justify-between min-h-screen md:gap-10 bg-card/90 backdrop-blur-lg border-r border-border transition-colors duration-300',
+          pinned ? 'relative' : 'md:fixed',
+        )}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
@@ -83,9 +85,11 @@ export default function AdminSidebar({
         >
           <IconChevronRight
             size={14}
-            className={`transition-transform duration-300 ${
-              pinned ? 'rotate-180' : ''
-            } text-primary`}
+            className={cn(
+              'transition-transform duration-300',
+              pinned ? 'rotate-180' : '',
+              'text-primary',
+            )}
           />
         </button>
 
@@ -118,21 +122,23 @@ export default function AdminSidebar({
                               href: item.path,
                               icon: (
                                 <div
-                                  className={`shrink-0 flex items-center justify-center transition-colors ${
+                                  className={cn(
+                                    'shrink-0 flex items-center justify-center transition-colors',
                                     isActive
                                       ? 'text-primary'
-                                      : 'text-muted-foreground'
-                                  }`}
+                                      : 'text-muted-foreground',
+                                  )}
                                 >
                                   {item.icon}
                                 </div>
                               ),
                             }}
-                            className={`rounded-xl px-2 transition-all duration-200 ${
+                            className={cn(
+                              'rounded-xl px-2 transition-all duration-200',
                               isActive
                                 ? 'bg-primary/10 font-semibold text-foreground'
-                                : 'hover:bg-muted text-muted-foreground hover:text-foreground'
-                            }`}
+                                : 'hover:bg-muted text-muted-foreground hover:text-foreground',
+                            )}
                           />
                         </div>
                       );

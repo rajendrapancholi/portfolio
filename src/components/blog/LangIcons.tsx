@@ -12,6 +12,7 @@ import {
 import { CurlyBraces, FileCode, Globe, Terminal } from 'lucide-react';
 import { IconDatabase, IconHttpConnect } from '@tabler/icons-react';
 import { MdHttp } from 'react-icons/md';
+import { cn } from '@/lib/utils/cn';
 
 type IconComponent = React.ComponentType<{
   className?: string;
@@ -124,12 +125,12 @@ export const getLanguageIcon = (lang: string, className = 'w-4 h-4') => {
     return <entry.Icon className={className} style={{ color: entry.color }} />;
   }
   if (SHELL_ALIASES.includes(normalizedLang)) {
-    return <Terminal className={`${className} text-green-500`} />;
+    return <Terminal className={cn(className, 'text-green-500')} />;
   }
   if (normalizedLang === 'json') {
-    return <CurlyBraces className={`${className} text-blue-500`} />;
+    return <CurlyBraces className={cn(className, 'text-blue-500')} />;
   }
-  return <FileCode className={`${className} text-purple-500`} />;
+  return <FileCode className={cn(className, 'text-purple-500')} />;
 };
 
 export const getFileExtension = (lang: string): string => {

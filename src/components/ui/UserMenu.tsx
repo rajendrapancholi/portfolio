@@ -17,6 +17,7 @@ import { logoutAction } from '@/app/actions/authActions';
 import { clearCredentials } from '@/lib/features/auth/authSlice';
 import { useAppDispatch } from '@/lib/features/hooks';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils/cn';
 
 export default function UserMenu({
   user,
@@ -100,18 +101,15 @@ export default function UserMenu({
           e.stopPropagation();
           setOpen(!open);
         }}
-        className="relative flex items-center gap-2 text-sm font-semibold 
-                   text-foreground 
-                   bg-card 
-                   border border-border 
-                   px-4 py-2 rounded-xl 
-                   hover:bg-muted 
-                   transition-all active:scale-95 shadow-sm dark:shadow-xl z-70"
+        className="relative flex items-center gap-2 text-sm font-semibold text-foreground bg-card border border-border px-4 py-2 rounded-xl hover:bg-muted transition-all active:scale-95 shadow-sm dark:shadow-xl z-70"
       >
         <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
         {user?.name.split(' ')[0]}
         <span
-          className={`transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+          className={cn(
+            'transition-transform duration-300 ',
+            open && 'rotate-180',
+          )}
         >
           ▾
         </span>
@@ -127,16 +125,14 @@ export default function UserMenu({
 
       {/* Dropdown Menu */}
       <div
-        className={`
-            absolute z-80 min-w-52 overflow-hidden rounded-2xl 
-            border border-border 
-            bg-popover/95 backdrop-blur-xl 
-            shadow-xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)]
-            transition-all duration-200 ease-out
-            ${positionClasses[popupPos] || positionClasses.bottom}
-            ${translateClasses[popupPos] || translateClasses.bottom}
-            ${open ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}
-        `}
+        className={cn(
+          'absolute z-80 min-w-52 overflow-hidden rounded-2xl border border-border bg-popover/95 backdrop-blur-xl shadow-xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)]transition-all duration-200 ease-out',
+          positionClasses[popupPos] || positionClasses.bottom,
+          translateClasses[popupPos] || translateClasses.bottom,
+          open
+            ? 'opacity-100 scale-100 pointer-events-auto'
+            : 'opacity-0 scale-95 pointer-events-none',
+        )}
       >
         {/* User Header */}
         <div className="px-5 py-3 border-b border-border bg-muted/50">
@@ -158,11 +154,7 @@ export default function UserMenu({
                   href={item.href}
                   prefetch={false}
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg 
-                                       transition-all duration-150 
-                                       text-muted-foreground 
-                                       hover:bg-muted 
-                                       hover:text-foreground group"
+                  className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-150 text-muted-foreground hover:bg-muted hover:text-foreground group"
                 >
                   <span className="text-lg opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-transform">
                     {item.icon}
@@ -175,10 +167,7 @@ export default function UserMenu({
             <button
               type="button"
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg 
-                               transition-all duration-150 
-                               text-destructive 
-                               hover:bg-destructive/10 group"
+              className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-150 text-destructive hover:bg-destructive/10 group"
             >
               <span className="text-lg opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-transform">
                 <HiOutlineArrowRightOnRectangle />

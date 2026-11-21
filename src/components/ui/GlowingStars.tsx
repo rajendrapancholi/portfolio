@@ -130,7 +130,7 @@ const Star = ({ isGlowing, delay }: { isGlowing: boolean; delay: number }) => {
         ease: 'easeInOut',
         delay: delay,
       }}
-      className={cn('bg-[#666] h-[1px] w-[1px] rounded-full relative z-20')}
+      className={cn('bg-[#666] h-px w-px rounded-full relative z-20')}
     ></motion.div>
   );
 };
@@ -152,7 +152,7 @@ const Glow = ({ delay }: { delay: number }) => {
       exit={{
         opacity: 0,
       }}
-      className="absolute  left-1/2 -translate-x-1/2 z-10 h-[4px] w-[4px] rounded-full bg-primary blur-[1px] shadow-2xl shadow-primary"
+      className="absolute  left-1/2 -translate-x-1/2 z-10 h-1 w-1 rounded-full bg-primary blur-[1px] shadow-2xl shadow-primary"
     />
   );
 };

@@ -9,6 +9,7 @@ import {
   Wallet,
   ArrowUpRight,
 } from 'lucide-react';
+import { cn } from '@/lib/utils/cn';
 
 const summary = [
   {
@@ -124,9 +125,10 @@ export default function RevenuePage() {
             </div>
             <p className="text-2xl font-bold text-foreground">{item.value}</p>
             <p
-              className={`mt-2 text-xs font-semibold flex items-center gap-1 ${
-                item.up ? 'text-success' : 'text-destructive'
-              }`}
+              className={cn(
+                'mt-2 text-xs font-semibold flex items-center gap-1',
+                item.up ? 'text-success' : 'text-destructive',
+              )}
             >
               {item.up ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
               {item.change} vs last period
@@ -195,13 +197,14 @@ export default function RevenuePage() {
                   </td>
                   <td className="px-6 py-3">
                     <span
-                      className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                      className={cn(
+                        'inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase',
                         t.status === 'paid'
                           ? 'bg-success/15 text-success'
                           : t.status === 'pending'
                             ? 'bg-warning/15 text-warning'
-                            : 'bg-destructive/15 text-destructive'
-                      }`}
+                            : 'bg-destructive/15 text-destructive',
+                      )}
                     >
                       {t.status}
                     </span>

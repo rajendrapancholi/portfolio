@@ -31,14 +31,9 @@ export default function LeftDefault() {
             >
               <Link
                 href={item.href}
-                className="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted-foreground
-                           hover:text-primary hover:bg-primary/8
-                           transition-all duration-200"
+                className="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-muted-foreground hover:text-primary hover:bg-primary/8 transition-all duration-200"
               >
-                <span
-                  className="flex items-center justify-center size-7 rounded-lg bg-muted/60 text-muted-foreground
-                                 group-hover:bg-primary/15 group-hover:text-primary transition-colors"
-                >
+                <span className="flex items-center justify-center size-7 rounded-lg bg-muted/60 text-muted-foreground group-hover:bg-primary/15 group-hover:text-primary transition-colors">
                   {item.icon}
                 </span>
                 <span className="font-medium">{item.name}</span>

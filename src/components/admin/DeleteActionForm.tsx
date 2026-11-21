@@ -5,6 +5,7 @@ import { deleteBlog } from '@/app/actions/blog';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { AlertCircle, ArchiveX, Loader2, Trash2 } from 'lucide-react';
+import { cn } from '@/lib/utils/cn';
 
 export default function DeleteActionForm({
   id,
@@ -49,9 +50,10 @@ export default function DeleteActionForm({
       {/* Header */}
       <div className="flex flex-col items-center text-center">
         <div
-          className={`mb-6 flex size-20 items-center justify-center rounded-2xl transition-colors ${
-            isDeleted ? 'bg-destructive/15' : 'bg-destructive/10 animate-pulse'
-          }`}
+          className={cn(
+            'mb-6 flex size-20 items-center justify-center rounded-2xl transition-colors',
+            isDeleted ? 'bg-destructive/15' : 'bg-destructive/10 animate-pulse',
+          )}
         >
           {isDeleted ? (
             <ArchiveX className="size-10 text-destructive" />

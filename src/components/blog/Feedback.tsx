@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { DislikeIcon, HateIcon, LoveIcon, OkayIcon } from './Icon';
 import toast from 'react-hot-toast';
+import { cn } from '@/lib/utils/cn';
 
 export default function Feedback() {
   const [selected, setSelected] = useState<string | null>(null);
@@ -33,11 +34,12 @@ export default function Feedback() {
                 toast.custom(
                   (t) => (
                     <div
-                      className={`${
+                      className={cn(
                         t.visible
                           ? 'animate-in fade-in zoom-in-95'
-                          : 'animate-out fade-out zoom-out-95'
-                      } max-w-sm w-full bg-card/95 backdrop-blur-md border border-border shadow-2xl rounded-2xl pointer-events-auto flex ring-1 ring-black/5 p-4`}
+                          : 'animate-out fade-out zoom-out-95',
+                        'max-w-sm w-full bg-card/95 backdrop-blur-md border border-border shadow-2xl rounded-2xl pointer-events-auto flex ring-1 ring-black/5 p-4',
+                      )}
                     >
                       <div className="flex-1 w-0 flex items-center">
                         <div className="shrink-0 flex items-center justify-center size-10 bg-primary/15 rounded-xl">

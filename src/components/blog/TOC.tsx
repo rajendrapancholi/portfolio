@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils/cn';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
@@ -58,7 +59,7 @@ function TocGroup({
               <Link
                 href={`#${node.id}`}
                 onClick={(e) => onLinkClick(e, node.id)}
-                className={`toc-link ${isActive ? 'is-active' : ''}`}
+                className={cn('toc-link', isActive && 'is-active')}
               >
                 <span>{node.text}</span>
               </Link>

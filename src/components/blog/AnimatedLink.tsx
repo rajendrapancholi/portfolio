@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLayoutEffect, useRef, useState } from 'react';
 import Tooltip from '@/components/ui/Tooltip';
+import { cn } from '@/lib/utils/cn';
 
 const MotionLink = motion.create(Link);
 
@@ -64,7 +65,10 @@ export default function AnimatedLink({
         <span
           ref={textRef}
           title={isTruncated ? title : undefined}
-          className={`font-medium tracking-wide truncate text-xs lg:text-sm relative z-10 block min-w-0 flex-1 md:pointer-events-none ${isActive || isParentActive ? 'text-primary' : ''}`}
+          className={cn(
+            'font-medium tracking-wide truncate text-xs lg:text-sm relative z-10 block min-w-0 flex-1 md:pointer-events-none',
+            isActive || isParentActive ? 'text-primary' : '',
+          )}
         >
           {title}
         </span>

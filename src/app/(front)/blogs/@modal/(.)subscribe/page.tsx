@@ -44,10 +44,7 @@ export default function SubscribeModal() {
                 required
                 type="email"
                 placeholder="you@example.com"
-                className="w-full rounded-xl border border-border bg-base-200/50 px-4 py-3.5 text-sm
-                           outline-none transition-all
-                           placeholder:text-muted-foreground
-                           focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                className="w-full rounded-xl border border-border bg-base-200/50 px-4 py-3.5 text-sm outline-none transition-all placeholder:text-muted-foreground focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
               />
 
               <button

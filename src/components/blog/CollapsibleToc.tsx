@@ -12,6 +12,7 @@ import { useSidebarToggle } from '@/hooks/useSidebarToggle';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { LoadingToc } from '../Loading';
+import { cn } from '@/lib/utils/cn';
 
 type Heading = { id: string; text: string; level: number };
 
@@ -36,21 +37,24 @@ export default function CollapsibleToc({ headings }: { headings: Heading[] }) {
       <aside
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        className={`z-30 hidden h-[calc(100vh-3.5rem)] shrink-0 border-l rounded-tl-md rouunted-bl-md border-border/60 bg-main-bg shadow-xl transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] xl:flex xl:flex-col ${isOpen ? 'w-72' : 'w-12'} ${pinned ? 'sticky top-14' : 'fixed top-14 right-0'}`}
+        className={cn(
+          'z-30 hidden h-[calc(100vh-3.5rem)] shrink-0 border-l rounded-tl-md rouunted-bl-md border-border/60 bg-main-bg shadow-xl transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] xl:flex xl:flex-col',
+          isOpen ? 'w-72' : 'w-12',
+          pinned ? 'sticky top-14' : 'fixed top-14 right-0',
+        )}
       >
         {/* Header */}
         <div
-          className={`
-          flex shrink-0 items-center border-b border-border/40 py-2
-          ${isOpen ? 'justify-between pr-3 ' : 'justify-center'}
-        `}
+          className={cn(
+            'flex shrink-0 items-center border-b border-border/40 py-2',
+            isOpen ? 'justify-between pr-3 ' : 'justify-center',
+          )}
         >
           <span
-            className={`
-            text-xs font-semibold uppercase tracking-widest text-muted-foreground
-            transition-opacity duration-200
-            ${isOpen ? 'opacity-100' : 'sr-only opacity-0'}
-          `}
+            className={cn(
+              'text-xs font-semibold uppercase tracking-widest text-muted-foreground transition-opacity duration-200',
+              isOpen ? 'opacity-100' : 'sr-only opacity-0',
+            )}
           >
             On this page
           </span>
@@ -72,21 +76,24 @@ export default function CollapsibleToc({ headings }: { headings: Heading[] }) {
         <div className="relative flex-1 overflow-hidden">
           {/* Expanded */}
           <div
-            className={`
-            h-full transition-all duration-300
-            ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}
-          `}
+            className={cn(
+              'h-full transition-all duration-300',
+              isOpen
+                ? 'opacity-100 visible'
+                : 'opacity-0 invisible pointer-events-none',
+            )}
           >
             <TocSidebar headings={headings} bare />
           </div>
 
           {/* Collapsed strip */}
           <div
-            className={`
-            absolute inset-0 flex flex-col items-center gap-3 pt-3
-            text-muted-foreground transition-opacity duration-150
-            ${isOpen ? 'pointer-events-none opacity-0' : 'opacity-100 delay-100'}
-          `}
+            className={cn(
+              'absolute inset-0 flex flex-col items-center gap-3 pt-3 text-muted-foreground transition-opacity duration-150',
+              isOpen
+                ? 'pointer-events-none opacity-0'
+                : 'opacity-100 delay-100',
+            )}
           >
             <List size={14} className="opacity-70" />
             <span

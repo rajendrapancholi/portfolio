@@ -89,15 +89,15 @@ const Thumbnail = ({
   return (
     <div className="fixed inset-0 z-110 flex items-center justify-center p-4 sm:p-6">
       <div
-        className="absolute inset-0 bg-black/80 backdrop-blur-md"
+        className="absolute inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md transition-opacity"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-4xl bg-[#0f172a] border border-border/60 rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+      <div className="relative w-full max-w-4xl bg-popover text-popover-foreground border border-border rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-cinema">
         <div className="absolute top-6 right-6 z-10">
           <button
             onClick={onClose}
-            className="p-2 hover:bg-muted/60 rounded-full transition-colors text-gray-400 hover:text-white"
+            className="p-2 hover:bg-muted rounded-full transition-colors text-muted-foreground hover:text-foreground cursor-pointer"
           >
             <X size={24} />
           </button>
@@ -105,32 +105,32 @@ const Thumbnail = ({
 
         <div className="grid md:grid-cols-2 gap-0">
           {/* Left: Upload Section */}
-          <div className="p-8 md:p-12 border-b md:border-b-0 md:border-r border-white/5">
+          <div className="p-8 md:p-12 border-b md:border-b-0 md:border-r border-border">
             <div className="flex items-center gap-3 mb-8">
-              <div className="p-2 bg-cyan-500/20 rounded-lg">
-                <Sparkles className="text-cyan-400" size={20} />
+              <div className="p-2 bg-primary/15 rounded-lg">
+                <Sparkles className="text-primary" size={20} />
               </div>
-              <h2 className="text-xl font-bold text-white">Cover Image</h2>
+              <h2 className="text-xl font-bold text-foreground">Cover Image</h2>
             </div>
 
-            <label className="group relative flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border/60 hover:border-cyan-500/50 bg-white/2 hover:bg-cyan-500/2 rounded-3xl transition-all cursor-pointer overflow-hidden">
+            <label className="group relative flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-border hover:border-primary/60 bg-muted/40 hover:bg-primary/5 rounded-3xl transition-all duration-cinema cursor-pointer overflow-hidden">
               {isUploading ? (
                 <div className="flex flex-col items-center gap-3">
-                  <Loader2 className="animate-spin text-cyan-400" size={40} />
-                  <p className="text-cyan-400 font-medium animate-pulse">
+                  <Loader2 className="animate-spin text-primary" size={40} />
+                  <p className="text-primary font-medium animate-pulse">
                     Uploading to Cloudinary...
                   </p>
                 </div>
               ) : (
                 <div className="text-center p-6">
                   <CloudUpload
-                    className="mx-auto text-gray-500 group-hover:text-cyan-400 transition-colors mb-4"
+                    className="mx-auto text-muted-foreground group-hover:text-primary transition-colors mb-4"
                     size={48}
                   />
-                  <p className="text-white font-semibold">
+                  <p className="text-foreground font-semibold">
                     Click or Drop Image
                   </p>
-                  <p className="text-gray-500 text-xs mt-2">
+                  <p className="text-muted-foreground text-xs mt-2">
                     WebP, PNG, JPG accepted
                   </p>
                 </div>
@@ -146,12 +146,11 @@ const Thumbnail = ({
             </label>
 
             {/* Explicit Delete Action */}
-
             {currentUrl && (
               <button
                 onClick={onDelete}
                 disabled={isDeleting}
-                className="w-full mt-4 flex items-center justify-center gap-2 py-3 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-2xl transition-all border border-red-500/10"
+                className="w-full mt-4 flex items-center justify-center gap-2 py-3 text-destructive hover:bg-destructive/10 rounded-2xl transition-all border border-destructive/20 cursor-pointer disabled:opacity-50"
               >
                 {isDeleting ? (
                   <Loader2 className="animate-spin" size={18} />
@@ -163,22 +162,23 @@ const Thumbnail = ({
                 </span>
               </button>
             )}
+
             <button
               onClick={onClose}
-              className="w-full mt-8 py-4 bg-muted/50 hover:bg-muted/60 text-white font-bold rounded-2xl transition-all border border-border/60"
+              className="w-full mt-8 py-4 bg-primary text-primary-foreground hover:opacity-90 font-bold rounded-2xl transition-all duration-cinema shadow-lg cursor-pointer"
             >
               Save and Close
             </button>
           </div>
 
           {/* Right: Preview */}
-          <div className="p-8 md:p-12 bg-black/20 flex flex-col justify-center">
-            <span className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-6">
+          <div className="p-8 md:p-12 bg-muted/30 flex flex-col justify-center">
+            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-6">
               Live Card Preview
             </span>
 
-            <div className="group/preview relative w-full bg-[#1e293b] rounded-3xl overflow-hidden border border-border/60 shadow-2xl transition-all duration-500 hover:-translate-y-2">
-              <div className="aspect-video w-full bg-muted/50 overflow-hidden relative">
+            <div className="group/preview relative w-full bg-card text-card-foreground rounded-3xl overflow-hidden border border-border shadow-xl transition-all duration-500 hover:-translate-y-2">
+              <div className="aspect-video w-full bg-muted overflow-hidden relative">
                 {currentUrl ? (
                   <>
                     <img
@@ -194,7 +194,7 @@ const Thumbnail = ({
                         onDelete();
                       }}
                       disabled={isDeleting}
-                      className="absolute top-4 right-4 z-120 p-2.5  bg-black/40 backdrop-blur-xl border border-border/60  text-white/70 hover:text-red-400 hover:bg-red-500/20 rounded-full shadow-2xl opacity-0 group-hover/preview:opacity-100  translate-y-2 group-hover/preview:translate-y-0 transition-all duration-300 ease-out"
+                      className="absolute top-4 right-4 z-20 p-2.5 bg-background/70 backdrop-blur-xl border border-border text-foreground hover:text-destructive hover:bg-destructive/15 rounded-full shadow-lg opacity-0 group-hover/preview:opacity-100 translate-y-2 group-hover/preview:translate-y-0 transition-all duration-300 ease-out cursor-pointer"
                       title="Quick Remove"
                     >
                       {isDeleting ? (
@@ -208,31 +208,33 @@ const Thumbnail = ({
                     <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-black/20 opacity-0 group-hover/preview:opacity-100 transition-opacity duration-300 pointer-events-none" />
                   </>
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-gray-800 to-gray-900">
-                    <ImageIcon className="text-white/10" size={60} />
+                  <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-base-200 to-base-300">
+                    <ImageIcon className="text-muted-foreground/30" size={60} />
                   </div>
                 )}
               </div>
+
               <div className="p-6 space-y-3">
                 <div className="flex gap-2">
-                  <span className="h-2 w-12 bg-cyan-500 rounded-full" />
-                  <span className="h-2 w-8 bg-purple-500 rounded-full" />
+                  <span className="h-2 w-12 bg-primary rounded-full" />
+                  <span className="h-2 w-8 bg-brand rounded-full" />
                 </div>
-                <h3 className="text-lg font-bold text-white line-clamp-2">
+                <h3 className="text-lg font-bold text-card-foreground line-clamp-2">
                   {blogTitle || 'Your Awesome Blog Title...'}
                 </h3>
                 <div className="flex items-center gap-2 pt-2">
-                  <div className="h-6 w-6 rounded-full bg-muted/60" />
-                  <div className="h-3 w-20 bg-muted/60 rounded-full" />
+                  <div className="h-6 w-6 rounded-full bg-muted" />
+                  <div className="h-3 w-20 bg-muted rounded-full" />
                 </div>
               </div>
             </div>
 
-            <div className="mt-8 flex items-start gap-3 p-4 bg-cyan-500/5 border border-cyan-500/10 rounded-2xl">
-              <CheckCircle2 className="text-cyan-400 shrink-0" size={18} />
-              <p className="text-xs text-gray-400 leading-relaxed">
-                Content curated and optimized for the <b>Rajendra Pancholi</b>{' '}
-                ecosystem for premium web delivery.
+            <div className="mt-8 flex items-start gap-3 p-4 bg-primary/5 border border-primary/15 rounded-2xl">
+              <CheckCircle2 className="text-primary shrink-0" size={18} />
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Content curated and optimized for the{' '}
+                <b className="text-foreground">Rajendra Pancholi</b> ecosystem
+                for premium web delivery.
               </p>
             </div>
           </div>

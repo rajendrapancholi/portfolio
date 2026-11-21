@@ -18,6 +18,7 @@ import { Project } from '@/lib/models/ProjectModel';
 import Image from 'next/image';
 import { FaLocationArrow, FaPen } from 'react-icons/fa6';
 import { handleCloudinaryAdminDelete } from '@/app/actions/adminCloudinary';
+import { cn } from '@/lib/utils/cn';
 
 const Projects = () => {
   const { data: projects, error } = useSWR(`/api/admin/projects`);
@@ -261,7 +262,7 @@ const Projects = () => {
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Showing</span>
             <span className="badge badge-outline badge-sm font-semibold">
-              {indexOfFirstItem + 1} –{' '}
+              {indexOfFirstItem + 1} -{' '}
               {Math.min(indexOfLastItem, projects.length)}
             </span>
             <span>of {projects.length}</span>
@@ -280,9 +281,10 @@ const Projects = () => {
               <button
                 key={i + 1}
                 onClick={() => setCurrentPage(i + 1)}
-                className={`btn btn-sm join-item min-w-9 ${
-                  currentPage === i + 1 ? 'btn-primary' : 'btn-ghost'
-                }`}
+                className={cn(
+                  'btn btn-sm join-item min-w-9',
+                  currentPage === i + 1 ? 'btn-primary' : 'btn-ghost',
+                )}
               >
                 {i + 1}
               </button>

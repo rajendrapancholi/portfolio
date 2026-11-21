@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils/cn';
 import Toc from './TOC';
 
 type HeadingProps = { text: string; id: string; level: number };
@@ -19,7 +20,7 @@ export default function TocSidebar({
         </h3>
       )}
 
-      <div className={bare ? 'mb-4' : 'mb-4 flex-1 overflow-y-auto'}>
+      <div className={cn('mb-4', !bare && 'flex-1 overflow-y-auto')}>
         <Toc toc={headings} />
       </div>
     </>

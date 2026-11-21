@@ -13,6 +13,7 @@ import { ImageOff, XCircle } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { CodeBlock } from './CodeBlock';
 import dynamic from 'next/dynamic';
+import { cn } from '@/lib/utils/cn';
 
 const Mermaid = dynamic(() => import('../ui/Mermaid'), {
   ssr: false,
@@ -167,11 +168,12 @@ const MarkdownImage = memo(function MarkdownImage({
   return (
     <>
       <span
-        className={`group block relative my-8 w-full max-w-3xl mx-auto overflow-hidden rounded-xl border border-border bg-muted shadow-sm transition-all duration-300 ${
+        className={cn(
+          'group block relative my-8 w-full max-w-3xl mx-auto overflow-hidden rounded-xl border border-border bg-muted shadow-sm transition-all duration-300',
           status === 'loaded'
             ? 'cursor-zoom-in hover:shadow-xl hover:shadow-primary/10'
-            : 'cursor-default'
-        }`}
+            : 'cursor-default',
+        )}
         onClick={openModal}
       >
         {status === 'loading' && (
@@ -188,9 +190,10 @@ const MarkdownImage = memo(function MarkdownImage({
             decoding="async"
             onLoad={() => setStatus('loaded')}
             onError={() => setStatus('error')}
-            className={`w-full h-auto object-contain transition-all duration-500 ease-out group-hover:scale-[1.03] ${
-              status === 'loaded' ? 'opacity-100' : 'opacity-0'
-            }`}
+            className={cn(
+              'w-full h-auto object-contain transition-all duration-500 ease-out group-hover:scale-[1.03]',
+              status === 'loaded' ? 'opacity-100' : 'opacity-0',
+            )}
           />
           <span className="absolute inset-0 pointer-events-none bg-linear-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </span>

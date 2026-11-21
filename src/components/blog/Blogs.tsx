@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Blog } from '@/lib/models/BlogModel';
 import { Reveal } from '../ui/Reveal';
+import { cn } from '@/lib/utils/cn';
 
 function useInView<T extends HTMLElement>(options?: IntersectionObserverInit) {
   const ref = useRef<T | null>(null);
@@ -61,11 +62,12 @@ function BlogCard({
       style={{
         transitionDelay: isVisible && !settled ? `${delayMs}ms` : '0ms',
       }}
-      className={`group flex flex-1 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition-all duration-500 ease-out hover:border-primary/40 hover:shadow-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 md:rounded-3xl ${
+      className={cn(
+        'group flex flex-1 flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition-all duration-500 ease-out hover:border-primary/40 hover:shadow-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 md:rounded-3xl',
         isVisible
           ? 'translate-y-0 opacity-100 blur-none'
-          : 'translate-y-8 opacity-0 blur-[6px]'
-      }`}
+          : 'translate-y-8 opacity-0 blur-[6px]',
+      )}
     >
       <div className="relative h-52 w-full overflow-hidden bg-muted sm:h-60">
         <Image

@@ -15,6 +15,7 @@ import { FaLocationArrow, FaPen } from 'react-icons/fa6';
 import { Blog } from '@/lib/models/BlogModel';
 import ModalWrapper from '@/components/ui/ModalWrapper';
 import DeleteActionForm from '@/components/admin/DeleteActionForm';
+import { cn } from '@/lib/utils/cn';
 
 export default function Blogs({ blogs }: { blogs: Blog[] }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -206,11 +207,12 @@ export default function Blogs({ blogs }: { blogs: Blog[] }) {
               <button
                 key={i + 1}
                 onClick={() => setCurrentPage(i + 1)}
-                className={`join-item btn btn-sm border-none min-w-10 ${
+                className={cn(
+                  'join-item btn btn-sm border-none min-w-10',
                   currentPage === i + 1
                     ? 'bg-primary text-primary-foreground shadow-md shadow-primary/30'
-                    : 'bg-transparent hover:bg-muted'
-                }`}
+                    : 'bg-transparent hover:bg-muted',
+                )}
               >
                 {i + 1}
               </button>
