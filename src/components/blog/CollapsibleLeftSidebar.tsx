@@ -15,7 +15,9 @@ export default function CollapsibleLeftSidebar({
   return (
     <>
       <div
-        className={cn(pinned ? 'absolute' : 'w-12 h-screen sticky top-0 bottom-0 left-0')}
+        className={cn(
+          pinned ? 'absolute' : 'w-12 h-screen sticky top-0 bottom-0 left-0',
+        )}
       />
       <aside
         onMouseEnter={onMouseEnter}
@@ -28,8 +30,10 @@ export default function CollapsibleLeftSidebar({
       >
         {/* Header */}
         <div
-          className={cn('flex shrink-0 items-center border-b border-border/60'
-          isOpen ? 'justify-between pr-1 pl-3 py-3' : 'justify-center py-3')}
+          className={cn(
+            'flex shrink-0 items-center border-b border-border/60',
+            isOpen ? 'justify-between pr-1 pl-3 py-3' : 'justify-center py-3',
+          )}
         >
           {isOpen && (
             <span className="text-md font-semibold uppercase tracking-widest text-muted-foreground">
@@ -54,15 +58,20 @@ export default function CollapsibleLeftSidebar({
         <div className="relative flex-1 overflow-hidden">
           {/* Expanded content */}
           <div
-            className={cn('h-full overflow-y-auto x-2 py-3 transition-opacity duration-200',
-            isOpen ? 'opacity-100' : 'pointer-events-none opacity-0')}
+            className={cn(
+              'h-full overflow-y-auto x-2 py-3 transition-opacity duration-200',
+              isOpen ? 'opacity-100' : 'pointer-events-none opacity-0',
+            )}
           >
             {children}
           </div>
 
           {/* Collapsed strip */}
           <div
-            className={cn('absolute inset-0 flex flex-col items-center gap-4 pt-4 text-muted-foreground transition-opacity duration-200', isOpen ? 'pointer-events-none opacity-0' : 'opacity-100')}
+            className={cn(
+              'absolute inset-0 flex flex-col items-center gap-4 pt-4 text-muted-foreground transition-opacity duration-200',
+              isOpen ? 'pointer-events-none opacity-0' : 'opacity-100',
+            )}
           >
             <BookOpen size={16} className="opacity-70" />
             <span
