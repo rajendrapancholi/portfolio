@@ -9,15 +9,24 @@ import { TextMoveUp } from './ui/TextMoveUp';
 import Link from 'next/link';
 
 const highlights = [
-  'Modern UI with React & Next.js',
-  'Performance optimized web apps',
-  'SEO friendly architectures',
-  'Clean, maintainable code',
-  'Responsive, mobile-first design',
-  'Production ready deployments',
+  'Real-time collaborative apps (WebSockets & CRDTs)',
+  'Full-stack architectures with Next.js & TypeScript',
+  'Scalable backends with Redis, PostgreSQL & Docker',
+  'Kubernetes orchestration & low-latency systems',
+  'Secure auth, RBAC & Stripe payment integrations',
+  'Strong DSA, OOP & system design fundamentals',
 ];
 
-const stack = ['Next.js', 'React Native', 'MongoDB', 'TypeScript', 'NextAuth'];
+const stack = [
+  'Next.js',
+  'React 19',
+  'TypeScript',
+  'PostgreSQL',
+  'Redis',
+  'Docker',
+  'Kubernetes',
+  'Socket.io',
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 14 },
