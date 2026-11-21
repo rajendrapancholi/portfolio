@@ -77,7 +77,7 @@ const Hero = () => {
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="uppercase tracking-[0.2em] text-[11px] text-center sm:text-xs font-medium text-muted-foreground mb-3"
         >
-          Building high-performance web experiences
+          Engineering Scalable Systems & Real-Time Web Apps
         </motion.p>
 
         <motion.div
@@ -96,7 +96,7 @@ const Hero = () => {
           className="w-full mt-6 flex flex-col items-center text-center"
         >
           <p className="text-sm font-medium text-muted-foreground mb-2 tracking-wide">
-            What I focus on
+            What I build &amp; focus on
           </p>
           <TextMoveUp text={highlights} />
         </motion.div>
@@ -106,11 +106,14 @@ const Hero = () => {
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="mt-3 text-base md:text-lg text-center text-muted-foreground max-w-3xl leading-relaxed"
         >
-          Hi, I&apos;m Rajendra - a Full Stack Developer based in{' '}
-          <span className="font-semibold text-foreground">Indore, India</span>,
-          building production-grade apps with{' '}
+          Hi, I&apos;m{' '}
           <span className="font-semibold text-foreground">
-            Next.js &amp; TypeScript
+            Rajendra Pancholi
+          </span>{' '}
+          — a Full Stack Developer architecting low-latency distributed systems
+          and production-ready web apps with{' '}
+          <span className="font-semibold text-foreground">
+            Next.js, Node.js, TypeScript &amp; Kubernetes
           </span>
           .
         </motion.p>
